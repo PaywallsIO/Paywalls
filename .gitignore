@@ -17,4 +17,4 @@ node_modules
 frontend/.cache/
 .mypy_cache
 frontend/dist/*
-*.sqlite
+*.sqlite3

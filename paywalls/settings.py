@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import sys
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,6 +25,7 @@ SECRET_KEY = 'django-insecure-q9l@j54_@c)^*dgiva_-xyev6n!tt88f03^5ey!1u4b*6&4_+^
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+TEST = 'test' in sys.argv
 
 ALLOWED_HOSTS = []
 
@@ -37,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'paywalls.apps.PaywallsConfig',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -75,8 +79,12 @@ WSGI_APPLICATION = 'paywalls.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'paywalls',
+        'USER': 'paywalls',
+        'PASSWORD': 'paywalls',
+        'HOST': 'localhost',
+        'PORT': 5432
     }
 }
 
@@ -121,3 +129,5 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'paywalls.User'

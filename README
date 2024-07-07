@@ -1,0 +1,6 @@
+
+# Installing
+TODO
+
+## Creating a super user
+Creating a staff user for the admin run in cmd line: `python manage.py createsuperuser --username USERNAME --email EMAIL_ADDRESS` and you'll be prompted to enter a password

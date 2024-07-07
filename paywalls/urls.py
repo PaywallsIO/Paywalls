@@ -16,7 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from rest_framework.routers import DefaultRouter
+from django.urls import include
+
+from paywalls.api import PaywallViewSet
+
+api_router = DefaultRouter()
+api_router.register(r'paywalls', PaywallViewSet, basename='paywall')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/', include(api_router.urls)),
 ]
