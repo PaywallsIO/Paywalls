@@ -29,6 +29,9 @@ TEST = 'test' in sys.argv
 
 ALLOWED_HOSTS = []
 
+SIMPLE_JWT = {
+    'USER_ID_FIELD': 'email'
+}
 
 # Application definition
 
@@ -52,6 +55,12 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
 
 ROOT_URLCONF = 'paywalls.urls'
 
