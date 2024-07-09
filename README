@@ -1,6 +1,16 @@
 
-# Installing
-TODO
+# Development
+1. Make sure python 3.11 or install it on your machine
+    - Use `brew install python@3.11` on mac
+2. Start a virtual python environment
+    - On mac `python3.11 -m venv env`
+3. Activate the virtual environment
+    - On mac `source env/bin/activate`
+4. Install python packages
+```
+export LIBRARY_PATH=$LIBRARY_PATH:/usr/local/opt/openssl/lib/
+pip install -r requirements.txt
+```
 
 ## Creating a super user
 Creating a staff user for the admin run in cmd line: `python manage.py createsuperuser --username USERNAME --email EMAIL_ADDRESS` and you'll be prompted to enter a password
