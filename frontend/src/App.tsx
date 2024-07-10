@@ -1,7 +1,12 @@
 import '@mantine/core/styles.css'
 import ReactDOM from 'react-dom/client'
-import { createTheme, Container, MantineProvider } from '@mantine/core'
+import { createTheme, Container, MantineProvider, Center, Stack } from '@mantine/core'
 import { AuthenticationForm } from './scenes/auth/AuthenticationForm'
+import { AppLogo } from './components/AppLogo'
+import { formsPlugin } from 'kea-forms'
+import { resetContext } from 'kea'
+
+resetContext({ plugins: [formsPlugin] })
 
 export function App() {
   const theme = createTheme({
@@ -11,7 +16,12 @@ export function App() {
   return (
     <MantineProvider theme={theme} defaultColorScheme="auto">
       <Container size="responsive">
-        <AuthenticationForm />
+        <Center style={{ height: '100vh' }}>
+          <Stack align="center">
+            <AppLogo />
+            <AuthenticationForm />
+          </Stack>
+        </Center>
       </Container>
     </MantineProvider >
   )

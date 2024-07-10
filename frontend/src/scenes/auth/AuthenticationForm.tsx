@@ -1,23 +1,15 @@
 import { useToggle, upperFirst } from '@mantine/hooks'
 import { useForm } from '@mantine/form'
-import { Anchor, Button, Checkbox, Group, Paper, PaperProps, Stack, Title, TextInput, Center } from '@mantine/core'
+import { Anchor, Button, Checkbox, Group, Paper, PaperProps, Stack, Title, TextInput, Center, PasswordInput } from '@mantine/core'
+import { useValues } from 'kea'
+import { Form } from 'kea-forms'
+import { Field } from '../../components/Field'
 
+import authLogic from './authLogic'
 
-export function AuthenticationForm(props: PaperProps) {
+export function AuthenticationForm(props: PaperProps): JSX.Element {
     const [type, toggle] = useToggle(['login', 'register'])
-    const form = useForm({
-        initialValues: {
-            name: '',
-            email: '',
-            password: '',
-            terms: true,
-        },
-
-        validate: {
-            email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email'),
-            password: (val) => (val.length <= 6 ? 'Password should include at least 6 characters' : null),
-        },
-    })
+    const { isAuthFormSubmitting } = useValues(authLogic)
 
     return (
         <Center>
@@ -26,44 +18,41 @@ export function AuthenticationForm(props: PaperProps) {
                     {upperFirst(type)}
                 </Title>
 
-                <form onSubmit={form.onSubmit(() => { })}>
+                <Form logic={authLogic} formKey="authForm" enableFormOnSubmit>
                     <Stack>
                         {type === 'register' && (
-                            <TextInput
-                                label="Name"
-                                placeholder="Your name"
-                                value={form.values.name}
-                                onChange={(event) => form.setFieldValue('name', event.currentTarget.value)}
-                                radius="md"
-                            />
+                            <Field name="name">
+                                <TextInput
+                                    required
+                                    label="Name"
+                                    placeholder="Your name"
+                                    radius="md"
+                                />
+                            </Field>
                         )}
 
-                        <TextInput
-                            required
-                            label="Email"
-                            placeholder="hello@paywalls.io"
-                            value={form.values.email}
-                            onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
-                            error={form.errors.email && 'Invalid email'}
-                            radius="md"
-                        />
+                        <Field name="email">
+                            <TextInput
+                                required
+                                label="Email"
+                                placeholder="hello@paywalls.io"
+                                radius="md"
+                            />
+                        </Field>
 
-                        <TextInput
-                            required
-                            label="Password"
-                            placeholder="Your password"
-                            value={form.values.password}
-                            onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
-                            error={form.errors.password && 'Password should include at least 6 characters'}
-                            radius="md"
-                        />
+                        <Field name="password">
+                            <PasswordInput
+                                required
+                                label="Password"
+                                placeholder="Your password"
+                                radius="md"
+                            />
+                        </Field>
 
                         {type === 'register' && (
-                            <Checkbox
-                                label="I accept terms and conditions"
-                                checked={form.values.terms}
-                                onChange={(event) => form.setFieldValue('terms', event.currentTarget.checked)}
-                            />
+                            <Field name="terms">
+                                <Checkbox label="Terms and conditions" />
+                            </Field>
                         )}
                     </Stack>
 
@@ -71,9 +60,9 @@ export function AuthenticationForm(props: PaperProps) {
                         <Anchor component="button" type="button" c="dimmed" onClick={() => toggle()} size="xs">
                             {type === 'register' ? 'Already have an account? Login' : 'Don’t have an account? Register'}
                         </Anchor>
-                        <Button type="submit">{upperFirst(type)}</Button>
+                        <Button type="submit" disabled={isAuthFormSubmitting}>{upperFirst(type)}</Button>
                     </Group>
-                </form>
+                </Form>
             </Paper>
         </Center>
     )
