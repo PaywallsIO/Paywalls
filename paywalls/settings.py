@@ -27,7 +27,8 @@ SECRET_KEY = 'django-insecure-q9l@j54_@c)^*dgiva_-xyev6n!tt88f03^5ey!1u4b*6&4_+^
 DEBUG = True
 TEST = 'test' in sys.argv
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+]
 
 SIMPLE_JWT = {
     'USER_ID_FIELD': 'email'
@@ -44,11 +45,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'paywalls.apps.PaywallsConfig',
     'rest_framework',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -61,6 +64,11 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:5173'
+]
+# CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'paywalls.urls'
 
