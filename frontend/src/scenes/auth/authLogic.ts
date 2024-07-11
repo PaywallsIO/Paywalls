@@ -4,10 +4,8 @@ import { forms } from 'kea-forms'
 import type { authLogicType } from './authLogicType'
 
 interface AuthFormIF {
-  name: string
   email: string
   password: string
-  terms: boolean
 }
 
 const authLogic = kea<authLogicType>([
@@ -16,14 +14,12 @@ const authLogic = kea<authLogicType>([
   forms(({ props, actions }) => ({
     authForm: {
       defaults: {
-        name: '',
         email: '',
         password: '',
-        terms: true,
       } as AuthFormIF,
       errors: ({ email, password }: AuthFormIF) => ({
-        email: email ? (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? null : 'Please enter a valid email' + email) : 'Please enter an email',
-        password: 'Password should include at least ' + password.length + ' characters',
+        email: email ? (/^\S+@\S+$/.test(email) ? null : 'Please enter a valid email') : 'Please enter an email',
+        password: password.length <= 6 ? 'Password should include at least 6 characters' + password.length : null,
       }),
       submit: async ({ name, email, password, terms }) => {
         console.log({ name, email, password, terms })

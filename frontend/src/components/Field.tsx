@@ -4,7 +4,7 @@ import React, { ReactElement } from 'react'
 export function Field({ children, name, label, ...props }: FieldProps): ReturnType<typeof KeaField> {
     const template: FieldProps['template'] = ({ label, kids, error }) => {
         const kid = React.cloneElement(kids as any, {
-            value: (children as ReactElement).props.value,
+            error: error
         })
 
         return (
