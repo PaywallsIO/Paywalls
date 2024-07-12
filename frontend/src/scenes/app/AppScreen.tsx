@@ -1,7 +1,8 @@
 import { AppShell, Burger, Group } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import AppNavigation from '../components/navigation/Navigation';
+import AppNavigation from './navigation/Navigation';
 import AppLogo from '../components/AppLogo';
+import { PaywallsScreen } from '../paywalls/PaywallsScreen';
 
 export default function AppScreen() {
     const [opened, { toggle }] = useDisclosure();
@@ -28,11 +29,13 @@ export default function AppScreen() {
                 </Group>
             </AppShell.Header>
 
-            <AppShell.Navbar p="md">
+            <AppShell.Navbar>
                 <AppNavigation />
             </AppShell.Navbar>
 
-            <AppShell.Main>Main</AppShell.Main>
+            <AppShell.Main>
+                <PaywallsScreen />
+            </AppShell.Main>
         </AppShell>
     )
 }

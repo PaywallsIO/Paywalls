@@ -8,8 +8,9 @@
 
 .navbarMain {
     flex: 1;
-    margin-top: var(--mantine-spacing-xl);
+    margin-top: var(--mantine-spacing-md);
 }
+
 
 .title {
     text-transform: uppercase;
