@@ -13,7 +13,7 @@ from paywalls.api import (
 )
 
 api_router = DefaultRouter()
-api_router.register(r'paywalls', PaywallViewSet, basename='paywall')
+api_router.register(r'paywalls', PaywallViewSet, basename='paywalls')
 
 urlpatterns = [
     path('admin/', admin.site.urls),

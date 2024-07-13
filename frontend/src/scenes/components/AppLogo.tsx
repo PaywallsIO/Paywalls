@@ -9,8 +9,8 @@ export default function AppLogo() {
             gap="xs"
         >
             <IconReceipt2 style={{ width: rem(30), height: rem(30) }} stroke={1.5} />
-            <Title order={5}>
-                PaywallsIO
+            <Title order={5} style={{ fontWeight: 500 }}>
+                Paywalls
             </Title>
         </Flex>
     )

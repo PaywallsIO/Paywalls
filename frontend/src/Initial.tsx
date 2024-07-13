@@ -3,6 +3,8 @@ import '@mantine/notifications/styles.css';
 import ReactDOM from 'react-dom/client'
 import { createTheme, Container, MantineProvider, Text } from '@mantine/core'
 import { formsPlugin } from 'kea-forms'
+import { loadersPlugin } from 'kea-loaders'
+import { routerPlugin } from 'kea-router'
 import { useValues, resetContext } from 'kea'
 import { Notifications } from '@mantine/notifications';
 import appLogic from './scenes/app/appLogic';
@@ -12,7 +14,7 @@ import axios from 'axios'
 
 configureAxios()
 
-resetContext({ plugins: [formsPlugin] })
+resetContext({ plugins: [loadersPlugin, formsPlugin, routerPlugin] })
 
 export function Initial() {
   const { accessToken } = useValues(appLogic)

@@ -13,7 +13,7 @@ interface AuthFormIF {
 }
 
 const authLogic = kea<authLogicType>([
-  path(['src', 'logics', 'authLogic']),
+  path(['scenes', 'auth', 'authLogic']),
   forms(({ }) => ({
     authForm: {
       defaults: {

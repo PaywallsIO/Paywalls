@@ -10,7 +10,8 @@ const tabs = [
     { link: '', label: 'Charts', icon: IconChartBar },
     { link: '', label: 'Products', icon: IconReceipt2 },
     { link: '', label: 'Users', icon: IconUsers },
-    { link: '', label: 'Localization', icon: IconLanguage }
+    { link: '', label: 'Localization', icon: IconLanguage },
+    { link: '', label: 'Settings', icon: IconSettings }
 ]
 
 export default function AppNavigation() {

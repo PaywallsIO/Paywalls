@@ -12,6 +12,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@grapesjs/react": "^1.0.0",
     "@mantine/carousel": "^7.11.1",
     "@mantine/charts": "^7.11.1",
     "@mantine/code-highlight": "^7.11.1",
@@ -33,9 +34,10 @@
     "axios": "^1.7.2",
     "dayjs": "^1.11.11",
     "embla-carousel-react": "^8.1.6",
+    "grapesjs": "^0.21.12",
     "js-cookie": "^3.0.5",
     "kea": "^3.0.2",
-    "kea-loaders": "^3.0.0",
+    "kea-loaders": "^3.0.1",
     "kea-router": "^3.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

@@ -10,7 +10,7 @@ interface AppDefaultsIF {
 type AccessTokenType = string | null
 
 export const appLogic = kea<appLogicType>([
-  path(['src', 'App']),
+  path(['scenes', 'app', 'appLogic']),
   defaults({
     accessToken: null as AccessTokenType,
     refreshToken: null as AccessTokenType,
