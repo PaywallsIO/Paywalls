@@ -1,13 +1,39 @@
-import { Button, Paper, PaperProps, Stack, Title, TextInput, Center, PasswordInput } from '@mantine/core'
-import { Notifications } from '@mantine/notifications'
-import { useValues } from 'kea'
-import { Form } from 'kea-forms'
-import { Field } from '../components/Field'
+import { Center, Stack, Paper, PaperProps, Title, TextInput, PasswordInput, Button } from '@mantine/core'
+import AppLogo from '../components/AppLogo'
+import { SceneExport } from '../sceneTypes'
+import { BindLogic, useValues } from 'kea'
+import { Form, Field } from 'kea-forms'
 
-import authLogic from './authLogic'
+import loginLogic from './loginLogic'
 
-export default function AuthenticationForm(props: PaperProps): JSX.Element {
-    const { isAuthFormSubmitting } = useValues(authLogic)
+export const scene: SceneExport = {
+    component: Login,
+    logic: loginLogic,
+}
+
+export function Login(): JSX.Element {
+    return (
+        <BindLogic logic={loginLogic} props={{}}>
+            <LoginScene />
+        </BindLogic>
+    )
+}
+
+function LoginScene() {
+    return (
+        <>
+            <Center style={{ height: '100vh' }}>
+                <Stack align="center">
+                    <AppLogo />
+                    <LoginForm />
+                </Stack>
+            </Center>
+        </>
+    )
+}
+
+function LoginForm(props: PaperProps): JSX.Element {
+    const { isAuthFormSubmitting } = useValues(loginLogic)
 
     return (
         <>
@@ -17,7 +43,7 @@ export default function AuthenticationForm(props: PaperProps): JSX.Element {
                         Login
                     </Title>
 
-                    <Form logic={authLogic} formKey="authForm" enableFormOnSubmit>
+                    <Form logic={loginLogic} formKey="authForm" enableFormOnSubmit>
                         <Stack>
                             <Field name="email">
                                 {({ value, onChange }) => (

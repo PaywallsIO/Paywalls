@@ -7,9 +7,7 @@ import { loadersPlugin } from 'kea-loaders'
 import { routerPlugin } from 'kea-router'
 import { useValues, resetContext } from 'kea'
 import { Notifications } from '@mantine/notifications';
-import appLogic from './scenes/app/appLogic';
-import AuthScreen from './scenes/auth/AuthScreen';
-import AppScreen from './scenes/app/AppScreen';
+import App from './scenes/app/App';
 import axios from 'axios'
 
 configureAxios()

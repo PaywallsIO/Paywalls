@@ -1,8 +1,23 @@
 import { Text, Title, Loader, Center, Table, Stack, Flex, Button, Paper } from "@mantine/core";
-import { useValues } from 'kea'
+import { useValues, BindLogic } from 'kea'
+import { SceneExport } from '../sceneTypes'
+
 import paywallsLogic from './paywallsLogic'
 
-export function PaywallsScreen() {
+export const scene: SceneExport = {
+    component: PaywallsScene,
+    logic: paywallsLogic,
+}
+
+export function Paywalls(): JSX.Element {
+    return (
+        <BindLogic logic={paywallsLogic} props={{}}>
+            <PaywallsScene />
+        </BindLogic>
+    )
+}
+
+function PaywallsScene() {
     const { paywalls, paywallsLoading } = useValues(paywallsLogic)
     return (
         <Stack>

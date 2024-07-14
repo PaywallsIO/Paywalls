@@ -2,7 +2,6 @@ import { AppShell, Burger, Group } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import AppNavigation from './navigation/Navigation';
 import AppLogo from '../components/AppLogo';
-import { PaywallsScreen } from '../paywalls/PaywallsScreen';
 
 export default function AppScreen() {
     const [opened, { toggle }] = useDisclosure();
