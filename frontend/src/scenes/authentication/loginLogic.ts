@@ -2,39 +2,30 @@ import { kea, path, props } from 'kea'
 import { forms } from 'kea-forms'
 import { router, encodeParams } from 'kea-router'
 import { notifications } from '@mantine/notifications'
-import axios from 'axios'
-import Cookies from 'js-cookie'
-import appLogic from '../app/appLogic'
 
 import type { loginLogicType } from './loginLogicType'
-
-interface LoginForm {
-  email: string
-  password: string
-}
+import { userLogic } from '../userLogic'
+import { api, ApiConfig } from '../../lib/api'
+import { LoginType } from '../../types'
 
 const loginLogic = kea<loginLogicType>([
   path(['scenes', 'auth', 'loginLogicType']),
   forms(({ }) => ({
-    authForm: {
+    loginForm: {
       defaults: {
         email: '',
         password: '',
-      } as LoginForm,
-      errors: ({ email, password }: LoginForm) => ({
+      } as LoginType,
+      errors: ({ email, password }: LoginType) => ({
         email: email ? (/^\S+@\S+$/.test(email) ? null : 'Please enter a valid email') : 'Please enter an email',
         password: password.length <= 6 ? 'Password should include at least 6 characters' + password.length : null,
       }),
       submit: async ({ email, password }) => {
-        console.log({ email, password })
         try {
-          const response = await axios.post('/api/token', { email, password })
+          const response = await api.auth.login({ email, password })
+          ApiConfig.persistToken(response)
 
-          const { access, refresh } = response.data
-          Cookies.set('access_token', access, { secure: true, sameSite: 'strict' })
-          Cookies.set('refresh_token', refresh, { secure: true, sameSite: 'strict' })
-
-          appLogic.actions.setAuthRefreshToken(access, refresh)
+          userLogic.actions.loadUser()
 
           notifications.show({
             color: 'green',
@@ -42,7 +33,7 @@ const loginLogic = kea<loginLogicType>([
             message: 'Great to see you.',
             radius: 'md',
           })
-        } catch (error) {
+        } catch (error: any) {
           notifications.show({
             color: 'red',
             title: 'Error',

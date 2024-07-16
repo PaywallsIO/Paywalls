@@ -5,33 +5,23 @@ import { createTheme, Container, MantineProvider, Text } from '@mantine/core'
 import { formsPlugin } from 'kea-forms'
 import { loadersPlugin } from 'kea-loaders'
 import { routerPlugin } from 'kea-router'
-import { useValues, resetContext } from 'kea'
-import { Notifications } from '@mantine/notifications';
-import App from './scenes/app/App';
-import axios from 'axios'
-
-configureAxios()
+import { resetContext } from 'kea'
+import { App } from './scenes/app/App';
 
 resetContext({ plugins: [loadersPlugin, formsPlugin, routerPlugin] })
 
 export function Initial() {
-  const { accessToken } = useValues(appLogic)
   const theme = createTheme({
     fontFamily: '"Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif'
   })
 
   return (
     <MantineProvider theme={theme} defaultColorScheme="auto">
-      <Notifications position="top-center" zIndex={1000} />
       <Container size="responsive">
-        {accessToken ? <AppScreen /> : <AuthScreen />}
+        <App />
       </Container>
     </MantineProvider >
   )
-}
-
-function configureAxios() {
-  axios.defaults.baseURL = 'http://localhost:8000'
 }
 
 ReactDOM.createRoot(

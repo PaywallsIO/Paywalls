@@ -3,7 +3,8 @@ import { LogicWrapper } from 'kea'
 export enum Scene {
     Login = 'Login',
     Paywalls = 'Paywalls',
-    Error404 = 'Error404'
+    Error404 = '404',
+    ErrorNetwork = '4xx',
 }
 
 export type SceneProps = Record<string, any>

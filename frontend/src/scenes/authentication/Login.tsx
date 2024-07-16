@@ -33,7 +33,7 @@ function LoginScene() {
 }
 
 function LoginForm(props: PaperProps): JSX.Element {
-    const { isAuthFormSubmitting } = useValues(loginLogic)
+    const { isLoginFormSubmitting } = useValues(loginLogic)
 
     return (
         <>
@@ -43,7 +43,7 @@ function LoginForm(props: PaperProps): JSX.Element {
                         Login
                     </Title>
 
-                    <Form logic={loginLogic} formKey="authForm" enableFormOnSubmit>
+                    <Form logic={loginLogic} formKey="loginForm" enableFormOnSubmit>
                         <Stack>
                             <Field name="email">
                                 {({ value, onChange }) => (
@@ -72,7 +72,7 @@ function LoginForm(props: PaperProps): JSX.Element {
                             </Field>
                         </Stack>
 
-                        <Button type="submit" mt="xl" disabled={isAuthFormSubmitting}>Login</Button>
+                        <Button type="submit" mt="xl" disabled={isLoginFormSubmitting}>Login</Button>
                     </Form>
                 </Paper>
             </Center>
