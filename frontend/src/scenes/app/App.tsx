@@ -14,7 +14,6 @@ const Spinner = () => (
     <LoadingOverlay visible={true} zIndex={1000} overlayProps={{ radius: 'sm', blur: 2 }} />
 )
 
-
 export function App(): JSX.Element | null {
     const { showApp } = useValues(appLogic)
     useMountedLogic(sceneLogic({ scenes: appScenes }))
@@ -66,7 +65,11 @@ function AppScene(): JSX.Element | null {
                 {wrappedSceneElement}
                 {notificationsElement}
             </>
-        ) : (<Text>Not logged in</Text>)
+        ) : (
+            <>
+                {wrappedSceneElement}
+            </>
+        )
     }
 
     return (

@@ -16,7 +16,7 @@ export const sceneLogic = kea<sceneLogicType>([
   ),
   path(['scenes', 'sceneLogic']),
   connect(() => ({
-    logic: [router],
+    logic: [router, userLogic],
   })),
   actions({
     /* 1. Prepares to open the scene, as the listener may override and do something
@@ -108,7 +108,8 @@ export const sceneLogic = kea<sceneLogicType>([
     },
     openScene: ({ scene, params, method }) => {
       const sceneConfig = sceneConfigurations[scene] || {}
-      const { user } = userLogic.values
+      // get most up to date user on the userLogic
+      const user = userLogic.values.user
 
       if (user) {
         // If user is already logged in, redirect away from unauthenticated-only routes (e.g. /signup)
@@ -243,9 +244,9 @@ export const sceneLogic = kea<sceneLogicType>([
         router.actions.replace(typeof redirect === 'function' ? redirect(params, searchParams, hashParams) : redirect)
       }
     }
+
     for (const [path, scene] of Object.entries(routes)) {
-      mapping[path] = (params, searchParams, hashParams, { method }) =>
-        actions.openScene(scene, { params, searchParams, hashParams }, method)
+      mapping[path] = (params, searchParams, hashParams, { method }) => actions.openScene(scene, { params, searchParams, hashParams }, method)
     }
 
     mapping['/*'] = (_, __, { method }) => actions.loadScene(Scene.Error404, emptySceneParams, method)

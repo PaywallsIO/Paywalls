@@ -58,8 +58,6 @@ export function prepareUrl(url: string): string {
             if (!url.startsWith('/')) {
                 url = '/' + url
             }
-
-            url = url + (url.indexOf('?') === -1 && url[url.length - 1] !== '/' ? '/' : '')
         }
         return url
     }

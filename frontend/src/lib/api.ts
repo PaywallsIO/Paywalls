@@ -96,11 +96,6 @@ class ApiRequest {
     }
 
     // Generic endpoint composition
-    private addPathComponent(component: string | number): ApiRequest {
-        this.pathComponents.push(component.toString())
-        return this
-    }
-
     public withQueryString(queryString?: string | Record<string, any>): ApiRequest {
         this.queryString = typeof queryString === 'object' ? toParams(queryString) : queryString
         return this
@@ -110,7 +105,6 @@ class ApiRequest {
         return this.addPathComponent(apiAction)
     }
 
-    // Request finalization
     public async get(options?: ApiMethodOptions): Promise<any> {
         return await api.get(this.assembleFullUrl(), options)
     }
@@ -130,6 +124,11 @@ class ApiRequest {
     public async delete(): Promise<any> {
         return await api.delete(this.assembleFullUrl())
     }
+
+    private addPathComponent(component: string | number): ApiRequest {
+        this.pathComponents.push(component.toString())
+        return this
+    }
 }
 
 export const api = {
@@ -139,7 +138,7 @@ export const api = {
                 .withAction('token')
                 .post({ data })
         },
-        async getCurrentUser(): Promise<UserType> {
+        async currentUser(): Promise<UserType> {
             return new ApiRequest().withAction('users/@me').get()
         },
         async logout(): Promise<void> {
@@ -160,7 +159,7 @@ export const api = {
                 signal: options?.signal,
                 headers: {
                     ...objectClean(options?.headers ?? {}),
-                    "Authorization": `Bearer ${ApiConfig.getAccessToken()}`
+                    ...(ApiConfig.getAccessToken() ? { Authorization: `Bearer ${ApiConfig.getAccessToken()}` } : {}),
                 },
             })
         })
@@ -175,7 +174,8 @@ export const api = {
                 method: 'PATCH',
                 headers: {
                     ...objectClean(options?.headers ?? {}),
-                    ...(isFormData ? {} : { 'Content-Type': 'application/json' })
+                    ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
+                    ...(ApiConfig.getAccessToken() ? { Authorization: `Bearer ${ApiConfig.getAccessToken()}` } : {}),
                 },
                 body: isFormData ? data : JSON.stringify(data),
                 signal: options?.signal,
@@ -200,6 +200,8 @@ export const api = {
                 headers: {
                     ...objectClean(options?.headers ?? {}),
                     ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
+                    ...(ApiConfig.getAccessToken() ? { Authorization: `Bearer ${ApiConfig.getAccessToken()}` } : {}),
+
                 },
                 body: data ? (isFormData ? data : JSON.stringify(data)) : undefined,
                 signal: options?.signal,
@@ -213,7 +215,8 @@ export const api = {
             fetch(url, {
                 method: 'DELETE',
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
+                    ...{ 'Content-Type': 'application/x-www-form-urlencoded' },
+                    ...(ApiConfig.getAccessToken() ? { Authorization: `Bearer ${ApiConfig.getAccessToken()}` } : {}),
                 },
             })
         )
@@ -238,10 +241,9 @@ export const api = {
 }
 
 async function handleFetch(url: string, method: string, fetcher: () => Promise<Response>): Promise<Response> {
-    const startTime = new Date().getTime()
-
     let response
     let error
+
     try {
         response = await fetcher()
     } catch (e) {

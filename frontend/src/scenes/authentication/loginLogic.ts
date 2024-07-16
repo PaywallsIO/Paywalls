@@ -7,6 +7,7 @@ import type { loginLogicType } from './loginLogicType'
 import { userLogic } from '../userLogic'
 import { api, ApiConfig } from '../../lib/api'
 import { LoginType } from '../../types'
+import { urls } from '../urls'
 
 const loginLogic = kea<loginLogicType>([
   path(['scenes', 'auth', 'loginLogicType']),
@@ -33,6 +34,7 @@ const loginLogic = kea<loginLogicType>([
             message: 'Great to see you.',
             radius: 'md',
           })
+          router.actions.replace(urls.default())
         } catch (error: any) {
           notifications.show({
             color: 'red',
