@@ -1,6 +1,3 @@
-import { combineUrl } from 'kea-router'
-import { toParams } from '../lib/utils'
-
 /**
  * To add a new URL to the front end:
  * - add a URL function here
@@ -16,6 +13,5 @@ export const urls = {
     absolute: (path = ''): string => window.location.origin + path,
     default: (): string => '/',
     paywalls: (): string => '/paywalls',
-    // Onboarding / setup routes
     login: (): string => '/login',
 }

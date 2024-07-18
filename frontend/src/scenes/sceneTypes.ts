@@ -1,6 +1,7 @@
 import { LogicWrapper } from 'kea'
 
 export enum Scene {
+    Dashboard = 'Dashboard',
     Login = 'Login',
     Paywalls = 'Paywalls',
     Error404 = '404',
@@ -41,9 +42,9 @@ export interface SceneConfig {
     /** Custom name for the scene */
     name?: string
     /** Route should only be accessed when logged out (N.B. should be added to urls.py too) */
-    onlyUnauthenticated?: boolean
-    /** Route **can** be accessed when logged out (i.e. can be accessed when logged in too; should be added to urls.py too) */
-    allowUnauthenticated?: boolean
+    anonymousOnly?: boolean
+    /** Route **can** be accessed when logged out */
+    anonymousAllowed?: boolean
     /**
      * If `app`, navigation is shown, and the scene has default padding.
      * If `app-raw`, navigation is shown, but the scene has no padding.

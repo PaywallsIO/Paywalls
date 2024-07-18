@@ -7,32 +7,33 @@ import AppLogo from '../components/AppLogo'
 import { sceneLogic } from '../../sceneLogic'
 import { appScenes } from '../appScenes'
 import { appLogic } from './appLogic'
-import { userLogic } from '../userLogic'
 import { Notifications } from '@mantine/notifications'
+
+import { userLogic } from '../userLogic'
 
 const Spinner = () => (
     <LoadingOverlay visible={true} zIndex={1000} overlayProps={{ radius: 'sm', blur: 2 }} />
 )
 
 export function App(): JSX.Element | null {
-    const { showApp } = useValues(appLogic)
-    useMountedLogic(sceneLogic({ scenes: appScenes }))
+    const { isLoading } = useValues(appLogic)
 
     return (
         <>
-            {showApp ? (
-                <AppScene />
-            ) : (
+            {isLoading ? (
                 <Spinner />
+            ) : (
+                <AppScene />
             )}
         </>
     )
 }
 
 function AppScene(): JSX.Element | null {
+    useMountedLogic(sceneLogic({ scenes: appScenes }))
     const [opened, { toggle }] = useDisclosure()
+    const { activeScene, activeLoadedScene, sceneParams, params, loadedScenes } = useValues(sceneLogic)
     const { user } = useValues(userLogic)
-    const { activeScene, activeLoadedScene, sceneParams, params, loadedScenes, sceneConfig } = useValues(sceneLogic)
 
     const notificationsElement = (
         <Notifications position="top-center" zIndex={1000} />
@@ -41,10 +42,9 @@ function AppScene(): JSX.Element | null {
     let sceneElement: JSX.Element
     if (activeScene && activeScene in loadedScenes) {
         const { component: SceneComponent } = loadedScenes[activeScene]
-        sceneElement = <SceneComponent user={user} {...params} />
+        sceneElement = <SceneComponent {...params} />
     } else {
         sceneElement = <Spinner />
-
     }
 
     const wrappedSceneElement = (
@@ -60,14 +60,10 @@ function AppScene(): JSX.Element | null {
     )
 
     if (!user) {
-        return sceneConfig?.onlyUnauthenticated || sceneConfig?.allowUnauthenticated ? (
+        return (
             <>
                 {wrappedSceneElement}
                 {notificationsElement}
-            </>
-        ) : (
-            <>
-                {wrappedSceneElement}
             </>
         )
     }

@@ -5,7 +5,7 @@ import { SceneExport } from '../sceneTypes'
 import paywallsLogic from './paywallsLogic'
 
 export const scene: SceneExport = {
-    component: PaywallsScene,
+    component: Paywalls,
     logic: paywallsLogic,
 }
 

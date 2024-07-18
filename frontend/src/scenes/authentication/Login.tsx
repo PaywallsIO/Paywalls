@@ -11,7 +11,7 @@ export const scene: SceneExport = {
     logic: loginLogic,
 }
 
-export function Login(): JSX.Element {
+function Login(): JSX.Element {
     return (
         <BindLogic logic={loginLogic} props={{}}>
             <LoginScene />

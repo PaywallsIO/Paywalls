@@ -7,12 +7,11 @@ export const appLogic = kea<appLogicType>([
     path(['src', 'scenes', 'app', 'App']),
     connect([userLogic]),
     selectors({
-        // Load deps for the app to show
-        showApp: [
+        isLoading: [
             (s) => [
                 userLogic.selectors.userLoading
             ],
-            (userLoading) => !userLoading
-        ],
+            (userLoading) => userLoading
+        ]
     })
 ])

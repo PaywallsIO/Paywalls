@@ -1,4 +1,4 @@
-import { actions, BuiltLogic, connect, kea, listeners, path, props, reducers, selectors } from 'kea'
+import { actions, BuiltLogic, connect, kea, listeners, path, props, reducers, selectors, getContext, afterMount } from 'kea'
 import { router, urlToAction } from 'kea-router'
 import { routes, redirects, sceneConfigurations, emptySceneParams, preloadedScenes } from './scenes'
 import { Scene, SceneParams, LoadedScene, SceneConfig, SceneExport, Params } from './scenes/sceneTypes'
@@ -17,6 +17,7 @@ export const sceneLogic = kea<sceneLogicType>([
   path(['scenes', 'sceneLogic']),
   connect(() => ({
     logic: [router, userLogic],
+    actions: [router, ['locationChanged']],
   })),
   actions({
     /* 1. Prepares to open the scene, as the listener may override and do something
@@ -34,6 +35,8 @@ export const sceneLogic = kea<sceneLogicType>([
     }),
 
     reloadBrowserDueToImportError: true,
+    redirectToLoginOrShow404: (method) => ({ method }),
+    authMiddleware: (scene: Scene, params: SceneParams, method: string) => ({ scene, params, method })
   }),
   reducers({
     scene: [
@@ -74,6 +77,10 @@ export const sceneLogic = kea<sceneLogicType>([
         return sceneConfigurations[scene] || null
       },
     ],
+    currentUser: [
+      (s) => [userLogic.selectors.user],
+      (user) => user,
+    ],
     activeScene: [
       (s) => [s.scene],
       (scene) => scene || null,
@@ -99,11 +106,18 @@ export const sceneLogic = kea<sceneLogicType>([
     hashParams: [(s) => [s.sceneParams], (sceneParams): Record<string, any> => sceneParams.hashParams || {}],
   }),
   listeners(({ values, actions, props, selectors }) => ({
-    setScene: ({ scene, scrollToTop }, _, __, previousState) => {
-      // if we clicked on a link, scroll to top
-      const previousScene = selectors.scene(previousState)
-      if (scrollToTop && scene !== previousScene) {
-        window.scrollTo(0, 0)
+    authMiddleware: ({ scene, params, method }, breakpoint) => {
+      const sceneConfig = sceneConfigurations[scene] || {}
+      const user = userLogic.values.user
+
+      if (sceneConfig) {
+        if (!user && !sceneConfig.anonymousOnly && !sceneConfig.anonymousAllowed) {
+          actions.redirectToLoginOrShow404(method)
+        } else if (sceneConfig.anonymousOnly) {
+          handleLoginRedirect()
+        } else {
+          actions.openScene(scene, params, method)
+        }
       }
     },
     openScene: ({ scene, params, method }) => {
@@ -111,14 +125,19 @@ export const sceneLogic = kea<sceneLogicType>([
       // get most up to date user on the userLogic
       const user = userLogic.values.user
 
-      if (user) {
-        // If user is already logged in, redirect away from unauthenticated-only routes (e.g. /signup)
-        if (sceneConfig.onlyUnauthenticated) {
+      if (!user) {
+        if (!sceneConfig.anonymousOnly && !sceneConfig.anonymousAllowed) {
+          router.actions.replace(urls.login() + `?redirect=${window.location.pathname}`)
+          return
+        }
+      } else {
+        if (sceneConfig.anonymousOnly) {
           if (scene === Scene.Login) {
             handleLoginRedirect()
           } else {
             router.actions.replace(urls.default())
           }
+          return
         }
       }
 
@@ -143,6 +162,7 @@ export const sceneLogic = kea<sceneLogicType>([
         // if we can't load the scene in a second, show a spinner
         const timeout = window.setTimeout(() => actions.setScene(scene, params, true), 500)
         let importedScene
+
         try {
           importedScene = await props.scenes[scene]()
         } catch (error: any) {
@@ -168,7 +188,10 @@ export const sceneLogic = kea<sceneLogicType>([
           window.clearTimeout(timeout)
         }
         breakpoint()
+
         const { default: defaultExport, logic, scene: _scene, ...others } = importedScene
+
+        // console.log("logic", logic)
 
         if (_scene) {
           loadedScene = { id: scene, ...(_scene as SceneExport), sceneParams: params }
@@ -211,6 +234,13 @@ export const sceneLogic = kea<sceneLogicType>([
       }
       actions.setScene(scene, params, clickedLink || wasNotLoaded)
     },
+    setScene: ({ scene, scrollToTop }, _, __, previousState) => {
+      // if we clicked on a link, scroll to top
+      const previousScene = selectors.scene(previousState)
+      if (scrollToTop && scene !== previousScene) {
+        window.scrollTo(0, 0)
+      }
+    },
     reloadBrowserDueToImportError: () => {
       window.location.reload()
     },
@@ -224,19 +254,24 @@ export const sceneLogic = kea<sceneLogicType>([
         router.actions.replace(pathname.replace(/(\/+)$/, ''), search, hash)
       }
     },
+    redirectToLoginOrShow404: ({ method }) => {
+      const { currentUser } = values
+      if (currentUser) {
+        actions.loadScene(Scene.Error404, emptySceneParams, method)
+      } else {
+        router.actions.replace(urls.login() + `?redirect=${window.location.pathname}`)
+      }
+    },
   })),
   urlToAction(({ actions }) => {
-    const mapping: Record<
-      string,
-      (
-        params: Params,
-        searchParams: Params,
-        hashParams: Params,
-        payload: {
-          method: string
-        }
-      ) => any
-    > = {}
+    const mapping: Record<string, (
+      params: Params,
+      searchParams: Params,
+      hashParams: Params,
+      payload: {
+        method: string
+      }
+    ) => any> = {}
 
     for (const path of Object.keys(redirects)) {
       mapping[path] = (params, searchParams, hashParams) => {
@@ -249,7 +284,7 @@ export const sceneLogic = kea<sceneLogicType>([
       mapping[path] = (params, searchParams, hashParams, { method }) => actions.openScene(scene, { params, searchParams, hashParams }, method)
     }
 
-    mapping['/*'] = (_, __, { method }) => actions.loadScene(Scene.Error404, emptySceneParams, method)
+    mapping['/*'] = (_, __, { method }) => actions.openScene(Scene.Error404, emptySceneParams, method)
 
     return mapping
   }),
