@@ -32,7 +32,7 @@ export function App(): JSX.Element | null {
 function AppScene(): JSX.Element | null {
     useMountedLogic(sceneLogic({ scenes: appScenes }))
     const [opened, { toggle }] = useDisclosure()
-    const { activeScene, activeLoadedScene, sceneParams, params, loadedScenes } = useValues(sceneLogic)
+    const { activeScene, activeLoadedScene, sceneParams, params, loadedScenes, sceneConfig } = useValues(sceneLogic)
     const { user } = useValues(userLogic)
 
     const notificationsElement = (
@@ -59,7 +59,7 @@ function AppScene(): JSX.Element | null {
         </>
     )
 
-    if (!user) {
+    if (!user || sceneConfig?.layout == 'plain') {
         return (
             <>
                 {wrappedSceneElement}
@@ -69,7 +69,8 @@ function AppScene(): JSX.Element | null {
     }
 
     return (
-        (
+        <>
+            {notificationsElement}
             <AppShell
                 header={{ height: 60 }}
                 navbar={{
@@ -94,6 +95,6 @@ function AppScene(): JSX.Element | null {
                     {wrappedSceneElement}
                 </AppShell.Main>
             </AppShell>
-        )
+        </>
     )
 }

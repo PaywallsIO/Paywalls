@@ -2,6 +2,7 @@ import { LogicWrapper } from 'kea'
 
 export enum Scene {
     Dashboard = 'Dashboard',
+    Editor = 'Editor',
     Login = 'Login',
     Paywalls = 'Paywalls',
     Error404 = '404',

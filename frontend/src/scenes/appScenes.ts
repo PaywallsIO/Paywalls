@@ -7,4 +7,5 @@ export const appScenes: Record<Scene, () => any> = {
     [Scene.Paywalls]: () => import('./paywalls/Paywalls'),
     [Scene.Login]: () => import('./authentication/Login'),
     [Scene.Dashboard]: () => import('./dashboard/Dashboard'),
+    [Scene.Editor]: () => import('./editor/Editor'),
 }

@@ -35,6 +35,10 @@ export const sceneConfigurations: Record<Scene, SceneConfig> = {
     },
     [Scene.Dashboard]: {
         projectBased: true
+    },
+    [Scene.Editor]: {
+        projectBased: true,
+        layout: 'plain'
     }
 }
 
@@ -51,4 +55,6 @@ export const routes: Record<string, Scene> = {
     [urls.login()]: Scene.Login,
     [urls.paywalls()]: Scene.Paywalls,
     [urls.default()]: Scene.Dashboard,
+    [urls.editor()]: Scene.Editor,
+
 }

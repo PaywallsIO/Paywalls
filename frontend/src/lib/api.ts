@@ -62,6 +62,11 @@ export class ApiConfig {
         ApiConfig.setRefreshToken(token.refresh)
     }
 
+    static clearToken(): void {
+        Cookies.remove('access_token')
+        Cookies.remove('refresh_token')
+    }
+
     static setAccessToken(token: string): void {
         Cookies.set('access_token', token, { secure: true, sameSite: 'strict' })
     }

@@ -1,25 +1,35 @@
-import { actions, kea, path, afterMount, listeners, defaults } from 'kea'
+import { actions, kea, path, afterMount, listeners, defaults, reducers } from 'kea'
 import { loaders } from 'kea-loaders'
 import type { userLogicType } from './userLogicType'
 import { UserType } from '../types'
-import { api } from '../lib/api'
+import { ApiConfig, api } from '../lib/api'
+import { notifications } from '@mantine/notifications'
 
 export const userLogic = kea<userLogicType>([
   path(['scenes', 'app', 'userLogic']),
   defaults({ user: null }),
   actions({
-    loadUser: () => ({})
+    loadUser: () => ({}),
+    logout: true
   }),
+  listeners(({ actions }) => ({
+    logout: () => {
+      ApiConfig.clearToken()
+      actions.loadUserSuccess(null)
+      notifications.show({
+        title: 'You\'ve been logged out',
+        message: 'See you again soon 👋',
+        radius: 'md',
+      })
+    }
+  })),
   loaders(({ actions }) => ({
     user: [
       null as UserType | null,
       {
         loadUser: async () => {
           try {
-            // await new Promise(r => setTimeout(r, 2000));
-            const user = await api.auth.currentUser()
-            console.log("user", user)
-            return user
+            return await api.auth.currentUser()
           } catch (error: any) {
             actions.loadUserFailure(error.message)
           }

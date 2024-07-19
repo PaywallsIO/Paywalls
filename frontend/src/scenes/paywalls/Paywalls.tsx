@@ -31,7 +31,7 @@ function PaywallsScene() {
             {
                 paywallsLoading ? (
                     <Center style={{ height: '100vh' }}><Loader color="blue" /></Center>
-                ) : (
+                ) : paywalls.length ? (
                     <Paper radius="md" withBorder style={{ overflow: 'hidden' }}>
                         <Table>
                             <Table.Thead bg={"var(--mantine-color-dark-6)"}>
@@ -50,6 +50,12 @@ function PaywallsScene() {
                             </Table.Tbody>
                         </Table>
                     </Paper>
+                ) : (
+                    <Center>
+                        <Stack>
+                            <Text>No paywalls found</Text>
+                        </Stack>
+                    </Center>
                 )
             }
         </Stack >

@@ -4,7 +4,8 @@ import classes from './Navigation.module.css'
 import { A } from 'kea-router';
 import { urls } from '../../urls';
 import { sceneLogic } from '../../../sceneLogic';
-import { useValues } from 'kea';
+import { useActions, useValues } from 'kea';
+import { userLogic } from '../../userLogic';
 
 const tabs = [
     { link: urls.default(), label: 'Dashboard', icon: IconHome },
@@ -21,6 +22,7 @@ const tabs = [
 export default function AppNavigation() {
     // get current scene
     const { activeScene } = useValues(sceneLogic)
+    const { logout } = useActions(userLogic)
 
     const links = tabs.map((item) => (
         <A
@@ -63,8 +65,7 @@ export default function AppNavigation() {
                     <span>Change account</span>
                 </a>
 
-                <A href={urls.paywalls()}>Login</A>
-                <a href="#" className={classes.link} onClick={(event) => event.preventDefault()}>
+                <a href="#" className={classes.link} onClick={() => logout()}>
                     <IconLogout className={classes.linkIcon} stroke={1.5} />
                     <span>Logout</span>
                 </a>

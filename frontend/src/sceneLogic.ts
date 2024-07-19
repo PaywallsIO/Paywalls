@@ -106,20 +106,6 @@ export const sceneLogic = kea<sceneLogicType>([
     hashParams: [(s) => [s.sceneParams], (sceneParams): Record<string, any> => sceneParams.hashParams || {}],
   }),
   listeners(({ values, actions, props, selectors }) => ({
-    authMiddleware: ({ scene, params, method }, breakpoint) => {
-      const sceneConfig = sceneConfigurations[scene] || {}
-      const user = userLogic.values.user
-
-      if (sceneConfig) {
-        if (!user && !sceneConfig.anonymousOnly && !sceneConfig.anonymousAllowed) {
-          actions.redirectToLoginOrShow404(method)
-        } else if (sceneConfig.anonymousOnly) {
-          handleLoginRedirect()
-        } else {
-          actions.openScene(scene, params, method)
-        }
-      }
-    },
     openScene: ({ scene, params, method }) => {
       const sceneConfig = sceneConfigurations[scene] || {}
       // get most up to date user on the userLogic
@@ -127,7 +113,7 @@ export const sceneLogic = kea<sceneLogicType>([
 
       if (!user) {
         if (!sceneConfig.anonymousOnly && !sceneConfig.anonymousAllowed) {
-          router.actions.replace(urls.login() + `?redirect=${window.location.pathname}`)
+          router.actions.replace(urls.login() + `?next=${window.location.pathname}`)
           return
         }
       } else {
