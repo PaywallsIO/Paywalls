@@ -1,14 +1,13 @@
-import { afterMount, kea, path, actions, defaults } from 'kea'
+import { kea, path, actions, defaults } from 'kea'
 import { loaders } from 'kea-loaders'
-import grapesjs from 'grapesjs'
 
-import type { paywallsLogicType } from './editorLogicType'
+import type { editorLogicType } from './editorLogicType'
 
-const paywallsLogic = kea<paywallsLogicType>([
+const editorLogic = kea<editorLogicType>([
   path(['scenes', 'editor', 'editorLogic']),
   defaults({}),
   actions({}),
-  loaders(({ actions, values }) => ({}))
+  loaders(({ }) => ({})),
 ])
 
-export default paywallsLogic
+export default editorLogic
