@@ -1,4 +1,4 @@
-import { actions, kea, path, afterMount, listeners, defaults, reducers } from 'kea'
+import { actions, kea, path, afterMount, listeners, defaults } from 'kea'
 import { loaders } from 'kea-loaders'
 import type { userLogicType } from './userLogicType'
 import { UserType } from '../types'
