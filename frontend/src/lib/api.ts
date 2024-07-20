@@ -4,7 +4,7 @@
 
 import Cookies from "js-cookie"
 import { toParams, prepareUrl, objectClean } from "./utils"
-import { LoginType, TokenType, UserType } from "../types"
+import { LoginType, Paywall, TokenType, UserType } from "../types"
 
 const PAGINATION_DEFAULT_MAX_PAGES = 10
 
@@ -148,6 +148,12 @@ export const api = {
         },
         async logout(): Promise<void> {
             return new ApiRequest().delete()
+        },
+    },
+
+    paywalls: {
+        async getPaywalls(): Promise<Paywall[]> {
+            return new ApiRequest().withAction('paywalls').get()
         },
     },
 

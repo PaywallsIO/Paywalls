@@ -18,7 +18,7 @@ const loginLogic = kea<loginLogicType>([
       } as LoginType,
       errors: ({ email, password }: LoginType) => ({
         email: email ? (/^\S+@\S+$/.test(email) ? null : 'Please enter a valid email') : 'Please enter an email',
-        password: password.length <= 6 ? 'Password should include at least 6 characters' + password.length : null,
+        password: password.length <= 6 ? 'Password should include at least 6 characters' : null,
       }),
       submit: async ({ email, password }) => {
         try {

@@ -1,4 +1,4 @@
-import { actions, BuiltLogic, connect, kea, listeners, path, props, reducers, selectors, getContext, afterMount } from 'kea'
+import { actions, BuiltLogic, connect, kea, listeners, path, props, reducers, selectors } from 'kea'
 import { router, urlToAction } from 'kea-router'
 import { routes, redirects, sceneConfigurations, emptySceneParams, preloadedScenes } from './scenes'
 import { Scene, SceneParams, LoadedScene, SceneConfig, SceneExport, Params } from './scenes/sceneTypes'
@@ -34,9 +34,7 @@ export const sceneLogic = kea<sceneLogicType>([
       loadedScene,
     }),
 
-    reloadBrowserDueToImportError: true,
-    redirectToLoginOrShow404: (method) => ({ method }),
-    authMiddleware: (scene: Scene, params: SceneParams, method: string) => ({ scene, params, method })
+    reloadBrowserDueToImportError: true
   }),
   reducers({
     scene: [
@@ -76,10 +74,6 @@ export const sceneLogic = kea<sceneLogicType>([
       (scene: Scene): SceneConfig | null => {
         return sceneConfigurations[scene] || null
       },
-    ],
-    currentUser: [
-      (s) => [userLogic.selectors.user],
-      (user) => user,
     ],
     activeScene: [
       (s) => [s.scene],
@@ -177,8 +171,6 @@ export const sceneLogic = kea<sceneLogicType>([
 
         const { default: defaultExport, logic, scene: _scene, ...others } = importedScene
 
-        // console.log("logic", logic)
-
         if (_scene) {
           loadedScene = { id: scene, ...(_scene as SceneExport), sceneParams: params }
         } else if (defaultExport) {
@@ -239,25 +231,10 @@ export const sceneLogic = kea<sceneLogicType>([
       if (pathname !== '/' && pathname.endsWith('/')) {
         router.actions.replace(pathname.replace(/(\/+)$/, ''), search, hash)
       }
-    },
-    redirectToLoginOrShow404: ({ method }) => {
-      const { currentUser } = values
-      if (currentUser) {
-        actions.loadScene(Scene.Error404, emptySceneParams, method)
-      } else {
-        router.actions.replace(urls.login() + `?redirect=${window.location.pathname}`)
-      }
-    },
+    }
   })),
   urlToAction(({ actions }) => {
-    const mapping: Record<string, (
-      params: Params,
-      searchParams: Params,
-      hashParams: Params,
-      payload: {
-        method: string
-      }
-    ) => any> = {}
+    const mapping: Record<string, (params: Params, searchParams: Params, hashParams: Params, payload: { method: string }) => any> = {}
 
     for (const path of Object.keys(redirects)) {
       mapping[path] = (params, searchParams, hashParams) => {

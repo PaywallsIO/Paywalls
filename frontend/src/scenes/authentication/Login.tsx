@@ -1,4 +1,4 @@
-import { Center, Stack, Paper, PaperProps, Title, TextInput, PasswordInput, Button, Flex } from '@mantine/core'
+import { Center, Stack, Paper, PaperProps, Title, TextInput, PasswordInput, Button } from '@mantine/core'
 import AppLogo from '../components/AppLogo'
 import { SceneExport } from '../sceneTypes'
 import { BindLogic, useValues } from 'kea'

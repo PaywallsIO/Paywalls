@@ -1,9 +1,9 @@
 import { afterMount, kea, path, actions, defaults } from 'kea'
 import { loaders } from 'kea-loaders'
 import { Paywall } from '../../types'
-import axios from 'axios'
 
 import type { paywallsLogicType } from './paywallsLogicType'
+import { api } from '../../lib/api'
 
 const paywallsLogic = kea<paywallsLogicType>([
     path(['scenes', 'paywalls', 'paywallsLogic']),
@@ -16,8 +16,7 @@ const paywallsLogic = kea<paywallsLogicType>([
     loaders(({ actions, values }) => ({
         paywalls: {
             loadPaywalls: async () => {
-                const response = await axios.get('/api/paywalls')
-                return response.data
+                return await api.paywalls.getPaywalls()
             }
         }
     })),
