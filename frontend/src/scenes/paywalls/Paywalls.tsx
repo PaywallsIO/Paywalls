@@ -1,8 +1,10 @@
 import { Text, Title, Loader, Center, Table, Stack, Flex, Button, Paper } from "@mantine/core";
-import { useValues, BindLogic } from 'kea'
+import { useValues, BindLogic, useActions } from 'kea'
 import { SceneExport } from '../sceneTypes'
+import { urls } from '../urls'
 
 import paywallsLogic from './paywallsLogic'
+import { router } from "kea-router";
 
 export const scene: SceneExport = {
     component: Paywalls,
@@ -19,6 +21,7 @@ export function Paywalls(): JSX.Element {
 
 function PaywallsScene() {
     const { paywalls, paywallsLoading } = useValues(paywallsLogic)
+    const { push } = useActions(router)
     return (
         <Stack>
             <Flex justify="space-between" align="center">
@@ -26,7 +29,7 @@ function PaywallsScene() {
                     <Title>Paywalls</Title>
                     <Text>Manage your paywalls below or add a new one</Text>
                 </Stack>
-                <Button>Add Paywall</Button>
+                <Button onClick={() => push(urls.editor())}>Add Paywall</Button>
             </Flex>
             {
                 paywallsLoading ? (
@@ -34,7 +37,7 @@ function PaywallsScene() {
                 ) : paywalls.length ? (
                     <Paper radius="md" withBorder style={{ overflow: 'hidden' }}>
                         <Table>
-                            <Table.Thead bg={"var(--mantine-color-dark-6)"}>
+                            <Table.Thead>
                                 <Table.Tr>
                                     <Table.Th>Name</Table.Th>
                                     <Table.Th>Created At</Table.Th>

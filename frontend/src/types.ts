@@ -11,8 +11,16 @@ export type LoginType = {
     password: string
 }
 
-export type TokenType = {
+export type TokenResponse = {
     refresh: string
+    access: string
+}
+
+export type RefreshRequest = {
+    refresh: string
+}
+
+export type RefreshResponse = {
     access: string
 }
 

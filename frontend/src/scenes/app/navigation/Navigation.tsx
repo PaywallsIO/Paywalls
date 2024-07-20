@@ -14,7 +14,7 @@ const tabs = [
     { link: '', label: 'Campaigns', icon: IconSpeakerphone },
     { link: '', label: 'Charts', icon: IconChartBar },
     { link: '', label: 'Products', icon: IconReceipt2 },
-    { link: '', label: 'Users', icon: IconUsers },
+    { link: '', label: 'People', icon: IconUsers },
     { link: '', label: 'Localization', icon: IconLanguage },
     { link: '', label: 'Settings', icon: IconSettings }
 ]

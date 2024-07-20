@@ -4,7 +4,8 @@
 
 import Cookies from "js-cookie"
 import { toParams, prepareUrl, objectClean } from "./utils"
-import { LoginType, Paywall, TokenType, UserType } from "../types"
+import { LoginType, Paywall, RefreshRequest, RefreshResponse, TokenResponse, UserType } from "../types"
+import { jwtDecode } from 'jwt-decode'
 
 const PAGINATION_DEFAULT_MAX_PAGES = 10
 
@@ -25,6 +26,15 @@ export interface PaginatedResponse<T> {
     results: T[]
     next?: string | null
     previous?: string | null
+}
+
+interface AccessToken {
+    token_type: string
+    exp: number
+    iat: number
+    jti: string
+    user_id: string
+    email: string
 }
 
 export class ApiError extends Error {
@@ -53,11 +63,25 @@ export class ApiConfig {
         return Cookies.get('access_token')
     }
 
-    static getRefreshToken(): string | undefined {
-        return Cookies.get('refresh_token')
+    static getRefreshToken(): string {
+        return Cookies.get('refresh_token') || ''
     }
 
-    static persistToken(token: TokenType): void {
+    static getAccessTokenExpire(): number | undefined {
+        const expire = Cookies.get('access_token_exp') || '0'
+        return parseInt(expire)
+    }
+
+    static isTokenExpired(): boolean {
+        const expire = ApiConfig.getAccessTokenExpire()
+        if (!expire) {
+            return true
+        }
+
+        return Date.now() >= expire * 1000
+    }
+
+    static persistToken(token: TokenResponse): void {
         ApiConfig.setAccessToken(token.access)
         ApiConfig.setRefreshToken(token.refresh)
     }
@@ -65,10 +89,17 @@ export class ApiConfig {
     static clearToken(): void {
         Cookies.remove('access_token')
         Cookies.remove('refresh_token')
+        Cookies.remove('access_token_exp')
+    }
+
+    static setAccessTokenExpire(date: number): void {
+        Cookies.set('access_token_exp', date.toString(), { secure: true, sameSite: 'strict' })
     }
 
     static setAccessToken(token: string): void {
         Cookies.set('access_token', token, { secure: true, sameSite: 'strict' })
+        const decodedToken = jwtDecode<AccessToken>(token)
+        ApiConfig.setAccessTokenExpire(decodedToken.exp)
     }
 
     static setRefreshToken(token: string): void {
@@ -79,6 +110,7 @@ export class ApiConfig {
 class ApiRequest {
     private pathComponents: string[]
     private queryString: string | undefined
+    private disableTokenRefresh: boolean = false
 
     constructor() {
         this.pathComponents = []
@@ -106,27 +138,47 @@ class ApiRequest {
         return this
     }
 
+    public withoutTokenRefresh(): ApiRequest {
+        this.disableTokenRefresh = true
+        return this
+    }
+
     public withAction(apiAction: string): ApiRequest {
         return this.addPathComponent(apiAction)
     }
 
     public async get(options?: ApiMethodOptions): Promise<any> {
+        if (!this.disableTokenRefresh) {
+            await refreshAccessTokenIfNecessary()
+        }
         return await api.get(this.assembleFullUrl(), options)
     }
 
     public async getResponse(options?: ApiMethodOptions): Promise<Response> {
+        if (!this.disableTokenRefresh) {
+            await refreshAccessTokenIfNecessary()
+        }
         return await api.getResponse(this.assembleFullUrl(), options)
     }
 
     public async update(options?: ApiMethodOptions & { data: any }): Promise<any> {
+        if (!this.disableTokenRefresh) {
+            await refreshAccessTokenIfNecessary()
+        }
         return await api.patch(this.assembleFullUrl(), options?.data, options)
     }
 
     public async post(options?: ApiMethodOptions & { data: any }): Promise<any> {
+        if (!this.disableTokenRefresh) {
+            await refreshAccessTokenIfNecessary()
+        }
         return await api.post(this.assembleFullUrl(), options?.data, options)
     }
 
     public async delete(): Promise<any> {
+        if (!this.disableTokenRefresh) {
+            await refreshAccessTokenIfNecessary()
+        }
         return await api.delete(this.assembleFullUrl())
     }
 
@@ -138,9 +190,15 @@ class ApiRequest {
 
 export const api = {
     auth: {
-        async login(data: Partial<LoginType>): Promise<TokenType> {
+        async login(data: Partial<LoginType>): Promise<TokenResponse> {
             return new ApiRequest()
                 .withAction('token')
+                .post({ data })
+        },
+        async refreshToken(data: Partial<RefreshRequest>): Promise<RefreshResponse> {
+            return new ApiRequest()
+                .withoutTokenRefresh()
+                .withAction('token/refresh')
                 .post({ data })
         },
         async currentUser(): Promise<UserType> {
@@ -251,6 +309,13 @@ export const api = {
     },
 }
 
+async function refreshAccessTokenIfNecessary() {
+    if (ApiConfig.getRefreshToken() && ApiConfig.isTokenExpired()) {
+        const { access } = await api.auth.refreshToken({ refresh: ApiConfig.getRefreshToken() })
+        ApiConfig.setAccessToken(access)
+    }
+}
+
 async function handleFetch(url: string, method: string, fetcher: () => Promise<Response>): Promise<Response> {
     let response
     let error
@@ -266,6 +331,10 @@ async function handleFetch(url: string, method: string, fetcher: () => Promise<R
             throw error
         }
         throw new ApiError(error as any, response?.status)
+    }
+
+    if (response.status === 401) {
+        ApiConfig.clearToken()
     }
 
     if (!response.ok) {
