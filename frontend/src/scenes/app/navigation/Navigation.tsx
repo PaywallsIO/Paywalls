@@ -1,29 +1,39 @@
 import { IconSwitchHorizontal, IconLogout, IconReceipt2, IconUsers, IconSettings, IconChartBar, IconLanguage, IconSpeakerphone, IconTemplate, IconHome, IconChevronDown } from '@tabler/icons-react'
-import { Group, Title, Avatar, Flex, Anchor, UnstyledButton, Tooltip, Center, Divider } from '@mantine/core'
+import { Group, Title, Avatar, Flex, UnstyledButton, Center, Divider } from '@mantine/core'
 import classes from './Navigation.module.css'
+import { A } from 'kea-router';
+import { urls } from '../../urls';
+import { sceneLogic } from '../../../sceneLogic';
+import { useActions, useValues } from 'kea';
+import { userLogic } from '../../userLogic';
 
 const tabs = [
-    { link: '', label: 'Overview', icon: IconHome },
-    { link: '', label: 'Paywalls', icon: IconReceipt2 },
+    { link: urls.default(), label: 'Dashboard', icon: IconHome },
+    { link: urls.paywalls(), label: 'Paywalls', icon: IconReceipt2 },
     { link: '', label: 'Templates', icon: IconTemplate },
     { link: '', label: 'Campaigns', icon: IconSpeakerphone },
     { link: '', label: 'Charts', icon: IconChartBar },
     { link: '', label: 'Products', icon: IconReceipt2 },
     { link: '', label: 'Users', icon: IconUsers },
-    { link: '', label: 'Localization', icon: IconLanguage }
+    { link: '', label: 'Localization', icon: IconLanguage },
+    { link: '', label: 'Settings', icon: IconSettings }
 ]
 
 export default function AppNavigation() {
+    // get current scene
+    const { activeScene } = useValues(sceneLogic)
+    const { logout } = useActions(userLogic)
+
     const links = tabs.map((item) => (
-        <a
+        <A
             className={classes.link}
             href={item.link}
             key={item.label}
-            {...(item.label === 'Paywalls' && { 'data-active': true })}
+            {...(item.label === activeScene && { 'data-active': true })}
         >
             <item.icon className={classes.linkIcon} stroke={1.5} />
             <span>{item.label}</span>
-        </a>
+        </A>
     ));
 
     return (
@@ -55,7 +65,7 @@ export default function AppNavigation() {
                     <span>Change account</span>
                 </a>
 
-                <a href="#" className={classes.link} onClick={(event) => event.preventDefault()}>
+                <a href="#" className={classes.link} onClick={() => logout()}>
                     <IconLogout className={classes.linkIcon} stroke={1.5} />
                     <span>Logout</span>
                 </a>
