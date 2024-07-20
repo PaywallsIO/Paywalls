@@ -1,7 +1,9 @@
 import { Text } from "@mantine/core";
 import { useValues, BindLogic } from 'kea'
 import { SceneExport } from '../sceneTypes'
-import 'grapesjs/dist/css/grapes.min.css';
+import grapesjs from "grapesjs"
+import 'grapesjs/dist/css/grapes.min.css'
+import { useEffect } from "react";
 
 import editorLogic from './editorLogic'
 
@@ -19,7 +21,15 @@ export function Editor(): JSX.Element {
 }
 
 function EditorScene() {
+    useEffect(() => {
+        grapesjs.init({
+            container: '#gjs',
+            components: '<div class="txt-red">Hello world!</div>',
+            style: '.txt-red{color: red}',
+        })
+    })
+
     return (
-        <div id="gjs"></div>
+        <div><div id="gjs"></div></div>
     )
 }

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
 import sys
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -31,7 +32,8 @@ ALLOWED_HOSTS = [
 ]
 
 SIMPLE_JWT = {
-    'USER_ID_FIELD': 'email'
+    'USER_ID_FIELD': 'email',
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1)
 }
 
 # Application definition
