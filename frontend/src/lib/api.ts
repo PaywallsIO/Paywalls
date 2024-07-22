@@ -6,6 +6,7 @@ import Cookies from "js-cookie"
 import { toParams, prepareUrl, objectClean } from "./utils"
 import { LoginType, Paywall, RefreshRequest, RefreshResponse, TokenResponse, UserType } from "../types"
 import { jwtDecode } from 'jwt-decode'
+import { CreatePaywallForm } from "../scenes/paywalls/create/createPaywallLogic"
 
 const PAGINATION_DEFAULT_MAX_PAGES = 10
 
@@ -212,6 +213,9 @@ export const api = {
     paywalls: {
         async getPaywalls(): Promise<Paywall[]> {
             return new ApiRequest().withAction('paywalls').get()
+        },
+        async create(data: Partial<CreatePaywallForm>): Promise<Paywall> {
+            return new ApiRequest().withAction('paywalls').post({ data })
         },
     },
 
