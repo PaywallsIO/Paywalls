@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db.models import EmailField
+from django.db import models
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -17,5 +18,9 @@ class User(AbstractUser):
 
     username = None
     email: EmailField = EmailField(unique=True)
+    current_team = models.ForeignKey("paywalls.Team", models.SET_NULL, null=True)
 
     objects = UserManager()
+
+    def team(self):
+        return self.current_team

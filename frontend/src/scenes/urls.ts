@@ -14,5 +14,5 @@ export const urls = {
     default: (): string => '/',
     paywalls: (): string => '/paywalls',
     login: (): string => '/login',
-    editor: (): string => '/editor',
+    editor: (id: string | number): string => `/editor/${id}`,
 }

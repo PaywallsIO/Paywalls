@@ -9,14 +9,14 @@ export function CreatePaywallForm(): JSX.Element {
 
     return (
         <>
-            <Form logic={createPaywallLogic} formKey="createPaywallLogic" enableFormOnSubmit>
+            <Form logic={createPaywallLogic} formKey="createPaywallForm" enableFormOnSubmit>
                 <Stack>
-                    <Field name="email">
+                    <Field name="name">
                         {({ value, onChange }) => (
                             <TextInput
                                 required
                                 label="Name"
-                                placeholder="A brilliant name"
+                                placeholder="My new Paywall"
                                 radius="md"
                                 value={value}
                                 onChange={(e) => onChange(e.currentTarget.value)}

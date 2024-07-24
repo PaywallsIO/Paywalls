@@ -2,8 +2,11 @@ from typing import cast
 from rest_framework import serializers, viewsets, mixins, exceptions
 from paywalls.models import User
 from rest_framework.permissions import IsAuthenticated
+from paywalls.api.team import TeamSerializer
 
 class UserSerializer(serializers.ModelSerializer):
+    team = TeamSerializer()
+
     class Meta:
         model = User
         fields = [
@@ -14,6 +17,14 @@ class UserSerializer(serializers.ModelSerializer):
             'is_active',
             'is_staff',
             'date_joined',
+            'team',
+            'last_login'
+        ]
+
+        read_only_fields = [
+            'team',
+            'is_staff',
+            'is_active',
             'last_login'
         ]
 

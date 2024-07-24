@@ -4,10 +4,10 @@ from paywalls.models import (
     TimeStampedModel,
     User
 )
-
 import secrets
 
 class Team(TimeStampedModel):
+    name: models.CharField = models.CharField(max_length=200, null=True)
     users: models.ManyToManyField = models.ManyToManyField(User, blank=True)
     api_token: models.CharField = models.CharField(max_length=200, null=True, blank=True)
 
