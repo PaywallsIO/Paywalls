@@ -4,6 +4,8 @@ import { grapesjs } from 'grapesjs'
 import type { editorLogicType } from './editorLogicType'
 import { api } from '../../lib/api'
 import { useEffect } from 'react'
+import { loaders } from 'kea-loaders'
+import { Paywall } from '../../types'
 
 export type EditorProps = {
   id: string | number
@@ -11,13 +13,28 @@ export type EditorProps = {
 
 export const editorLogic = kea<editorLogicType>([
   props({} as EditorProps),
-  key(({ id }) => `paywall-${id}`),
-  path(['scenes', 'editor', 'editorLogic']),
+  path((key) => ['scenes', 'editor', 'editorLogic', key]),
+  key(({ id }) => id),
   selectors({
     paywallId: [() => [(_, props) => props], (props): string => props.id],
-    version: [() => [() => true], () => 1],
   }),
-  afterMount(({ props }) => {
-
+  loaders(({ props, values }) => ({
+    paywall: {
+      loadPaywall: async () => {
+        return await api.paywalls.getPaywall(values.paywallId)
+      },
+      storePaywall: async (data): Promise<Paywall> => {
+        return await api.paywalls.updateContent({
+          id: props.id,
+          data: {
+            version: values.paywall.version,
+            content: data
+          }
+        })
+      }
+    }
+  })),
+  afterMount(({ actions }) => {
+    actions.loadPaywall()
   })
 ])

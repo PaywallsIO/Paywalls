@@ -19,9 +19,7 @@ export function Initial() {
   return (
     <MantineProvider theme={theme} defaultColorScheme="auto">
       <ModalsProvider>
-        <Container size="responsive">
-          <App />
-        </Container>
+        <App />
       </ModalsProvider>
     </MantineProvider >
   )

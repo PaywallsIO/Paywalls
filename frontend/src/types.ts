@@ -3,7 +3,7 @@ export type Paywall = {
     name: string
     created_at: string
     updated_at: string
-    content: string
+    content: Object
 }
 
 export type LoginType = {
