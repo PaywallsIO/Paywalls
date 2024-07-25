@@ -24,6 +24,11 @@ export type RefreshResponse = {
     access: string
 }
 
+export type UpdatePaywallRequest = {
+    content: string
+    version: number
+}
+
 export type UserType = {
     id: number
     email: string
