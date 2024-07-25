@@ -53,7 +53,7 @@ class PaywallSerializer(serializers.ModelSerializer):
 
                 if validated_data.get("content"):
                     if validated_data.get("version") != locked_instance.version:
-                        raise Conflict("Paywall edited by someone else")
+                        raise Conflict("Paywall was edited by someone else. Your edits would override those edits.")
 
                     validated_data["version"] = locked_instance.version + 1
 

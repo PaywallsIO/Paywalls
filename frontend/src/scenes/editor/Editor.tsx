@@ -6,6 +6,7 @@ import 'grapesjs/dist/css/grapes.min.css'
 
 import { editorLogic, EditorProps } from './editorLogic'
 import { Paywall } from '../../types'
+import { LoadingOverlay } from '@mantine/core'
 
 interface EditorSceneProps {
     id?: string
@@ -20,16 +21,20 @@ export const scene: SceneExport = {
 }
 
 export function EditorScene(): JSX.Element {
-    const { paywallId } = useValues(editorLogic)
+    const { paywallId, paywallLoading } = useValues(editorLogic)
     return (
-        <Editor id={paywallId} />
+        paywallLoading ? (
+            <LoadingOverlay visible={true} zIndex={1000} overlayProps={{ radius: 'sm', blur: 2 }} />
+        ) : (
+            <Editor id={paywallId} />
+        )
     )
 }
 
 function Editor({ id }: EditorProps) {
     const logic = editorLogic({ id })
     const { paywall } = useValues(logic)
-    const { loadPaywall, storePaywall } = useActions(logic)
+    const { storePaywall } = useActions(logic)
 
     const onEditor = (editor: GrapesJsEditorType) => {
         editor.Storage.add('remote', {

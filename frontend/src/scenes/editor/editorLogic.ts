@@ -1,11 +1,12 @@
-import { kea, path, actions, defaults, props, key, afterMount, selectors } from 'kea'
+import { kea, path, actions, defaults, props, key, afterMount, selectors, listeners } from 'kea'
 import { grapesjs } from 'grapesjs'
 
 import type { editorLogicType } from './editorLogicType'
-import { api } from '../../lib/api'
+import { ApiError, api } from '../../lib/api'
 import { useEffect } from 'react'
 import { loaders } from 'kea-loaders'
 import { Paywall } from '../../types'
+import { notifications } from '@mantine/notifications'
 
 export type EditorProps = {
   id: string | number
@@ -22,8 +23,10 @@ export const editorLogic = kea<editorLogicType>([
     paywall: {
       loadPaywall: async () => {
         return await api.paywalls.getPaywall(values.paywallId)
-      },
-      storePaywall: async (data): Promise<Paywall> => {
+      }
+    },
+    updatedPaywall: {
+      storePaywall: async (data) => {
         return await api.paywalls.updateContent({
           id: props.id,
           data: {
@@ -32,6 +35,16 @@ export const editorLogic = kea<editorLogicType>([
           }
         })
       }
+    }
+  })),
+  listeners(({ actions }) => ({
+    storePaywallFailure: (error) => {
+      notifications.show({
+        color: 'red',
+        title: 'Error saving paywall',
+        message: (error.errorObject as ApiError).detail,
+        radius: 'md',
+      })
     }
   })),
   afterMount(({ actions }) => {

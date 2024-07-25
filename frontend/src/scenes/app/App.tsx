@@ -36,7 +36,7 @@ function AppScene(): JSX.Element | null {
     const { user } = useValues(userLogic)
 
     const notificationsElement = (
-        <Notifications position="top-center" zIndex={1000} />
+        <Notifications position="bottom-right" zIndex={1000} />
     )
 
     let sceneElement: JSX.Element
