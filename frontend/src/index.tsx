@@ -1,7 +1,7 @@
 import '@mantine/core/styles.css'
 import '@mantine/notifications/styles.css';
 import ReactDOM from 'react-dom/client'
-import { createTheme, Container, MantineProvider, Text, Modal } from '@mantine/core'
+import { createTheme, MantineProvider } from '@mantine/core'
 import { ModalsProvider } from '@mantine/modals';
 import { formsPlugin } from 'kea-forms'
 import { loadersPlugin } from 'kea-loaders'

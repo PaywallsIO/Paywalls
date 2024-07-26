@@ -4,7 +4,7 @@
 
 import Cookies from "js-cookie"
 import { toParams, prepareUrl, objectClean } from "./utils"
-import { UpdatePaywallRequest, LoginType, Paywall, RefreshRequest, RefreshResponse, TokenResponse, UserType } from "../types"
+import { LoginType, Paywall, RefreshRequest, RefreshResponse, TokenResponse, UserType } from "../types"
 import { jwtDecode } from 'jwt-decode'
 import { CreatePaywallForm } from "../scenes/paywalls/create/createPaywallLogic"
 import { ProjectData } from "grapesjs"
@@ -221,7 +221,7 @@ export const api = {
         async create(data: Partial<CreatePaywallForm>): Promise<Paywall> {
             return new ApiRequest().withAction('paywalls').post({ data })
         },
-        async updateContent({ id, data }: { id: string | number, data: ProjectData }): Promise<Paywall> {
+        async update({ id, data }: { id: string | number, data: ProjectData }): Promise<Paywall> {
             return new ApiRequest().withAction(`paywalls/${id}`).update({ data })
         }
     },

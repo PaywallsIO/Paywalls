@@ -1,7 +1,7 @@
-import { useValues, BindLogic, useActions } from 'kea'
+import { useValues, useActions } from 'kea'
 import { SceneExport } from '../sceneTypes'
-import { grapesjs, Editor as GrapesJsEditorType, ProjectData } from 'grapesjs'
-import GjsEditor, { useEditor, WithEditor } from '@grapesjs/react'
+import { grapesjs, Editor as GrapesJsEditorType } from 'grapesjs'
+import GjsEditor from '@grapesjs/react'
 import 'grapesjs/dist/css/grapes.min.css'
 
 import { editorLogic, EditorProps } from './editorLogic'
@@ -45,7 +45,7 @@ function Editor({ id }: EditorProps) {
                 return storePaywall(data)
             }
         })
-    };
+    }
 
     return (
         <>

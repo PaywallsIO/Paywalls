@@ -1,11 +1,8 @@
 import { kea, path, actions, defaults, props, key, afterMount, selectors, listeners } from 'kea'
-import { grapesjs } from 'grapesjs'
 
 import type { editorLogicType } from './editorLogicType'
 import { ApiError, api } from '../../lib/api'
-import { useEffect } from 'react'
 import { loaders } from 'kea-loaders'
-import { Paywall } from '../../types'
 import { notifications } from '@mantine/notifications'
 
 export type EditorProps = {
@@ -27,7 +24,7 @@ export const editorLogic = kea<editorLogicType>([
     },
     updatedPaywall: {
       storePaywall: async (data) => {
-        return await api.paywalls.updateContent({
+        return await api.paywalls.update({
           id: props.id,
           data: {
             version: values.paywall.version,

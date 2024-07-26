@@ -33,7 +33,6 @@ class PaywallSerializer(serializers.ModelSerializer):
         user = self.context['request'].user
         team = user.team()
         paywall = Paywall.objects.create(
-            name=validated_data['name'],
             created_by=user,
             team=team,
             last_modified_by=user,
