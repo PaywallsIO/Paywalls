@@ -1,5 +1,5 @@
 import { BindLogic, useMountedLogic, useValues } from 'kea'
-import { AppShell, Burger, Group, LoadingOverlay, Text } from '@mantine/core'
+import { AppShell, Burger, Container, Group, LoadingOverlay, Text } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import AppNavigation from './navigation/Navigation'
 import AppLogo from '../components/AppLogo'
@@ -36,7 +36,7 @@ function AppScene(): JSX.Element | null {
     const { user } = useValues(userLogic)
 
     const notificationsElement = (
-        <Notifications position="top-center" zIndex={1000} />
+        <Notifications position="bottom-right" zIndex={1000} />
     )
 
     let sceneElement: JSX.Element
@@ -69,7 +69,7 @@ function AppScene(): JSX.Element | null {
     }
 
     return (
-        <>
+        <Container size="responsive">
             {notificationsElement}
             <AppShell
                 header={{ height: 60 }}
@@ -95,6 +95,6 @@ function AppScene(): JSX.Element | null {
                     {wrappedSceneElement}
                 </AppShell.Main>
             </AppShell>
-        </>
+        </Container>
     )
 }

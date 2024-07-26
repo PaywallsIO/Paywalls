@@ -52,12 +52,15 @@ export function fromParamsGivenUrl(url: string): Record<string, any> {
 export function fromParams(): Record<string, any> {
     return fromParamsGivenUrl(window.location.search)
 }
+
 export function prepareUrl(url: string): string {
     function normalizeUrl(url: string): string {
         if (url.indexOf('http') !== 0) {
             if (!url.startsWith('/')) {
                 url = '/' + url
             }
+
+            url = url + (url.indexOf('?') === -1 && url[url.length - 1] !== '/' ? '/' : '')
         }
         return url
     }

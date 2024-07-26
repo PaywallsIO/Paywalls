@@ -1,7 +1,8 @@
 import '@mantine/core/styles.css'
 import '@mantine/notifications/styles.css';
 import ReactDOM from 'react-dom/client'
-import { createTheme, Container, MantineProvider, Text } from '@mantine/core'
+import { createTheme, MantineProvider } from '@mantine/core'
+import { ModalsProvider } from '@mantine/modals';
 import { formsPlugin } from 'kea-forms'
 import { loadersPlugin } from 'kea-loaders'
 import { routerPlugin } from 'kea-router'
@@ -17,9 +18,9 @@ export function Initial() {
 
   return (
     <MantineProvider theme={theme} defaultColorScheme="auto">
-      <Container size="responsive">
+      <ModalsProvider>
         <App />
-      </Container>
+      </ModalsProvider>
     </MantineProvider >
   )
 }

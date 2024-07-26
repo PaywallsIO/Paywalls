@@ -33,7 +33,7 @@ ALLOWED_HOSTS = [
 
 SIMPLE_JWT = {
     'USER_ID_FIELD': 'email',
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=1000 if TEST else 5),
 }
 
 # Application definition

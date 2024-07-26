@@ -3,7 +3,7 @@ export type Paywall = {
     name: string
     created_at: string
     updated_at: string
-    content: string
+    content: Object
 }
 
 export type LoginType = {
@@ -22,6 +22,11 @@ export type RefreshRequest = {
 
 export type RefreshResponse = {
     access: string
+}
+
+export type UpdatePaywallRequest = {
+    content: string
+    version: number
 }
 
 export type UserType = {

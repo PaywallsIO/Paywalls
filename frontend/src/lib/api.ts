@@ -6,6 +6,8 @@ import Cookies from "js-cookie"
 import { toParams, prepareUrl, objectClean } from "./utils"
 import { LoginType, Paywall, RefreshRequest, RefreshResponse, TokenResponse, UserType } from "../types"
 import { jwtDecode } from 'jwt-decode'
+import { CreatePaywallForm } from "../scenes/paywalls/create/createPaywallLogic"
+import { ProjectData } from "grapesjs"
 
 const PAGINATION_DEFAULT_MAX_PAGES = 10
 
@@ -213,6 +215,15 @@ export const api = {
         async getPaywalls(): Promise<Paywall[]> {
             return new ApiRequest().withAction('paywalls').get()
         },
+        async getPaywall(id: string | number): Promise<Paywall> {
+            return new ApiRequest().withAction(`paywalls/${id}`).get()
+        },
+        async create(data: Partial<CreatePaywallForm>): Promise<Paywall> {
+            return new ApiRequest().withAction('paywalls').post({ data })
+        },
+        async update({ id, data }: { id: string | number, data: ProjectData }): Promise<Paywall> {
+            return new ApiRequest().withAction(`paywalls/${id}`).update({ data })
+        }
     },
 
     /** Fetch data from specified URL. The result already is JSON-parsed. */

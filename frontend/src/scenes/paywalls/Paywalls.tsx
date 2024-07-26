@@ -1,10 +1,12 @@
-import { Text, Title, Loader, Center, Table, Stack, Flex, Button, Paper } from "@mantine/core";
-import { useValues, BindLogic, useActions } from 'kea'
+import { Text, Title, Loader, Center, Table, Stack, Flex, Button, Paper, Anchor } from "@mantine/core";
+import { useValues, useActions, BindLogic } from 'kea'
 import { SceneExport } from '../sceneTypes'
-import { urls } from '../urls'
+import { modals } from "@mantine/modals"
+import { CreatePaywallForm } from './create/CreatePaywallForm'
 
 import paywallsLogic from './paywallsLogic'
 import { router } from "kea-router";
+import { urls } from "../urls";
 
 export const scene: SceneExport = {
     component: Paywalls,
@@ -19,9 +21,17 @@ export function Paywalls(): JSX.Element {
     )
 }
 
+function didClickAddPaywall() {
+    modals.open({
+        title: 'New Paywall',
+        children: <CreatePaywallForm />
+    })
+}
+
 function PaywallsScene() {
     const { paywalls, paywallsLoading } = useValues(paywallsLogic)
     const { push } = useActions(router)
+
     return (
         <Stack>
             <Flex justify="space-between" align="center">
@@ -29,7 +39,7 @@ function PaywallsScene() {
                     <Title>Paywalls</Title>
                     <Text>Manage your paywalls below or add a new one</Text>
                 </Stack>
-                <Button onClick={() => push(urls.editor())}>Add Paywall</Button>
+                <Button onClick={() => didClickAddPaywall()}>Add Paywall</Button>
             </Flex>
             {
                 paywallsLoading ? (
@@ -45,8 +55,8 @@ function PaywallsScene() {
                             </Table.Thead>
                             <Table.Tbody>
                                 {paywalls.map((paywall) => (
-                                    <Table.Tr>
-                                        <Table.Td>{paywall.name}</Table.Td>
+                                    <Table.Tr key={paywall.id}>
+                                        <Table.Td><Anchor onClick={() => push(urls.editor(paywall.id))}>{paywall.name}</Anchor></Table.Td>
                                         <Table.Td>{paywall.created_at}</Table.Td>
                                     </Table.Tr>
                                 ))}

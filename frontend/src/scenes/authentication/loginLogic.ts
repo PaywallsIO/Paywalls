@@ -1,4 +1,4 @@
-import { kea, path, props } from 'kea'
+import { kea, path } from 'kea'
 import { forms } from 'kea-forms'
 import { router, encodeParams } from 'kea-router'
 import { notifications } from '@mantine/notifications'

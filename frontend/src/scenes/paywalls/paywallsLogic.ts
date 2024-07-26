@@ -1,4 +1,4 @@
-import { afterMount, kea, path, actions, defaults } from 'kea'
+import { afterMount, kea, path, actions, defaults, listeners } from 'kea'
 import { loaders } from 'kea-loaders'
 import { Paywall } from '../../types'
 
@@ -11,7 +11,7 @@ const paywallsLogic = kea<paywallsLogicType>([
         paywalls: [] as Paywall[]
     }),
     actions({
-        loadPaywalls: () => ({})
+        loadPaywalls: () => ({}),
     }),
     loaders(({ actions, values }) => ({
         paywalls: {

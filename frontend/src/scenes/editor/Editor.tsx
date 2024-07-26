@@ -1,35 +1,71 @@
-import { Text } from "@mantine/core";
-import { useValues, BindLogic } from 'kea'
+import { useValues, useActions } from 'kea'
 import { SceneExport } from '../sceneTypes'
-import grapesjs from "grapesjs"
+import { grapesjs, Editor as GrapesJsEditorType } from 'grapesjs'
+import GjsEditor from '@grapesjs/react'
 import 'grapesjs/dist/css/grapes.min.css'
-import { useEffect } from "react";
 
-import editorLogic from './editorLogic'
+import { editorLogic, EditorProps } from './editorLogic'
+import { Paywall } from '../../types'
+import { LoadingOverlay } from '@mantine/core'
 
-export const scene: SceneExport = {
-    component: Editor,
-    logic: editorLogic,
+interface EditorSceneProps {
+    id?: string
 }
 
-export function Editor(): JSX.Element {
+export const scene: SceneExport = {
+    component: EditorScene,
+    logic: editorLogic,
+    paramsToProps: ({ params: { id } }: { params: EditorSceneProps }): EditorProps => ({
+        id: id || ''
+    }),
+}
+
+export function EditorScene(): JSX.Element {
+    const { paywallId, paywallLoading } = useValues(editorLogic)
     return (
-        <BindLogic logic={editorLogic} props={{}}>
-            <EditorScene />
-        </BindLogic>
+        paywallLoading ? (
+            <LoadingOverlay visible={true} zIndex={1000} overlayProps={{ radius: 'sm', blur: 2 }} />
+        ) : (
+            <Editor id={paywallId} />
+        )
     )
 }
 
-function EditorScene() {
-    useEffect(() => {
-        grapesjs.init({
-            container: '#gjs',
-            components: '<div class="txt-red">Hello world!</div>',
-            style: '.txt-red{color: red}',
+function Editor({ id }: EditorProps) {
+    const logic = editorLogic({ id })
+    const { paywall } = useValues(logic)
+    const { storePaywall } = useActions(logic)
+
+    const onEditor = (editor: GrapesJsEditorType) => {
+        editor.Storage.add('remote', {
+            async load() {
+                return paywall
+            },
+            async store(data) {
+                return storePaywall(data)
+            }
         })
-    })
+    }
 
     return (
-        <div><div id="gjs"></div></div>
+        <>
+            <GjsEditor
+                grapesjs={grapesjs}
+                onEditor={onEditor}
+                options={{
+                    height: '100vh',
+                    storageManager: {
+                        type: 'remote',
+                        autosave: true,
+                        stepsBeforeSave: 1,
+                        options: {
+                            remote: {
+                                onLoad: result => result.content,
+                            }
+                        }
+                    },
+                }}
+            />
+        </>
     )
 }
