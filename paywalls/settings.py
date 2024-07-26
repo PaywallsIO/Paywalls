@@ -100,11 +100,11 @@ WSGI_APPLICATION = 'paywalls.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('PGDATABASE', 'paywalls'),
-        'USER': os.getenv('PGUSER', 'paywalls'),
-        'PASSWORD': os.getenv('PGPASSWORD', 'paywalls'),
-        'HOST': os.getenv('PGHOST', 'localhost'),
-        'PORT': os.getenv('PGPORT', 5432)
+        'NAME': os.environ.get('PGDATABASE', 'paywalls'),
+        'USER': os.environ.get('PGUSER', 'paywalls'),
+        'PASSWORD': os.environ.get('PGPASSWORD', 'paywalls'),
+        'HOST': os.environ.get('PGHOST', 'localhost'),
+        'PORT': os.environ.get('PGPORT', 5432)
     }
 }
 
