@@ -9,7 +9,8 @@
     "dev:vite": "vite",
     "build": "tsc && vite build",
     "prettier": "prettier --write src",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "typegen:write": "kea-typegen write --delete --show-ts-errors"
   },
   "dependencies": {
     "@grapesjs/react": "^1.0.0",
