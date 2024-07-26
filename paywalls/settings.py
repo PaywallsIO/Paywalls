@@ -12,17 +12,16 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
-import sys
+import sys, os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-q9l@j54_@c)^*dgiva_-xyev6n!tt88f03^5ey!1u4b*6&4_+^'
+SECRET_KEY = 'q9l@j54_@c)^*dgiva_-xyev6n!tt88f03^5ey!1u4b*6&4_+^'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -101,11 +100,11 @@ WSGI_APPLICATION = 'paywalls.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'paywalls',
-        'USER': 'paywalls',
-        'PASSWORD': 'paywalls',
-        'HOST': 'localhost',
-        'PORT': 5432
+        'NAME': os.getenv('POSTGRES_DB', 'paywalls'),
+        'USER': os.getenv('PGUSER', 'paywalls'),
+        'PASSWORD': os.getenv('PGPASSWORD', 'paywalls'),
+        'HOST': os.getenv('PGHOST', 'localhost'),
+        'PORT': os.getenv('PGPORT', 5432)
     }
 }
 
