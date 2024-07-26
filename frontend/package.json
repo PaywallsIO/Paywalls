@@ -8,6 +8,7 @@
     "dev:kea": "kea-typegen watch --write-paths",
     "dev:vite": "vite",
     "build": "npm run typegen:write && tsc && vite build",
+    "start": "",
     "prettier": "prettier --write src",
     "preview": "vite preview",
     "typegen:write": "kea-typegen write --delete --show-ts-errors"
