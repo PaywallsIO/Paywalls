@@ -28,6 +28,7 @@ DEBUG = True
 TEST = 'test' in sys.argv
 
 ALLOWED_HOSTS = [
+    'paywalls-production.up.railway.app'
 ]
 
 SIMPLE_JWT = {
