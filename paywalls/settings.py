@@ -24,8 +24,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'q9l@j54_@c)^*dgiva_-xyev6n!tt88f03^5ey!1u4b*6&4_+^'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-ENVIRONMENT = os.environ.get('RAILWAY_ENVIRONMENT_NAME', 'development')
-DEBUG = ENVIRONMENT != 'production'
+ENVIRONMENT = os.environ.get('ENV', 'development')
+DEBUG = ENV != 'production'
 TEST = 'test' in sys.argv
 
 ALLOWED_HOSTS = ['localhost'] + [os.environ.get('ALLOWED_HOST', '')] if os.environ.get('ALLOWED_HOST', '') else []
