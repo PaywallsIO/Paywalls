@@ -67,7 +67,7 @@ export function prepareUrl(url: string): string {
 
     let output = normalizeUrl(url)
 
-    return "http://localhost:8000" + output +
+    return import.meta.env.VITE_BACKEND_HOST + output +
         (output.indexOf('?') === -1 ? '?' : '&')
 }
 

@@ -27,11 +27,7 @@ SECRET_KEY = 'q9l@j54_@c)^*dgiva_-xyev6n!tt88f03^5ey!1u4b*6&4_+^'
 DEBUG = True
 TEST = 'test' in sys.argv
 
-ALLOWED_HOSTS = [
-    'localhost',
-    'app.paywalls.io'
-    'paywalls-production.up.railway.app'
-]
+ALLOWED_HOSTS = ['localhost'] + [os.environ.get('RAILWAY_PUBLIC_DOMAIN', '')] if os.environ.get('RAILWAY_PUBLIC_DOMAIN', '') else []
 
 SIMPLE_JWT = {
     'USER_ID_FIELD': 'email',
@@ -71,9 +67,7 @@ REST_FRAMEWORK = {
     )
 }
 
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:5173'
-]
+CORS_ALLOWED_ORIGINS = os.environ.get('ALLOWED_ORGINS', 'http://localhost:5173').split(',')
 # CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'paywalls.urls'
