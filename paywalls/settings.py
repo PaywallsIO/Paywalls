@@ -27,7 +27,7 @@ SECRET_KEY = 'q9l@j54_@c)^*dgiva_-xyev6n!tt88f03^5ey!1u4b*6&4_+^'
 DEBUG = True
 TEST = 'test' in sys.argv
 
-ALLOWED_HOSTS = ['localhost'] + [os.environ.get('RAILWAY_PUBLIC_DOMAIN', '')] if os.environ.get('RAILWAY_PUBLIC_DOMAIN', '') else []
+ALLOWED_HOSTS = ['localhost'] + [os.environ.get('ALLOWED_HOST', '')] if os.environ.get('ALLOWED_HOST', '') else []
 
 SIMPLE_JWT = {
     'USER_ID_FIELD': 'email',
