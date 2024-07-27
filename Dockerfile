@@ -20,6 +20,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the application code into the image
 COPY ./paywalls /app/paywalls
+COPY ./manage.py /app/manage.py
 
 # Expose the port the app runs on
 EXPOSE 8000
