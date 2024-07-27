@@ -67,7 +67,7 @@ REST_FRAMEWORK = {
     )
 }
 
-CORS_ALLOWED_ORIGINS = os.environ.get('ALLOWED_ORGINS', 'http://localhost:5173').split(',')
+CORS_ALLOWED_ORIGINS = os.environ.get('ALLOWED_ORIGINS', 'http://localhost:5173').split(',')
 # CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'paywalls.urls'
