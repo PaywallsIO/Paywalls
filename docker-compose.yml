@@ -1,7 +1,26 @@
 services:
+  django:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgres://paywalls:paywalls@db:5432/paywalls
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx:/etc/nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - django
+      
   db:
     image: postgres:latest
-    container_name: postgres_db
     environment:
       POSTGRES_DB: paywalls
       POSTGRES_USER: paywalls

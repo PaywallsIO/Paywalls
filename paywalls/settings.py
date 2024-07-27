@@ -28,6 +28,8 @@ DEBUG = True
 TEST = 'test' in sys.argv
 
 ALLOWED_HOSTS = [
+    'localhost',
+    'app.paywalls.io'
     'paywalls-production.up.railway.app'
 ]
 
