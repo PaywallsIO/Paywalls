@@ -20,9 +20,7 @@ export const editorLogic = kea<editorLogicType>([
     paywall: {
       loadPaywall: async () => {
         return await api.paywalls.getPaywall(values.paywallId)
-      }
-    },
-    updatedPaywall: {
+      },
       storePaywall: async (data) => {
         return await api.paywalls.update({
           id: props.id,

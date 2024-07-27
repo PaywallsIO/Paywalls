@@ -2,6 +2,7 @@ import { useValues, useActions } from 'kea'
 import { SceneExport } from '../sceneTypes'
 import { grapesjs, Editor as GrapesJsEditorType } from 'grapesjs'
 import GjsEditor from '@grapesjs/react'
+import plugin from 'grapesjs-preset-webpage'
 import 'grapesjs/dist/css/grapes.min.css'
 
 import { editorLogic, EditorProps } from './editorLogic'
@@ -21,9 +22,9 @@ export const scene: SceneExport = {
 }
 
 export function EditorScene(): JSX.Element {
-    const { paywallId, paywallLoading } = useValues(editorLogic)
+    const { paywallId, paywall } = useValues(editorLogic)
     return (
-        paywallLoading ? (
+        !paywall ? (
             <LoadingOverlay visible={true} zIndex={1000} overlayProps={{ radius: 'sm', blur: 2 }} />
         ) : (
             <Editor id={paywallId} />
@@ -53,6 +54,12 @@ function Editor({ id }: EditorProps) {
                 grapesjs={grapesjs}
                 onEditor={onEditor}
                 options={{
+                    plugins: [plugin],
+                    pluginsOpts: {
+                        ['grapesjs-preset-webpage']: {
+
+                        }
+                    },
                     height: '100vh',
                     storageManager: {
                         type: 'remote',

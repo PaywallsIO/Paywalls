@@ -101,7 +101,7 @@ DATABASES = {
         'USER': os.environ.get('PGUSER', 'paywalls'),
         'PASSWORD': os.environ.get('PGPASSWORD', 'paywalls'),
         'HOST': os.environ.get('PGHOST', 'localhost'),
-        'PORT': os.environ.get('PGPORT', 5432)
+        'PORT': os.environ.get('PGPORT', '5432'),
     }
 }
 

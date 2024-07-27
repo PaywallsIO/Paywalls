@@ -2,5 +2,7 @@
 
 set -e
 
+export VITE_BACKEND_HOST="http://localhost:8000"
+
 cd frontend
 npm run dev
