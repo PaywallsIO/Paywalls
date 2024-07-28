@@ -1,4 +1,4 @@
-import { IconSwitchHorizontal, IconLogout, IconReceipt2, IconUsers, IconSettings, IconChartBar, IconLanguage, IconSpeakerphone, IconTemplate, IconHome, IconChevronDown } from '@tabler/icons-react'
+import { IconSwitchHorizontal, IconLogout, IconReceipt2, IconUsers, IconSettings, IconChartBar, IconLanguage, IconSpeakerphone, IconTemplate, IconHome, IconChevronDown, IconShoppingCart } from '@tabler/icons-react'
 import { Group, Title, Avatar, Flex, UnstyledButton, Center, Divider } from '@mantine/core'
 import classes from './Navigation.module.css'
 import { A } from 'kea-router';
@@ -13,7 +13,7 @@ const tabs = [
     { link: '', label: 'Templates', icon: IconTemplate },
     { link: '', label: 'Campaigns', icon: IconSpeakerphone },
     { link: '', label: 'Charts', icon: IconChartBar },
-    { link: '', label: 'Products', icon: IconReceipt2 },
+    { link: '', label: 'Products', icon: IconShoppingCart },
     { link: '', label: 'People', icon: IconUsers },
     { link: '', label: 'Localization', icon: IconLanguage },
     { link: '', label: 'Settings', icon: IconSettings }

@@ -7,9 +7,14 @@ import { formsPlugin } from 'kea-forms'
 import { loadersPlugin } from 'kea-loaders'
 import { routerPlugin } from 'kea-router'
 import { resetContext } from 'kea'
-import { App } from './scenes/app/App';
+import { App } from './scenes/app/App'
+import posthog from 'posthog-js'
+import { posthogKey, sentryDsn } from './lib/constants';
+import { useEffect } from "react"
+import * as Sentry from "@sentry/react"
 
-resetContext({ plugins: [loadersPlugin, formsPlugin, routerPlugin] })
+initMonitoring()
+initKea()
 
 export function Initial() {
   const theme = createTheme({
@@ -29,3 +34,36 @@ ReactDOM.createRoot(
   document.getElementById('initial') as HTMLElement
 )
   .render(<Initial />)
+
+
+function initMonitoring() {
+  sentryDsn && Sentry.init({
+    dsn: sentryDsn,
+    integrations: [
+      Sentry.replayIntegration(),
+    ],
+
+    // Set tracesSampleRate to 1.0 to capture 100%
+    // of transactions for tracing.
+    tracesSampleRate: 1.0,
+
+    // Set `tracePropagationTargets` to control for which URLs trace propagation should be enabled
+    tracePropagationTargets: [/^\//, /^https:\/\/yourserver\.io\/api/],
+
+    // Capture Replay for 10% of all sessions,
+    // plus for 100% of sessions with an error
+    replaysSessionSampleRate: 0.1,
+    replaysOnErrorSampleRate: 1.0,
+  });
+
+  posthogKey && posthog.init(posthogKey,
+    {
+      api_host: 'https://us.i.posthog.com',
+      person_profiles: 'always'
+    }
+  )
+}
+
+function initKea() {
+  resetContext({ plugins: [loadersPlugin, formsPlugin, routerPlugin] })
+}

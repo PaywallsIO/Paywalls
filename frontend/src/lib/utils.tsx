@@ -1,5 +1,6 @@
 import dayjs from 'dayjs'
 import equal from 'fast-deep-equal'
+import { viteBackendHost } from './constants'
 
 export function toParams(obj: Record<string, any>, explodeArrays: boolean = false): string {
     if (!obj) {
@@ -67,7 +68,7 @@ export function prepareUrl(url: string): string {
 
     let output = normalizeUrl(url)
 
-    return import.meta.env.VITE_BACKEND_HOST + output +
+    return viteBackendHost + output +
         (output.indexOf('?') === -1 ? '?' : '&')
 }
 

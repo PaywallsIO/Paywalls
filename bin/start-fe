@@ -3,6 +3,7 @@
 set -e
 
 export VITE_BACKEND_HOST="http://localhost:8000"
+# export VITE_POSTHOG_KEY="phc_Lne7vAGtnbNLW8ffC3opmy2ZmJbdrWF0h9B06SKfKOj"
 
 cd frontend
 npm run dev

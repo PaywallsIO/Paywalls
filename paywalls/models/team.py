@@ -13,6 +13,6 @@ class Team(TimeStampedModel):
 
 @receiver(models.signals.post_save, sender=Team)
 def create_api_token(sender, instance, created, **kwargs):
-    if created and not settings.TEST and not instance.api_token:
+    if created and not settings.DEBUG and not instance.api_token:
         instance.api_token = secrets.token_urlsafe(64)
         instance.save()

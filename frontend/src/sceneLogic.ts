@@ -7,6 +7,7 @@ import type { sceneLogicType } from './sceneLogicType'
 import { userLogic } from './scenes/userLogic'
 import { handleLoginRedirect } from './scenes/authentication/loginLogic'
 import { urls } from './scenes/urls'
+import posthog from 'posthog-js'
 
 export const sceneLogic = kea<sceneLogicType>([
   props(
@@ -213,6 +214,8 @@ export const sceneLogic = kea<sceneLogicType>([
       actions.setScene(scene, params, clickedLink || wasNotLoaded)
     },
     setScene: ({ scene, scrollToTop }, _, __, previousState) => {
+      posthog.capture('$pageview')
+
       // if we clicked on a link, scroll to top
       const previousScene = selectors.scene(previousState)
       if (scrollToTop && scene !== previousScene) {

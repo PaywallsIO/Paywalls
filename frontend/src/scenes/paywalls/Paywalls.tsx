@@ -34,13 +34,13 @@ function PaywallsScene() {
 
     return (
         <Stack>
-            <Flex justify="space-between" align="center">
-                <Stack>
+            <Stack>
+                <Flex justify="space-between" align="center">
                     <Title>Paywalls</Title>
-                    <Text>Manage your paywalls below or add a new one</Text>
-                </Stack>
-                <Button onClick={() => didClickAddPaywall()}>Add Paywall</Button>
-            </Flex>
+                    <Button onClick={() => didClickAddPaywall()}>Add Paywall</Button>
+                </Flex>
+                <Text>Manage your paywalls below or add a new one</Text>
+            </Stack>
             {
                 paywallsLoading ? (
                     <Center style={{ height: '100vh' }}><Loader color="blue" /></Center>

@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+from paywalls.helpers.sentry import init_sentry
 import sys, os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,14 +26,15 @@ SECRET_KEY = 'q9l@j54_@c)^*dgiva_-xyev6n!tt88f03^5ey!1u4b*6&4_+^'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('ENV', 'development') != 'production'
-TEST = 'test' in sys.argv
 
 ALLOWED_HOSTS = ['localhost'] + [os.environ.get('ALLOWED_HOST', '')] if os.environ.get('ALLOWED_HOST', '') else []
 
 SIMPLE_JWT = {
     'USER_ID_FIELD': 'email',
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=1000 if TEST else 5),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=1000 if DEBUG else 5),
 }
+
+SENTRY_DSN = os.environ.get('SENTRY_DSN', '')
 
 # Application definition
 
@@ -149,3 +151,5 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'paywalls.User'
+
+init_sentry()
