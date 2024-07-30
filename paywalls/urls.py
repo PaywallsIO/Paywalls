@@ -15,7 +15,6 @@ api_router = DefaultRouter()
 api_router.register(r'paywalls', PaywallViewSet, basename='paywalls')
 api_router.register(r'users', UserViewSet, basename='users')
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(api_router.urls)),

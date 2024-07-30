@@ -4,6 +4,8 @@ import type { userLogicType } from './userLogicType'
 import { UserType } from '../types'
 import { ApiConfig, api } from '../lib/api'
 import { notifications } from '@mantine/notifications'
+import { router } from 'kea-router'
+import { urls } from './urls'
 
 export const userLogic = kea<userLogicType>([
   path(['scenes', 'app', 'userLogic']),
@@ -21,6 +23,7 @@ export const userLogic = kea<userLogicType>([
         message: 'See you again soon 👋',
         radius: 'md',
       })
+      router.actions.push(urls.login())
     }
   })),
   loaders(({ actions }) => ({

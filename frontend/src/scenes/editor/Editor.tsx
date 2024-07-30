@@ -2,12 +2,18 @@ import { useValues, useActions } from 'kea'
 import { SceneExport } from '../sceneTypes'
 import { grapesjs, Editor as GrapesJsEditorType } from 'grapesjs'
 import GjsEditor from '@grapesjs/react'
-import plugin from 'grapesjs-preset-webpage'
-import 'grapesjs/dist/css/grapes.min.css'
+import grapesjsPresetWebpage from 'grapesjs-preset-webpage'
+import grapesjsBlocksBasic from 'grapesjs-blocks-basic'
+import grapesjsStyleBg from 'grapesjs-style-bg'
+// @ts-ignore
+import grapesjsTabs from 'grapesjs-tabs'
 
 import { editorLogic, EditorProps } from './editorLogic'
-import { Paywall } from '../../types'
 import { LoadingOverlay } from '@mantine/core'
+
+import 'grapesjs/dist/css/grapes.min.css'
+import 'grapick/dist/grapick.min.css';
+import './editor.scss'
 
 interface EditorSceneProps {
     id?: string
@@ -54,12 +60,19 @@ function Editor({ id }: EditorProps) {
                 grapesjs={grapesjs}
                 onEditor={onEditor}
                 options={{
-                    plugins: [plugin],
+                    plugins: [
+                        grapesjsBlocksBasic,
+                        grapesjsTabs,
+                        grapesjsStyleBg,
+                        grapesjsPresetWebpage
+                    ],
                     pluginsOpts: {
                         ['grapesjs-preset-webpage']: {
 
                         }
                     },
+                    selectorManager: { componentFirst: true },
+
                     height: '100vh',
                     storageManager: {
                         type: 'remote',
