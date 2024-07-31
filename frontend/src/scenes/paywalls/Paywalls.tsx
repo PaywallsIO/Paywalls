@@ -39,7 +39,7 @@ function PaywallsScene() {
                     <Title>Paywalls</Title>
                     <Button onClick={() => didClickAddPaywall()}>Add Paywall</Button>
                 </Flex>
-                <Text>Manage your paywalls below or add a new one</Text>
+                <Text size="sm">Paywalls are configurable screens that you can build and present to users using triggers in your app. They can be customized and tested to find the best combinations.</Text>
             </Stack>
             {
                 paywallsLoading ? (

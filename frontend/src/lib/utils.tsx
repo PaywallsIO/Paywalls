@@ -56,20 +56,15 @@ export function fromParams(): Record<string, any> {
 
 export function prepareUrl(url: string): string {
     function normalizeUrl(url: string): string {
-        if (url.indexOf('http') !== 0) {
-            if (!url.startsWith('/')) {
-                url = '/' + url
-            }
-
-            url = url + (url.indexOf('?') === -1 && url[url.length - 1] !== '/' ? '/' : '')
+        if (url.indexOf('http') !== 0 && !url.startsWith('/')) {
+            return url = '/' + url
         }
         return url
     }
 
     let output = normalizeUrl(url)
 
-    return viteBackendHost + output +
-        (output.indexOf('?') === -1 ? '?' : '&')
+    return viteBackendHost + output
 }
 
 /** Compare objects deeply. */

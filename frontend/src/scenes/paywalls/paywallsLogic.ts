@@ -1,9 +1,11 @@
 import { afterMount, kea, path, actions, defaults, listeners } from 'kea'
 import { loaders } from 'kea-loaders'
 import { Paywall } from '../../types'
-
+import { apiClient } from '../../lib/api'
+import { PaywallsApiClient } from './data/PaywallsApiClient'
 import type { paywallsLogicType } from './paywallsLogicType'
-import { api } from '../../lib/api'
+
+const paywallsApiClient = new PaywallsApiClient(apiClient)
 
 const paywallsLogic = kea<paywallsLogicType>([
     path(['scenes', 'paywalls', 'paywallsLogic']),
@@ -13,10 +15,10 @@ const paywallsLogic = kea<paywallsLogicType>([
     actions({
         loadPaywalls: () => ({}),
     }),
-    loaders(({ actions, values }) => ({
+    loaders(({ }) => ({
         paywalls: {
             loadPaywalls: async () => {
-                return await api.paywalls.getPaywalls()
+                return await paywallsApiClient.getPaywalls()
             }
         }
     })),
