@@ -23,22 +23,22 @@ export class ApiClient implements ApiClientInterface {
 
     async get(url: string, options?: ApiMethodOptions): Promise<any> {
         url = prepareUrl(url)
-        return await axios.get(url, { headers: objectClean(options?.headers ?? {}) })
+        return (await axios.get(url, { headers: objectClean(options?.headers ?? {}) })).data
     }
 
     async post(url: string, data?: any, options?: ApiMethodOptions): Promise<any> {
         url = prepareUrl(url)
-        return await axios.post(url, data, { headers: objectClean(options?.headers ?? {}) })
+        return (await axios.post(url, data, { headers: objectClean(options?.headers ?? {}) })).data
     }
 
     async patch(url: string, data?: any, options?: ApiMethodOptions): Promise<any> {
         url = prepareUrl(url)
-        return await axios.patch(url, data, { headers: objectClean(options?.headers ?? {}) })
+        return (await axios.patch(url, data, { headers: objectClean(options?.headers ?? {}) })).data
     }
 
     async delete(url: string, options?: ApiMethodOptions): Promise<any> {
         url = prepareUrl(url)
-        return await axios.delete(url, { headers: objectClean(options?.headers ?? {}) })
+        return (await axios.delete(url, { headers: objectClean(options?.headers ?? {}) })).data
     }
 }
 

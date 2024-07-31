@@ -10,6 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 use App\Events\UserCreated;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -43,14 +44,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Team::class, TeamUser::class);
     }
 
-    public function currentTeam(): BelongsTo {
-        return $this->belongsTo(Team::class, 'current_team_id');
+    public function paywalls(): HasMany {
+        return $this->hasMany(Paywall::class);
     }
 
-    public function team(): Team {
-        if (!$this->currentTeam) {
-            $this->currentTeam()->save($this->teams()->first());
-        }
-        return $this->currentTeam;
+    public function team(): BelongsTo {
+        return $this->belongsTo(Team::class, 'current_team_id');
     }
 }

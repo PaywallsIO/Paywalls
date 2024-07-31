@@ -18,5 +18,8 @@ class NewUserSetup
         $team = $user->teams()->create([
             'name' => "{$event->user->name}'s Team",
         ]);
+
+        $user->current_team_id = $team->id;
+        $user->save();
     }
 }

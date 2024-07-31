@@ -15,6 +15,10 @@ class Paywall extends Model
         'content'
     ];
 
+    protected $casts = [
+        'content' => 'json'
+    ];
+
     public function team(): BelongsTo {
         return $this->belongsTo(Team::class);
     }

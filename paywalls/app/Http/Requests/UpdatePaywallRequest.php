@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Paywall;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class UpdatePaywallRequest extends FormRequest
 {
@@ -11,7 +14,7 @@ class UpdatePaywallRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +25,9 @@ class UpdatePaywallRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'string|max:255',
+            'content' => 'array',
+            'version' => 'required|integer|min:0',
         ];
     }
 }

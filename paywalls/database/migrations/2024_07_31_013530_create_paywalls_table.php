@@ -37,7 +37,6 @@ return new class extends Migration
                 ->onDelete('cascade');
             $table->jsonb('content')->default('{}');
             $table->integer('version')->default(0);
-            $table->dateTime('last_modified_at')->nullable();
             $table->foreignId('last_modified_by')
                 ->nullable()
                 ->constrained()

@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePaywallRequest;
 use App\Http\Requests\UpdatePaywallRequest;
 use App\Models\Paywall;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class PaywallController extends Controller
 {
@@ -17,19 +20,13 @@ class PaywallController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
-    public function store(StorePaywallRequest $request)
+    public function store(StorePaywallRequest $request): Paywall
     {
-        //
+        return $request->user()->team->paywalls()->create([
+            'name' => $request->validated('name')
+        ]);
     }
 
     /**
@@ -37,15 +34,7 @@ class PaywallController extends Controller
      */
     public function show(Paywall $paywall)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Paywall $paywall)
-    {
-        //
+        return $paywall;
     }
 
     /**
@@ -53,7 +42,20 @@ class PaywallController extends Controller
      */
     public function update(UpdatePaywallRequest $request, Paywall $paywall)
     {
-        //
+        $request->validate([
+            'version' => function ($attribute, $submittedVersion, $fail) use ($paywall) {
+                if ($submittedVersion != $paywall->version) {
+                    $fail('Paywall was edited by someone else. Your edits would override those edits.');
+                }
+            }
+        ]);
+
+        DB::transaction(function () use ($request, $paywall) {
+            $paywall->lastModifiedBy()->associate($request->user());
+            $paywall->update($request->validated());
+            $paywall->increment('version');
+        });
+        return $paywall;
     }
 
     /**

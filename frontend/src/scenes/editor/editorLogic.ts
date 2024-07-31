@@ -40,7 +40,7 @@ export const editorLogic = kea<editorLogicType>([
       notifications.show({
         color: 'red',
         title: 'Error saving paywall',
-        message: error.errorObject.detail,
+        message: error.errorObject.response.data.message || 'Something went wrong. Please try again.',
         radius: 'md',
       })
     }
