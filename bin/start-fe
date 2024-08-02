@@ -2,9 +2,7 @@
 
 set -e
 
-export VITE_BACKEND_HOST="http://localhost:8000"
-# export VITE_POSTHOG_KEY="phc_Lne7vAGtnbNLW8ffC3opmy2ZmJbdrWF0h9B06SKfKOj"
-# export VITE_SENTRY_FE_DSN="https://4787cf77277e4eb1b4707fb44a921589@o4507500750438400.ingest.us.sentry.io/4507676598796288"
+export VITE_BACKEND_HOST="http://localhost"
 
 cd frontend
 npm run dev

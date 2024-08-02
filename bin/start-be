@@ -3,4 +3,4 @@
 set -e
 
 cd paywalls
-php artisan serve
+./vendor/bin/sail up -d

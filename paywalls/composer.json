@@ -12,12 +12,13 @@
         "laravel/fortify": "^1.22",
         "laravel/framework": "^11.9",
         "laravel/sanctum": "^4.0",
-        "laravel/tinker": "^2.9"
+        "laravel/tinker": "^2.9",
+        "sentry/sentry-laravel": "^4.7"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
         "laravel/pint": "^1.17",
-        "laravel/sail": "^1.26",
+        "laravel/sail": "^1.31",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.0",
         "phpunit/phpunit": "^11.0.1"
