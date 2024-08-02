@@ -5,8 +5,10 @@ import { notifications } from '@mantine/notifications'
 
 import type { loginLogicType } from './loginLogicType'
 import { userLogic } from '../userLogic'
-import { api, ApiConfig } from '../../lib/api'
-import { LoginType } from '../../types'
+import { apiClient } from '../../lib/api'
+import { AuthApiClient, LoginRequest, LoginResponse } from './data/AuthApiClient'
+
+const authApiClient = new AuthApiClient(apiClient)
 
 const loginLogic = kea<loginLogicType>([
   path(['scenes', 'auth', 'loginLogicType']),
@@ -15,15 +17,15 @@ const loginLogic = kea<loginLogicType>([
       defaults: {
         email: '',
         password: '',
-      } as LoginType,
-      errors: ({ email, password }: LoginType) => ({
+      } as LoginRequest,
+      errors: ({ email, password }: LoginRequest) => ({
         email: email ? (/^\S+@\S+$/.test(email) ? null : 'Please enter a valid email') : 'Please enter an email',
         password: password.length <= 6 ? 'Password should include at least 6 characters' : null,
       }),
       submit: async ({ email, password }) => {
         try {
-          const response = await api.auth.login({ email, password })
-          ApiConfig.persistToken(response)
+          const csrfToken = await authApiClient.csrfToken()
+          const response = await authApiClient.login({ email, password })
 
           userLogic.actions.loadUser()
 

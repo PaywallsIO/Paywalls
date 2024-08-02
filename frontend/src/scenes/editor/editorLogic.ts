@@ -1,9 +1,12 @@
 import { kea, path, actions, defaults, props, key, afterMount, selectors, listeners } from 'kea'
 
 import type { editorLogicType } from './editorLogicType'
-import { ApiError, api } from '../../lib/api'
+import { apiClient } from '../../lib/api'
 import { loaders } from 'kea-loaders'
 import { notifications } from '@mantine/notifications'
+import { PaywallsApiClient } from '../paywalls/data/PaywallsApiClient'
+
+const paywallsApiClient = new PaywallsApiClient(apiClient)
 
 export type EditorProps = {
   id: string | number
@@ -19,10 +22,10 @@ export const editorLogic = kea<editorLogicType>([
   loaders(({ props, values }) => ({
     paywall: {
       loadPaywall: async () => {
-        return await api.paywalls.getPaywall(values.paywallId)
+        return await paywallsApiClient.getPaywall(values.paywallId)
       },
       storePaywall: async (data) => {
-        return await api.paywalls.update({
+        return await paywallsApiClient.update({
           id: props.id,
           data: {
             version: values.paywall.version,
@@ -37,7 +40,7 @@ export const editorLogic = kea<editorLogicType>([
       notifications.show({
         color: 'red',
         title: 'Error saving paywall',
-        message: (error.errorObject as ApiError).detail,
+        message: error.errorObject.response.data.message || 'Something went wrong. Please try again.',
         radius: 'md',
       })
     }

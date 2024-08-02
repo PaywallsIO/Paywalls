@@ -2,13 +2,12 @@ import { kea, path } from 'kea'
 import { forms } from 'kea-forms'
 import type { createPaywallLogicType } from './createPaywallLogicType'
 import { notifications } from '@mantine/notifications'
-import { api } from '../../../lib/api'
 import { router } from 'kea-router'
 import { modals } from '@mantine/modals'
+import { CreatePaywallRequest, PaywallsApiClient } from '../data/PaywallsApiClient'
+import { apiClient } from '../../../lib/api'
 
-export type CreatePaywallForm = {
-    name: string
-}
+const paywallsApiClient = new PaywallsApiClient(apiClient)
 
 const createPaywallLogic = kea<createPaywallLogicType>([
     path(['scenes', 'paywalls', 'create', 'createPaywallLogicType']),
@@ -16,13 +15,13 @@ const createPaywallLogic = kea<createPaywallLogicType>([
         createPaywallForm: {
             defaults: {
                 name: '',
-            } as CreatePaywallForm,
-            errors: ({ name }: CreatePaywallForm) => ({
+            } as CreatePaywallRequest,
+            errors: ({ name }: CreatePaywallRequest) => ({
                 password: !name ? 'A name is required' : null,
             }),
             submit: async ({ name }) => {
                 try {
-                    const response = await api.paywalls.create({ name })
+                    const response = await paywallsApiClient.create({ name })
 
                     modals.closeAll()
                     actions.resetCreatePaywallForm()

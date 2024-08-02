@@ -1,5 +1,6 @@
 import { BindLogic, useMountedLogic, useValues } from 'kea'
-import { AppShell, Burger, Container, Group, LoadingOverlay, Text } from '@mantine/core'
+import { Menu, Center, AppShell, Burger, Container, Flex, Group, LoadingOverlay, Avatar, Combobox } from '@mantine/core'
+import { IconChevronDown, IconChevronsDown } from '@tabler/icons-react'
 import { useDisclosure } from '@mantine/hooks'
 import AppNavigation from './navigation/Navigation'
 import AppLogo from '../components/AppLogo'
@@ -8,8 +9,14 @@ import { sceneLogic } from '../../sceneLogic'
 import { appScenes } from '../appScenes'
 import { appLogic } from './appLogic'
 import { Notifications } from '@mantine/notifications'
+import classes from './App.module.css';
 
 import { userLogic } from '../userLogic'
+import { UserButton } from '../components/UserButton'
+import ProjectsCombobox from '../projects/ProjectsCombobox'
+import { urls } from '../urls'
+import AppLayout from './layouts/AppLayout'
+import PlainLayout from './layouts/PlainLayout'
 
 const Spinner = () => (
     <LoadingOverlay visible={true} zIndex={1000} overlayProps={{ radius: 'sm', blur: 2 }} />
@@ -31,13 +38,8 @@ export function App(): JSX.Element | null {
 
 function AppScene(): JSX.Element | null {
     useMountedLogic(sceneLogic({ scenes: appScenes }))
-    const [opened, { toggle }] = useDisclosure()
     const { activeScene, activeLoadedScene, sceneParams, params, loadedScenes, sceneConfig } = useValues(sceneLogic)
     const { user } = useValues(userLogic)
-
-    const notificationsElement = (
-        <Notifications position="bottom-right" zIndex={1000} />
-    )
 
     let sceneElement: JSX.Element
     if (activeScene && activeScene in loadedScenes) {
@@ -47,7 +49,7 @@ function AppScene(): JSX.Element | null {
         sceneElement = <Spinner />
     }
 
-    const wrappedSceneElement = (
+    const currentSceneElement = (
         <>
             {activeLoadedScene?.logic ? (
                 <BindLogic logic={activeLoadedScene.logic} props={activeLoadedScene.paramsToProps?.(sceneParams) || {}}>
@@ -61,40 +63,15 @@ function AppScene(): JSX.Element | null {
 
     if (!user || sceneConfig?.layout == 'plain') {
         return (
-            <>
-                {wrappedSceneElement}
-                {notificationsElement}
-            </>
+            <PlainLayout>
+                {currentSceneElement}
+            </PlainLayout>
         )
     }
 
     return (
-        <Container size="responsive">
-            {notificationsElement}
-            <AppShell
-                header={{ height: 60 }}
-                navbar={{
-                    width: 300,
-                    breakpoint: 'sm',
-                    collapsed: { mobile: !opened },
-                }}
-                padding="md"
-            >
-                <AppShell.Header>
-                    <Group h="100%" px="md">
-                        <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-                        <AppLogo />
-                    </Group>
-                </AppShell.Header>
-
-                <AppShell.Navbar>
-                    <AppNavigation />
-                </AppShell.Navbar>
-
-                <AppShell.Main>
-                    {wrappedSceneElement}
-                </AppShell.Main>
-            </AppShell>
-        </Container>
+        <AppLayout>
+            {currentSceneElement}
+        </AppLayout>
     )
 }

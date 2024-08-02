@@ -6,6 +6,7 @@ import { urls } from '../../urls';
 import { sceneLogic } from '../../../sceneLogic';
 import { useActions, useValues } from 'kea';
 import { userLogic } from '../../userLogic';
+import ProjectsCombobox from '../../projects/ProjectsCombobox';
 
 const tabs = [
     { link: urls.default(), label: 'Dashboard', icon: IconHome },
@@ -39,20 +40,22 @@ export default function AppNavigation() {
     return (
         <nav className={classes.navbar}>
             <div className={classes.navbarHeader}>
-                <UnstyledButton component="button" w={"100%"} variant="transparent">
-                    <Flex gap={"xs"}>
-                        <Group w={"100%"}>
-                            <Avatar
-                                src="https://www.appatar.io/com.legacybits.ProgressPicRelease/small"
-                                size="md"
-                                radius="md"
-                            />
-                            <Title order={5}>ProgressPic</Title>
-                        </Group>
+                <ProjectsCombobox>
+                    <UnstyledButton component="button" w={"100%"} variant="transparent">
+                        <Flex gap={"xs"}>
+                            <Group w={"100%"}>
+                                <Avatar
+                                    src="https://www.appatar.io/com.legacybits.ProgressPicRelease/small"
+                                    size="md"
+                                    radius="md"
+                                />
+                                <Title order={5}>ProgressPic</Title>
+                            </Group>
 
-                        <Center><IconChevronDown color="var(--mantine-color-gray-filled)" /></Center>
-                    </Flex>
-                </UnstyledButton>
+                            <Center><IconChevronDown color="var(--mantine-color-gray-filled)" /></Center>
+                        </Flex>
+                    </UnstyledButton>
+                </ProjectsCombobox>
             </div>
 
             <Divider mt={"lg"} />

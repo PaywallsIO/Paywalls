@@ -2,10 +2,13 @@ import { actions, kea, path, afterMount, listeners, defaults } from 'kea'
 import { loaders } from 'kea-loaders'
 import type { userLogicType } from './userLogicType'
 import { UserType } from '../types'
-import { ApiConfig, api } from '../lib/api'
+import { apiClient } from '../lib/api'
+import { AuthApiClient } from './authentication/data/AuthApiClient'
 import { notifications } from '@mantine/notifications'
 import { router } from 'kea-router'
 import { urls } from './urls'
+
+const authApiClient = new AuthApiClient(apiClient)
 
 export const userLogic = kea<userLogicType>([
   path(['scenes', 'app', 'userLogic']),
@@ -15,9 +18,10 @@ export const userLogic = kea<userLogicType>([
     logout: true
   }),
   listeners(({ actions }) => ({
-    logout: () => {
-      ApiConfig.clearToken()
+    logout: async () => {
+      await authApiClient.logout()
       actions.loadUserSuccess(null)
+
       notifications.show({
         title: 'You\'ve been logged out',
         message: 'See you again soon 👋',
@@ -32,7 +36,7 @@ export const userLogic = kea<userLogicType>([
       {
         loadUser: async () => {
           try {
-            return await api.auth.currentUser()
+            return await authApiClient.currentUser()
           } catch (error: any) {
             actions.loadUserFailure(error.message)
           }
