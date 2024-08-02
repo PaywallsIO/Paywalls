@@ -55,7 +55,7 @@ const AppLayout = ({ children }: AppLayoutProps): JSX.Element => {
                             <Button
                                 key={'customers'}
                                 onClick={() => router.actions.push(urls.default())}
-                                {...(activeScene === Scene.Customers ? { variant: 'transparent' } : { variant: 'transparent', color: 'gray.4' })}
+                                {...(false ? { variant: 'transparent' } : { variant: 'transparent', color: 'gray.4' })}
                             >
                                 Customers
                             </Button>
@@ -63,7 +63,7 @@ const AppLayout = ({ children }: AppLayoutProps): JSX.Element => {
                                 <Button
                                     key={'customers'}
                                     onClick={() => router.actions.push(urls.default())}
-                                    {...(activeScene === Scene.Projects ? { variant: 'transparent' } : { variant: 'transparent', color: 'gray.4' })}
+                                    {...(false ? { variant: 'transparent' } : { variant: 'transparent', color: 'gray.4' })}
                                 >
                                     <Group gap={3}>
                                         Projects
