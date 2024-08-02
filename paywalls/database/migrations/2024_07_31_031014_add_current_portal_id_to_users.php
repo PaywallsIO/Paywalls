@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('current_team_id')
+            $table->foreignId('current_portal_id')
                 ->nullable()
                 ->onDelete('set null');
         });
@@ -24,7 +24,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('current_team_id');
+            $table->dropColumn('current_portal_id');
         });
     }
 };

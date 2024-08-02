@@ -7,6 +7,7 @@ import { CreatePaywallForm } from './create/CreatePaywallForm'
 import paywallsLogic from './paywallsLogic'
 import { router } from "kea-router";
 import { urls } from "../urls";
+import { formatDate } from "../../lib/date";
 
 export const scene: SceneExport = {
     component: Paywalls,
@@ -44,7 +45,7 @@ function PaywallsScene() {
             {
                 paywallsLoading ? (
                     <Center style={{ height: '100vh' }}><Loader color="blue" /></Center>
-                ) : paywalls.length ? (
+                ) : paywalls.data.length ? (
                     <Paper radius="md" withBorder style={{ overflow: 'hidden' }}>
                         <Table>
                             <Table.Thead>
@@ -54,10 +55,10 @@ function PaywallsScene() {
                                 </Table.Tr>
                             </Table.Thead>
                             <Table.Tbody>
-                                {paywalls.map((paywall) => (
+                                {paywalls.data.map((paywall) => (
                                     <Table.Tr key={paywall.id}>
                                         <Table.Td><Anchor onClick={() => push(urls.editor(paywall.id))}>{paywall.name}</Anchor></Table.Td>
-                                        <Table.Td>{paywall.created_at}</Table.Td>
+                                        <Table.Td>{formatDate(paywall.created_at)}</Table.Td>
                                     </Table.Tr>
                                 ))}
                             </Table.Tbody>

@@ -12,15 +12,16 @@ class Paywall extends Model
 
     protected $fillable = [
         'name',
-        'content'
+        'content',
     ];
 
     protected $casts = [
-        'content' => 'json'
+        'content' => 'json',
     ];
 
-    public function team(): BelongsTo {
-        return $this->belongsTo(Team::class);
+    public function portal(): BelongsTo
+    {
+        return $this->belongsTo(Portal::class);
     }
 
     public function lastModifiedBy(): BelongsTo

@@ -9,4 +9,5 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::resource('paywalls', App\Http\Controllers\PaywallController::class);
+    Route::resource('projects', App\Http\Controllers\ProjectController::class);
 });

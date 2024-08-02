@@ -1,8 +1,8 @@
 export type Paywall = {
     id: number
     name: string
-    created_at: string
-    updated_at: string
+    created_at: Date
+    updated_at: Date
     content: Object
 }
 
@@ -16,11 +16,20 @@ export type UpdatePaywallRequest = {
     version: number
 }
 
+export type Portal = {
+    id: number
+    name: string
+    created_at: Date
+    updated_at: Date
+}
+
 export type UserType = {
     id: number
+    portal: Portal
     email: string
     name: string
     email_verified_at?: string
-    created_at: string
-    updated_at?: string
+    avatar_url?: string
+    created_at: Date
+    updated_at?: Date
 }

@@ -3,14 +3,14 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 use App\Events\UserCreated;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
@@ -25,6 +25,16 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'two_factor_recovery_codes',
+        'two_factor_secret',
+    ];
+
+    protected $with = [
+        'portal',
+    ];
+
+    protected $appends = [
+        'avatar_url',
     ];
 
     protected $dispatchesEvents = [
@@ -39,16 +49,23 @@ class User extends Authenticatable
         ];
     }
 
-    public function teams(): BelongsToMany
+    public function portals(): BelongsToMany
     {
-        return $this->belongsToMany(Team::class, TeamUser::class);
+        return $this->belongsToMany(Portal::class, PortalUser::class);
     }
 
-    public function paywalls(): HasMany {
+    public function paywalls(): HasMany
+    {
         return $this->hasMany(Paywall::class);
     }
 
-    public function team(): BelongsTo {
-        return $this->belongsTo(Team::class, 'current_team_id');
+    public function portal(): BelongsTo
+    {
+        return $this->belongsTo(Portal::class, 'current_portal_id');
+    }
+
+    public function getAvatarUrlAttribute(): ?string
+    {
+        return 'https://www.gravatar.com/avatar/'.md5(strtolower(trim($this->email)));
     }
 }

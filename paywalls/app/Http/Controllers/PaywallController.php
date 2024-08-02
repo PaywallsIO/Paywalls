@@ -7,16 +7,15 @@ use App\Http\Requests\UpdatePaywallRequest;
 use App\Models\Paywall;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class PaywallController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        return $request->user()->portal->paywalls()->paginate();
     }
 
     /**
@@ -24,8 +23,8 @@ class PaywallController extends Controller
      */
     public function store(StorePaywallRequest $request): Paywall
     {
-        return $request->user()->team->paywalls()->create([
-            'name' => $request->validated('name')
+        return $request->user()->portal->paywalls()->create([
+            'name' => $request->validated('name'),
         ]);
     }
 
@@ -47,7 +46,7 @@ class PaywallController extends Controller
                 if ($submittedVersion != $paywall->version) {
                     $fail('Paywall was edited by someone else. Your edits would override those edits.');
                 }
-            }
+            },
         ]);
 
         DB::transaction(function () use ($request, $paywall) {
@@ -55,6 +54,7 @@ class PaywallController extends Controller
             $paywall->update($request->validated());
             $paywall->increment('version');
         });
+
         return $paywall;
     }
 

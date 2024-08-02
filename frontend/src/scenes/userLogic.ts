@@ -18,8 +18,10 @@ export const userLogic = kea<userLogicType>([
     logout: true
   }),
   listeners(({ actions }) => ({
-    logout: () => {
+    logout: async () => {
+      await authApiClient.logout()
       actions.loadUserSuccess(null)
+
       notifications.show({
         title: 'You\'ve been logged out',
         message: 'See you again soon 👋',

@@ -1,6 +1,5 @@
 import dayjs from 'dayjs'
 import equal from 'fast-deep-equal'
-import { viteBackendHost } from './constants'
 
 export function toParams(obj: Record<string, any>, explodeArrays: boolean = false): string {
     if (!obj) {
@@ -52,19 +51,6 @@ export function fromParamsGivenUrl(url: string): Record<string, any> {
 
 export function fromParams(): Record<string, any> {
     return fromParamsGivenUrl(window.location.search)
-}
-
-export function prepareUrl(url: string): string {
-    function normalizeUrl(url: string): string {
-        if (url.indexOf('http') !== 0 && !url.startsWith('/')) {
-            return url = '/' + url
-        }
-        return url
-    }
-
-    let output = normalizeUrl(url)
-
-    return viteBackendHost + output
 }
 
 /** Compare objects deeply. */

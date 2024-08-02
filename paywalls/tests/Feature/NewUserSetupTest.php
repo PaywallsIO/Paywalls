@@ -9,7 +9,6 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
-
 class NewUserSetupTest extends TestCase
 {
     use RefreshDatabase;
@@ -23,7 +22,6 @@ class NewUserSetupTest extends TestCase
 
         // When
         $user = User::factory()->create();
-
 
         // Then
         Event::assertDispatched(UserCreated::class);
@@ -41,6 +39,6 @@ class NewUserSetupTest extends TestCase
         $listener->handle($event);
 
         // Then
-        $this->assertNotEmpty($user->teams);
+        $this->assertNotEmpty($user->portals);
     }
 }

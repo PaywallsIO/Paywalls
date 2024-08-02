@@ -1,8 +1,8 @@
 import { ProjectData } from "grapesjs"
-import { ApiClientInterface } from "../../../lib/api"
+import { ApiClientInterface, Paginated } from "../../../lib/api"
 
 interface PaywallsApiClientInterface {
-    getPaywalls(): Promise<Paywall[]>
+    getPaywalls(): Promise<Paginated<Paywall>>
     getPaywall(id: string | number): Promise<Paywall>
     create(data: Partial<CreatePaywallRequest>): Promise<Paywall>
     update({ id, data }: { id: string | number, data: ProjectData }): Promise<Paywall>
@@ -23,7 +23,7 @@ export type CreatePaywallRequest = {
 export class PaywallsApiClient implements PaywallsApiClientInterface {
     constructor(public api: ApiClientInterface) { }
 
-    async getPaywalls(): Promise<Paywall[]> {
+    async getPaywalls(): Promise<Paginated<Paywall>> {
         return this.api.get('/api/paywalls')
     }
 

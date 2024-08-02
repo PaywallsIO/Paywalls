@@ -11,20 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('paywalls', function (Blueprint $table) {
+        Schema::create('apps', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('platform');
+            $table->string('bundle_id');
             $table->foreignId('portal_id')
+                ->constrained();
+            $table->foreignId('project_id')
                 ->constrained()
-                ->onDelete('cascade');
-            $table->jsonb('content')->default('{}');
-            $table->integer('version')->default(0);
-            $table->foreignId('last_modified_by')
-                ->nullable()
-                ->constrained()
-                ->references('id')
-                ->on('users')
-                ->onDelete('set null');
+                ->cascadeOnDelete();
             $table->softDeletes();
             $table->timestamps();
         });
@@ -35,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('paywalls');
+        Schema::dropIfExists('apps');
     }
 };
