@@ -10,7 +10,7 @@ const paywallsApiClient = new PaywallsApiClient(apiClient)
 const paywallsLogic = kea<paywallsLogicType>([
     path(['scenes', 'paywalls', 'paywallsLogic']),
     defaults({
-        paywalls: {} as Paginated<Paywall>
+        paywalls: {} as Paginated<Paywall>,
     }),
     actions({
         loadPaywalls: () => ({}),
@@ -19,12 +19,12 @@ const paywallsLogic = kea<paywallsLogicType>([
         paywalls: {
             loadPaywalls: async () => {
                 return await paywallsApiClient.getPaywalls()
-            }
-        }
+            },
+        },
     })),
     afterMount(({ actions }) => {
         actions.loadPaywalls()
-    })
+    }),
 ])
 
 export default paywallsLogic

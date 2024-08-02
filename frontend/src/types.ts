@@ -1,11 +1,3 @@
-export type Paywall = {
-    id: number
-    name: string
-    created_at: Date
-    updated_at: Date
-    content: Object
-}
-
 export type TokenResponse = {
     refresh: string
     access: string
