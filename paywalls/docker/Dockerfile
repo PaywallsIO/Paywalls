@@ -56,11 +56,11 @@ RUN setcap "cap_net_bind_service=+ep" /usr/bin/php8.3
 RUN groupadd --force -g $WWWGROUP sail
 RUN useradd -ms /bin/bash --no-user-group -g $WWWGROUP -u 1337 sail
 
-COPY paywalls/docker/start-container /usr/local/bin/start-container
-COPY paywalls/docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-COPY paywalls/docker/php.ini /etc/php/8.3/cli/conf.d/99-sail.ini
+COPY docker/start-container /usr/local/bin/start-container
+COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY docker/php.ini /etc/php/8.3/cli/conf.d/99-sail.ini
 RUN chmod +x /usr/local/bin/start-container
 
 EXPOSE 80/tcp
 
-ENTRYPOINT ["paywalls/docker/start-container"]
+ENTRYPOINT ["docker/start-container"]
