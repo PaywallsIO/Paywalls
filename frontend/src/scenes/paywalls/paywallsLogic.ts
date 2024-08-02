@@ -1,6 +1,6 @@
 import { afterMount, kea, path, actions, defaults, listeners } from 'kea'
 import { loaders } from 'kea-loaders'
-import { Paywall } from '../../types'
+import { Paywall } from './data/PaywallsApiClient'
 import { apiClient, Paginated } from '../../lib/api'
 import { PaywallsApiClient } from './data/PaywallsApiClient'
 import type { paywallsLogicType } from './paywallsLogicType'

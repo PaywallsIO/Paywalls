@@ -48,22 +48,22 @@ const AppLayout = ({ children }: AppLayoutProps): JSX.Element => {
                             <Button
                                 key={'dashboard'}
                                 onClick={() => router.actions.push(urls.default())}
-                                {...(activeScene === Scene.Dashboard ? { variant: 'transparent' } : { variant: 'transparent', color: 'gray.4' })}
+                                {...(activeScene === Scene.Dashboard ? { variant: 'transparent' } : { variant: 'transparent' })}
                             >
                                 Dashboard
                             </Button>
                             <Button
                                 key={'customers'}
                                 onClick={() => router.actions.push(urls.default())}
-                                {...(false ? { variant: 'transparent' } : { variant: 'transparent', color: 'gray.4' })}
+                                {...(false ? { variant: 'transparent' } : { variant: 'transparent' })}
                             >
-                                Customers
+                                <Text>Customers</Text>
                             </Button>
                             <ProjectsCombobox>
                                 <Button
                                     key={'customers'}
                                     onClick={() => router.actions.push(urls.default())}
-                                    {...(false ? { variant: 'transparent' } : { variant: 'transparent', color: 'gray.4' })}
+                                    {...(false ? { variant: 'transparent' } : { variant: 'transparent' })}
                                 >
                                     <Group gap={3}>
                                         Projects
