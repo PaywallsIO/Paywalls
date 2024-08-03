@@ -63,4 +63,4 @@ RUN chmod +x /usr/local/bin/start-container
 
 EXPOSE 80/tcp
 
-ENTRYPOINT ["docker/start-container"]
+ENTRYPOINT ["start-container"]
