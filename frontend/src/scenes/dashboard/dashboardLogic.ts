@@ -1,6 +1,4 @@
-import { afterMount, kea, path, actions, defaults } from 'kea'
-import { loaders } from 'kea-loaders'
-import { Paywall } from '../../types'
+import { kea, path } from 'kea'
 
 import type { dashboardLogicType } from './dashboardLogicType'
 
