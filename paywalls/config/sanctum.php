@@ -19,7 +19,7 @@ return [
         'SANCTUM_STATEFUL_DOMAINS',
         sprintf(
             '%s%s',
-            'localhost,localhost:5173,127.0.0.1,127.0.0.1:80,::1',
+            'localhost,127.0.0.1,127.0.0.1:80,::1,'.env('FRONTEND_HOST'),
             Sanctum::currentApplicationUrlWithPort()
         ))
     ),
