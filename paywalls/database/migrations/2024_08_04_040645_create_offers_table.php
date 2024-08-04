@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('projects', function (Blueprint $table) {
+        Schema::create('offers', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('restore_behavior')->default('transferToNewPersonId');
-            $table->foreignId('portal_id')->constrained()->cascadeOnDelete();
+            $table->string('identifier');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('projects');
+        Schema::dropIfExists('offers');
     }
 };

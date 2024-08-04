@@ -24,7 +24,7 @@ return new class extends Migration
                 ->constrained()
                 ->references('id')
                 ->on('users')
-                ->onDelete('set null');
+                ->nullOnDelete();
             $table->softDeletes();
             $table->timestamps();
         });
