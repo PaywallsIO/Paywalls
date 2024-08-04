@@ -24,7 +24,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => [env('FRONTEND_HOST')],
+    'allowed_origins' => [env('ALLOWED_ORIGIN')],
 
     'allowed_origins_patterns' => [],
 
