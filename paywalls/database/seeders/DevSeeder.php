@@ -13,9 +13,10 @@ class DevSeeder extends Seeder
     public function run(): void
     {
         $user = User::create([
-            'email' => 'davidmoreen@gmail.com',
+            'email' => 'david@paywalls.io',
             'name' => 'David',
-            'password' => 'DevPassword',
+            'password' => 'password',
+            'is_admin' => true,
         ]);
 
         $project = $user->portal->projects()->create([
