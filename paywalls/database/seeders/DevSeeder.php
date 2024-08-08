@@ -32,5 +32,6 @@ class DevSeeder extends Seeder
         ]);
         $app->portal()->associate($user->portal);
         $app->save();
+        echo $app->createToken('Dev Token')->plainTextToken;
     }
 }

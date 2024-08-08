@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('person', function (Blueprint $table) {
+        Schema::create('app_users', function (Blueprint $table) {
             $table->id();
-            $table->uuid('distinct_id');
             $table->foreignId('portal_id')->constrained()->cascadeOnDelete();
             $table->jsonb('properties')->default('{}');
             $table->timestamps();
