@@ -14,14 +14,15 @@ return new class extends Migration
         Schema::create('events', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->foreignId('portal_id')->constrained()->cascadeOnDelete();
             $table->foreignId('app_id')->nullable()->constrained()->nullOnDelete();
-            $table->uuid('distinct_id');
+            $table->uuid('uuid');
+            $table->string('distinct_id');
             $table->dateTime('timestamp'); // when the event happened in real life
             $table->jsonb('properties')->default('{}');
-            $table->timestamps(); // updated_at will never be used
+            $table->timestamps();
 
             $table->index('distinct_id');
+            $table->index('uuid');
         });
     }
 
