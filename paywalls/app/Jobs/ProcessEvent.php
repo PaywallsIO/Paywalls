@@ -3,6 +3,8 @@
 namespace App\Jobs;
 
 use App\Models\App;
+use App\Services\AppUserService;
+use App\Services\EventService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 
@@ -21,8 +23,11 @@ class ProcessEvent implements ShouldQueue
     /**
      * Execute the job.
      */
-    public function handle(): void
-    {
-        $this->app->events()->create($this->event);
+    public function handle(
+        AppUserService $appUserService,
+        EventService $eventService
+    ): void {
+        $appUserService->processAppUserFromEvent($this->app, $this->event);
+        $eventService->processEvent($this->app, $this->event);
     }
 }
