@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('portal_id')->constrained()->cascadeOnDelete();
             $table->jsonb('properties')->default('{}');
+            $table->boolean('is_identified')->default(false);
             $table->timestamps();
         });
     }

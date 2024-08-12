@@ -27,7 +27,7 @@ class DevSeeder extends Seeder
 
         $app = $project->apps()->make([
             'name' => 'Progress Pic',
-            'platform' => 'appstore',
+            'platform' => 'apple',
             'bundle_id' => 'com.legacybits.ProgressPicRelease',
         ]);
         $app->portal()->associate($user->portal);

@@ -7,10 +7,13 @@ use App\Models\App;
 
 class ProcessEventService
 {
-    public function __construct() {}
+    public function __construct(
+        protected App $app,
+        protected ProcessEvent $event
+    ) {}
 
-    public function processEvent(App $app, ProcessEvent $event): void
+    public function run(): void
     {
-        $app->events()->create($event->toArray());
+        $this->app->events()->create($this->event->toArray());
     }
 }

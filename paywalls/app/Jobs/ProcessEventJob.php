@@ -28,7 +28,10 @@ class ProcessEventJob implements ShouldQueue
             $this->app,
             $this->event
         );
-        $this->eventService = new ProcessEventService;
+        $this->eventService = new ProcessEventService(
+            $this->app,
+            $this->event
+        );
     }
 
     /**
@@ -36,7 +39,7 @@ class ProcessEventJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $this->appUserService->processAppUserFromEvent($this->event);
-        $this->eventService->processEvent($this->app, $this->event);
+        $this->appUserService->run();
+        $this->eventService->run();
     }
 }

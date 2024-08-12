@@ -26,11 +26,11 @@ class ProcessAppUserService
         $this->event = $this->event;
     }
 
-    public function processAppUserFromEvent(): void
+    public function run(): void
     {
         $appUser = $this->handleIdentifyOrAlias();
         if ($appUser) {
-            $this->updatePersonProperties($appUser);
+            $this->updateAppUserProperties($appUser, true);
         } else {
             $this->updateProperties();
         }
@@ -55,11 +55,14 @@ class ProcessAppUserService
         }
     }
 
-    private function updatePersonProperties(AppUser $appUser)
+    private function updateAppUserProperties(AppUser $appUser, $isIdentified = false)
     {
         $properties = $this->eventPropertiesUpdated($appUser->properties);
 
         $appUser->properties = $properties;
+        if ($isIdentified) {
+            $appUser->is_identified = true;
+        }
         $appUser->save();
     }
 
@@ -67,10 +70,10 @@ class ProcessAppUserService
     {
         try {
             if (
-                collect(
+                collect([
                     EventName::createAlias->value,
-                    EventName::mergeDangerously->value
-                )->contains($this->event->name)
+                    EventName::mergeDangerously->value,
+                ])->contains($this->event->name)
                 && $this->event->properties[EventProperty::alias->value]
             ) {
                 return $this->merge(
@@ -81,8 +84,9 @@ class ProcessAppUserService
                 $this->event->name == EventName::identify->value
                 && $anonDistinctId = $this->event->properties[EventProperty::anonDistinctId->value]
             ) {
+                // Merge anonomous distinct id into identified distinct id
                 return $this->merge(
-                    (string) $this->event->properties[EventProperty::anonDistinctId->value],
+                    $this->event->properties[EventProperty::anonDistinctId->value],
                     $this->event->distinctId
                 );
             }
@@ -157,7 +161,8 @@ class ProcessAppUserService
         }
 
         $appUser = $this->portal->appUsers()->forceCreate([
-            'properties' => $properties,
+            'properties' => array_merge($properties, [EventProperty::creatorEventUuid->value => $createdEventUuid]),
+            'is_identified' => $isIdentified,
             'created_at' => $timestamp,
         ]);
         collect($distinctIds)->each(function ($distinctId) use ($appUser) {
@@ -204,6 +209,7 @@ class ProcessAppUserService
             // Update the user
             $target->created_at = $firstTimeSeen;
             $target->properties = $properties;
+            $target->is_identified = true;
             $target->save();
 
             // update the distinct ids
@@ -213,6 +219,8 @@ class ProcessAppUserService
             ])->update([
                 'app_user_id' => $target->id,
             ]);
+
+            $source->delete();
 
             DB::commit();
 
@@ -230,7 +238,7 @@ class ProcessAppUserService
      */
     private function canMerge(AppUser $appUser): bool
     {
-        return $this->event->name == EventName::mergeDangerously->value;
+        return $this->event->name == EventName::mergeDangerously->value || ! $appUser->is_identified;
     }
 
     private function eventPropertiesUpdated(array $personProperties = []): array
@@ -239,21 +247,21 @@ class ProcessAppUserService
         $setOnceProperties = $this->event->properties[EventProperty::setOnce->value] ?? [];
         $unsetProperties = $this->event->properties[EventProperty::unset->value] ?? [];
 
-        collect($properties)->map(function ($value, $key) use (&$personProperties) {
-            if (isset($personProperties[$key]) && $personProperties[$key] !== $value) {
+        foreach ($properties as $key => $value) {
+            if (! isset($personProperties[$key]) || $personProperties[$key] !== $value) {
                 $personProperties[$key] = $value;
             }
-        });
-        collect($setOnceProperties)->map(function ($value, $key) use (&$personProperties) {
+        }
+        foreach ($setOnceProperties as $key => $value) {
             if (! isset($personProperties[$key])) {
                 $personProperties[$key] = $value;
             }
-        });
-        collect($unsetProperties)->map(function ($key) use (&$personProperties) {
+        }
+        foreach ($unsetProperties as $key) {
             if (isset($personProperties[$key])) {
                 unset($personProperties[$key]);
             }
-        });
+        }
 
         return $personProperties;
     }
