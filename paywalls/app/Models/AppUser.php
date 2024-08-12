@@ -10,10 +10,6 @@ class AppUser extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'properties',
-    ];
-
     protected $casts = [
         'properties' => 'array',
     ];

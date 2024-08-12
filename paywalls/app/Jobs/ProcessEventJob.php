@@ -17,9 +17,6 @@ class ProcessEventJob implements ShouldQueue
 
     protected ProcessEventService $eventService;
 
-    /**
-     * Create a new job instance.
-     */
     public function __construct(
         protected App $app,
         protected ProcessEvent $event
@@ -34,9 +31,6 @@ class ProcessEventJob implements ShouldQueue
         );
     }
 
-    /**
-     * Execute the job.
-     */
     public function handle(): void
     {
         $this->appUserService->run();

@@ -74,7 +74,7 @@ class ProcessAppUserService
                     EventName::createAlias->value,
                     EventName::mergeDangerously->value,
                 ])->contains($this->event->name)
-                && $this->event->properties[EventProperty::alias->value]
+                && isset($this->event->properties[EventProperty::alias->value])
             ) {
                 return $this->merge(
                     (string) $this->event->properties[EventProperty::alias->value],
@@ -82,7 +82,7 @@ class ProcessAppUserService
                 );
             } elseif (
                 $this->event->name == EventName::identify->value
-                && $anonDistinctId = $this->event->properties[EventProperty::anonDistinctId->value]
+                && $anonDistinctId = $this->event->properties[EventProperty::anonDistinctId->value] ?? null
             ) {
                 // Merge anonomous distinct id into identified distinct id
                 return $this->merge(
@@ -113,6 +113,8 @@ class ProcessAppUserService
         $mergeIntoAppUser = $this->portal->fetchAppUser($mergeIntoDistinctId);
 
         if ($otherAppUser && ! $mergeIntoAppUser) {
+            // @davidmoreen Merge user doesnt exists but other does. Attach the merge distinct id to the other user by inserting it into the app_user_distinct_ids table
+            // with the other users' app_user_id
             $this->portal->appUserDistinctIds()->create([
                 'app_user_id' => $otherAppUser->id,
                 'distinct_id' => $mergeIntoDistinctId,
@@ -120,6 +122,8 @@ class ProcessAppUserService
 
             return $otherAppUser;
         } elseif (! $otherAppUser && $mergeIntoAppUser) {
+            // @davidmoreen Merge user exists but other doesn't. Attach the other distinct id to the other user by inserting it into the app_user_distinct_ids table
+            // with the other users' app_user_id
             $this->portal->appUserDistinctIds()->create([
                 'app_user_id' => $mergeIntoAppUser->id,
                 'distinct_id' => $otherDistinctId,
@@ -127,20 +131,19 @@ class ProcessAppUserService
 
             return $mergeIntoAppUser;
         } elseif ($otherAppUser && $mergeIntoAppUser) {
+            // @davidmoreen Both users exist. Merge them together
             if ($otherAppUser->id == $mergeIntoAppUser->id) {
                 return $mergeIntoAppUser;
             }
 
             return $this->mergeAppUsers(
                 $mergeIntoAppUser,
-                $mergeIntoDistinctId,
                 $otherAppUser,
-                $otherDistinctId
             );
         } else {
-            // neither user exists
+            // @davidmoreen neither user exists. Create new user and set it to is_identified=true. Attach both distinct ids to the new user.
             return $this->createUser(
-                $this->eventPropertiesUpdated(),
+                $this->eventPropertiesUpdated(), // @davidmoreen a list of default properties to create the user with
                 true,
                 [$mergeIntoDistinctId, $otherDistinctId],
                 $this->event->uuid,
@@ -177,9 +180,7 @@ class ProcessAppUserService
 
     private function mergeAppUsers(
         AppUser $mergeInto,
-        string $mergeIntoDistinctId,
-        AppUser $otherUser,
-        string $otherUserDistinctId
+        AppUser $otherUser
     ): AppUser {
         // min created_at bettwen the two app users
         $firstTimeSeen = min($mergeInto->created_at, $otherUser->created_at);
@@ -209,7 +210,7 @@ class ProcessAppUserService
             // Update the user
             $target->created_at = $firstTimeSeen;
             $target->properties = $properties;
-            $target->is_identified = true;
+            $target->is_identified = true; // Identified b/c this would be called downstream of handleIdentifyOrAlias
             $target->save();
 
             // update the distinct ids
@@ -264,10 +265,5 @@ class ProcessAppUserService
         }
 
         return $personProperties;
-    }
-
-    public function isAnonymousDistinctId(string $distinctId): bool
-    {
-        return substr($distinctId, 0, 10) === '$anonymous:';
     }
 }

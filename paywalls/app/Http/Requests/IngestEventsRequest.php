@@ -16,7 +16,6 @@ class IngestEventsRequest extends FormRequest
         return [
             'events' => 'array',
             'events.*.distinct_id' => 'required|string|max:255',
-            'events.*.old_distinct_id' => 'nullable|string|max:255',
             'events.*.name' => 'required|string|max:255',
             'events.*.properties' => 'required|array',
             'events.*.timestamp' => 'required|integer',
