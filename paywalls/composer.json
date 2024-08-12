@@ -9,6 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "filament/filament": "^3.2",
         "laravel/fortify": "^1.22",
         "laravel/framework": "^11.9",
         "laravel/sanctum": "^4.0",
@@ -24,6 +25,9 @@
         "phpunit/phpunit": "^11.0.1"
     },
     "autoload": {
+        "files": [
+            "app/helpers.php"
+        ],
         "psr-4": {
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
@@ -38,7 +42,8 @@
     "scripts": {
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover --ansi"
+            "@php artisan package:discover --ansi",
+            "@php artisan filament:upgrade"
         ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"

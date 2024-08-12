@@ -11,18 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('events', function (Blueprint $table) {
+        Schema::create('app_users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->foreignId('app_id')->nullable()->constrained()->nullOnDelete();
-            $table->uuid('uuid');
-            $table->string('distinct_id');
-            $table->dateTime('timestamp'); // when the event happened in real life
+            $table->foreignId('portal_id')->constrained()->cascadeOnDelete();
             $table->jsonb('properties')->default('{}');
+            $table->boolean('is_identified')->default(false);
             $table->timestamps();
-
-            $table->index('distinct_id');
-            $table->index('uuid');
         });
     }
 
@@ -31,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('events');
+        Schema::dropIfExists('person');
     }
 };

@@ -13,9 +13,10 @@ class DevSeeder extends Seeder
     public function run(): void
     {
         $user = User::create([
-            'email' => 'davidmoreen@gmail.com',
+            'email' => 'david@paywalls.io',
             'name' => 'David',
-            'password' => 'DevPassword',
+            'password' => 'password',
+            'is_admin' => true,
         ]);
 
         $project = $user->portal->projects()->create([
@@ -26,10 +27,11 @@ class DevSeeder extends Seeder
 
         $app = $project->apps()->make([
             'name' => 'Progress Pic',
-            'platform' => 'appstore',
+            'platform' => 'apple',
             'bundle_id' => 'com.legacybits.ProgressPicRelease',
         ]);
         $app->portal()->associate($user->portal);
         $app->save();
+        echo $app->createToken('Dev Token')->plainTextToken;
     }
 }

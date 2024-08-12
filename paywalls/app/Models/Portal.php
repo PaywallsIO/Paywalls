@@ -29,8 +29,28 @@ class Portal extends Model
         return $this->hasManyThrough(User::class, PortalUser::class);
     }
 
+    public function appUsers(): HasMany
+    {
+        return $this->hasMany(AppUser::class);
+    }
+
+    public function appUserDistinctIds(): HasMany
+    {
+        return $this->hasMany(AppUserDistinctId::class);
+    }
+
+    public function events(): HasManyThrough
+    {
+        return $this->hasManyThrough(Event::class, App::class);
+    }
+
     public function paywalls(): HasMany
     {
         return $this->hasMany(Paywall::class);
+    }
+
+    public function fetchAppUser(string $distinctId): ?AppUser
+    {
+        return $this->appUserDistinctIds()->where('distinct_id', $distinctId)->first()?->appUser;
     }
 }

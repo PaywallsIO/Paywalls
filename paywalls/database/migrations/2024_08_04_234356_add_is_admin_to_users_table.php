@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('person', function (Blueprint $table) {
-            $table->id();
-            $table->uuid('distinct_id');
-            $table->foreignId('portal_id')->constrained()->cascadeOnDelete();
-            $table->jsonb('properties')->default('{}');
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->boolean('is_admin')->default(false);
         });
     }
 
@@ -25,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('person');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('is_admin');
+        });
     }
 };

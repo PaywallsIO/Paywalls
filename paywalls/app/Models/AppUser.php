@@ -4,21 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Event extends Model
+class AppUser extends Model
 {
     use HasFactory;
 
     protected $casts = [
         'properties' => 'array',
-        'timestamp' => 'datetime',
     ];
 
-    protected $fillable = [
-        'uuid',
-        'distinct_id',
-        'name',
-        'properties',
-        'timestamp',
-    ];
+    public function distinctIds(): HasMany
+    {
+        return $this->hasMany(AppUserDistinctId::class);
+    }
 }
