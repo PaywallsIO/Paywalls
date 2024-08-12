@@ -115,9 +115,13 @@ EOF;
 
         // events
         $this->assertDatabaseCount('events', 3);
-        $event = Event::orderBy('id', 'desc')->first();
+        $event = Event::orderBy('id', 'desc')->first(); // get last event
+        $this->assertEquals($event->timestamp, '2024-08-09 04:33:35');
         $this->assertEquals($event->name, 'test_event');
         $this->assertEquals($event->distinct_id, 'McTester');
         $this->assertEquals($event->properties['test-event-property'], 'test');
+        $this->assertDatabaseHas('events', ['uuid' => 'b1e1f163-bd4b-4ddf-a18d-9b32fcc22b91']);
+        $this->assertDatabaseHas('events', ['uuid' => 'DC3271B4-C2DA-44D6-88E6-B8A6218D3D27']);
+        $this->assertDatabaseHas('events', ['uuid' => '235254C8-A136-45D2-8E8B-41E9B4809B41']);
     }
 }
