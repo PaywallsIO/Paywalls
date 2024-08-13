@@ -30,6 +30,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('person_distinct_ids');
+        Schema::table('app_user_distinct_ids', function (Blueprint $table) {
+            $table->dropForeign(['portal_id']);
+            $table->dropForeign('app_user_distinct_ids_app_user_id');
+        });
+        Schema::dropIfExists('app_user_distinct_ids');
     }
 };

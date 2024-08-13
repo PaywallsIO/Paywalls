@@ -23,6 +23,10 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('portal_user', function (Blueprint $table) {
+            $table->dropForeign(['portal_id']);
+            $table->dropForeign(['user_id']);
+        });
         Schema::dropIfExists('portal_user');
     }
 };
