@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Project;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -32,6 +33,18 @@ class DevSeeder extends Seeder
         ]);
         $app->portal()->associate($user->portal);
         $app->save();
+
+        $this->createCampaigns($project);
+
         echo $app->createToken('Dev Token')->plainTextToken;
+    }
+
+    private function createCampaigns(Project $project): void
+    {
+        $campaign = $project->campaigns()->create([
+            'name' => 'App Opened',
+        ]);
+
+        $campaign->triggers()
     }
 }
