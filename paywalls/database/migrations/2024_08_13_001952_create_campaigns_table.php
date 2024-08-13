@@ -22,7 +22,7 @@ return new class extends Migration
         });
 
         // Pivot table
-        Schema::create('campaign_paywalls', function (Blueprint $table) {
+        Schema::create('campaign_paywall', function (Blueprint $table) {
             $table->id();
             $table->foreignId('campaign_id')->constrained();
             $table->foreignId('paywall_id')->constrained();
@@ -41,8 +41,8 @@ return new class extends Migration
         Schema::create('campaign_audiences', function (Blueprint $table) {
             $table->id();
             $table->foreignId('campaign_id')->constrained();
-            $table->integer('sort_order');
-            $table->jsonb('filters');
+            $table->integer('sort_order')->default(0);
+            $table->jsonb('filters')->default('{}');
             $table->integer('match_limit')->nullable();
             $table->timestamps();
         });
@@ -56,7 +56,7 @@ return new class extends Migration
         Schema::table('campaigns', function (Blueprint $table) {
             $table->dropForeign(['project_id']);
         });
-        Schema::table('campaign_paywalls', function (Blueprint $table) {
+        Schema::table('campaign_paywall', function (Blueprint $table) {
             $table->dropForeign(['campaign_id']);
             $table->dropForeign(['paywall_id']);
         });
@@ -68,7 +68,7 @@ return new class extends Migration
         });
 
         Schema::dropIfExists('campaigns');
-        Schema::dropIfExists('campaign_paywalls');
+        Schema::dropIfExists('campaign_paywall');
         Schema::dropIfExists('campaign_triggers');
         Schema::dropIfExists('campaign_audiences');
     }

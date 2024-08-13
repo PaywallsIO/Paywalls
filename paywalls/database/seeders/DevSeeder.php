@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\EventName;
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -20,6 +21,8 @@ class DevSeeder extends Seeder
             'is_admin' => true,
         ]);
 
+        // portals get created automatically when a user is created via the Events/UserCreated.php
+
         $project = $user->portal->projects()->create([
             'name' => 'Progress Pic',
             'restore_behavior' => 'transferToNewPersonId',
@@ -34,6 +37,10 @@ class DevSeeder extends Seeder
         $app->portal()->associate($user->portal);
         $app->save();
 
+        $app->portal->paywalls()->create([
+            'name' => 'Progress Pic',
+        ]);
+
         $this->createCampaigns($project);
 
         echo $app->createToken('Dev Token')->plainTextToken;
@@ -45,6 +52,13 @@ class DevSeeder extends Seeder
             'name' => 'App Opened',
         ]);
 
-        $campaign->triggers()
+        $campaign->triggers()->create([
+            'event_name' => EventName::appOpened->value,
+        ]);
+
+        $campaign->paywalls()->save($project->portal->paywalls()->first(), [
+            'percentage' => 100,
+        ]);
+        $campaign->audiences()->create();
     }
 }

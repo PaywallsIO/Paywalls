@@ -102,11 +102,11 @@ EOF;
         // Then
         // Assert correct app user
         $this->assertDatabaseCount('app_users', 1);
-        $this->assertDatabaseCount('app_user_distinct_ids', 2);
+        $this->assertDatabaseCount('app_user_distinct_id', 2);
 
         // distinct ids
-        $this->assertDatabaseHas('app_user_distinct_ids', ['distinct_id' => '$annon:fe0ccd41-2104-4e43-b1bb-9e3cbf056c41']);
-        $this->assertDatabaseHas('app_user_distinct_ids', ['distinct_id' => 'McTester']);
+        $this->assertDatabaseHas('app_user_distinct_id', ['distinct_id' => '$annon:fe0ccd41-2104-4e43-b1bb-9e3cbf056c41']);
+        $this->assertDatabaseHas('app_user_distinct_id', ['distinct_id' => 'McTester']);
 
         // app user properties
         $appUser = AppUser::first();

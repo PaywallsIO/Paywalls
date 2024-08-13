@@ -4,7 +4,4 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class PortalUser extends Pivot
-{
-    //
-}
+class PortalUser extends Pivot {}
