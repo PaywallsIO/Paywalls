@@ -14,7 +14,7 @@ class IngestEventsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'events' => 'array',
+            'events' => 'required|array',
             'events.*.distinct_id' => 'required|string|max:255',
             'events.*.name' => 'required|string|max:255',
             'events.*.properties' => 'required|array',

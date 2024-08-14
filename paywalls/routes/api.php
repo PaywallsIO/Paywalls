@@ -15,4 +15,5 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::middleware('auth:app')->group(function () {
     Route::get('app_users/{distinct_id}', [App\Http\Controllers\AppUserController::class, 'show']);
     Route::post('events/ingest', [App\Http\Controllers\EventController::class, 'ingest']);
+    Route::post('events/trigger', [App\Http\Controllers\EventController::class, 'trigger']);
 });

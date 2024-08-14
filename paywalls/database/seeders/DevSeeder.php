@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Enums\EventName;
+use App\Models\Offer;
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -37,9 +38,12 @@ class DevSeeder extends Seeder
         $app->portal()->associate($user->portal);
         $app->save();
 
-        $app->portal->paywalls()->create([
+        $paywall = $app->portal->paywalls()->create([
             'name' => 'Progress Pic',
         ]);
+
+        $offers = Offer::factory(3)->create();
+        $paywall->offers()->saveMany($offers);
 
         $this->createCampaigns($project);
 
