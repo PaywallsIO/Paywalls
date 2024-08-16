@@ -28,6 +28,7 @@ return new class extends Migration
             $table->dropColumn('html');
             $table->dropColumn('css');
             $table->dropColumn('js');
+            $table->dropColumn('published_version');
         });
     }
 };
