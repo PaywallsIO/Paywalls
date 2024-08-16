@@ -11,7 +11,7 @@ class TriggerPaywallResource extends JsonResource
     {
         return [
             'name' => $this->name,
-            'url' => 'http://localhost/paywalls/1',
+            'url' => route('paywall.showPublished', $this->id),
             'offers' => TriggerOfferResource::collection($this->offers),
         ];
     }
