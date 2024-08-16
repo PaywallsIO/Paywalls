@@ -23,7 +23,6 @@ class Paywall extends Model
         'content' => 'json',
     ];
 
-    // include offers in json responses
     protected $with = [
         'offers',
     ];
