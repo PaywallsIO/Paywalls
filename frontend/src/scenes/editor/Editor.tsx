@@ -41,7 +41,7 @@ export function EditorScene(): JSX.Element {
 function Editor({ id }: EditorProps) {
     const logic = editorLogic({ id })
     const { paywall } = useValues(logic)
-    const { storePaywall } = useActions(logic)
+    const { storePaywall, publishPaywall } = useActions(logic)
 
     const onEditor = (editor: GrapesJsEditorType) => {
         editor.Storage.add('remote', {
@@ -52,6 +52,24 @@ function Editor({ id }: EditorProps) {
                 return storePaywall(data)
             }
         })
+
+        editor.Panels.addButton('options', {
+            id: 'publish',
+            togglable: false,
+            command: 'publish-paywall',
+            label: 'Publish',
+            attributes: { title: 'Publish' },
+        });
+
+        editor.Commands.add('publish-paywall', {
+            run(editor) {
+                publishPaywall({
+                    html: editor.getHtml(),
+                    css: editor.getCss() || "",
+                    js: editor.getJs()
+                })
+            },
+        });
     }
 
     return (
@@ -72,7 +90,6 @@ function Editor({ id }: EditorProps) {
                         }
                     },
                     selectorManager: { componentFirst: true },
-
                     height: '100vh',
                     storageManager: {
                         type: 'remote',
@@ -80,6 +97,20 @@ function Editor({ id }: EditorProps) {
                         stepsBeforeSave: 1,
                         options: {
                             remote: {
+                                // onStore: (data, editor) => {
+                                //     console.log('data', data)
+                                //     console.log('editor', editor)
+                                //     const pagesHtml = editor.Pages.getAll().map(page => {
+                                //         const component = page.getMainComponent();
+                                //         return {
+                                //             html: editor.getHtml({ component }),
+                                //             css: editor.getCss({ component })
+                                //         }
+                                //     });
+                                //     return {
+                                //         data, pagesHtml
+                                //     };
+                                // },
                                 onLoad: result => result.content,
                             }
                         }

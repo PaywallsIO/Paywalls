@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PublishPaywallRequest;
 use App\Http\Requests\StorePaywallRequest;
 use App\Http\Requests\UpdatePaywallRequest;
 use App\Models\Paywall;
@@ -10,17 +11,11 @@ use Illuminate\Support\Facades\DB;
 
 class PaywallController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
         return $request->user()->portal->paywalls()->paginate();
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StorePaywallRequest $request): Paywall
     {
         return $request->user()->portal->paywalls()->create([
@@ -28,17 +23,18 @@ class PaywallController extends Controller
         ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Paywall $paywall)
     {
         return $paywall;
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    public function showPublished(Paywall $paywall)
+    {
+        return view('paywall', [
+            'paywall' => $paywall,
+        ]);
+    }
+
     public function update(UpdatePaywallRequest $request, Paywall $paywall)
     {
         $request->validate([
@@ -58,9 +54,24 @@ class PaywallController extends Controller
         return $paywall;
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    public function publish(Paywall $paywall, PublishPaywallRequest $request)
+    {
+        $request->validate([
+            'version' => function ($attribute, $submittedVersion, $fail) use ($paywall) {
+                if ($submittedVersion != $paywall->version) {
+                    $fail('Paywall was edited by someone else. Your edits would override those edits.');
+                }
+            },
+        ]);
+
+        DB::transaction(function () use ($request, $paywall) {
+            $paywall->update($request->safe(['html', 'css', 'js']));
+            $paywall->forceFill(['published_version' => $paywall->version])->save();
+        });
+
+        return response()->noContent(200);
+    }
+
     public function destroy(Paywall $paywall)
     {
         //

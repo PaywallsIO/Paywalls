@@ -33,6 +33,16 @@ export const editorLogic = kea<editorLogicType>([
           }
         })
       }
+    },
+    publishPaywall: {
+      publishPaywall: async (data: { html: string, css: string, js: string }) => {
+        await paywallsApiClient.publish({
+          id: props.id,
+          version: values.paywall.version,
+          ...data
+        })
+        return true
+      }
     }
   })),
   listeners(({ actions }) => ({
@@ -43,7 +53,23 @@ export const editorLogic = kea<editorLogicType>([
         message: error.errorObject.response.data.message || 'Something went wrong. Please try again.',
         radius: 'md',
       })
-    }
+    },
+    publishPaywallFailure: (error) => {
+      notifications.show({
+        color: 'red',
+        title: 'Error publishing paywall',
+        message: 'Something went wrong. Please try again.',
+        radius: 'md',
+      })
+    },
+    publishPaywallSuccess: () => {
+      notifications.show({
+        color: 'green',
+        title: 'Paywall Published',
+        message: null,
+        radius: 'md',
+      })
+    },
   })),
   afterMount(({ actions }) => {
     actions.loadPaywall()

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StorePaywallRequest extends FormRequest
+class PublishPaywallRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -14,7 +14,10 @@ class StorePaywallRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
+            'html' => 'string|required',
+            'css' => 'string|nullable',
+            'js' => 'string|nullable',
+            'version' => 'required|integer|min:1',
         ];
     }
 }

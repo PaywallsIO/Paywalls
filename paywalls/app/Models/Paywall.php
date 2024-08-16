@@ -14,6 +14,9 @@ class Paywall extends Model
     protected $fillable = [
         'name',
         'content',
+        'html',
+        'css',
+        'js',
     ];
 
     protected $casts = [

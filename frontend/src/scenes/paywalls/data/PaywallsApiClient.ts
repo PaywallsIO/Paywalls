@@ -20,6 +20,14 @@ export type CreatePaywallRequest = {
     name: string
 }
 
+interface PublishPaywallRequest {
+    id: string | number
+    version: number
+    html: string
+    css: string
+    js: string
+}
+
 export class PaywallsApiClient implements PaywallsApiClientInterface {
     constructor(public api: ApiClientInterface) { }
 
@@ -37,5 +45,9 @@ export class PaywallsApiClient implements PaywallsApiClientInterface {
 
     async update({ id, data }: { id: string | number, data: ProjectData }): Promise<Paywall> {
         return this.api.patch(`/api/paywalls/${id}`, data)
+    }
+
+    async publish(request: PublishPaywallRequest): Promise<Paywall> {
+        return this.api.patch(`/api/paywalls/publish/${request.id}`, request)
     }
 }

@@ -19,6 +19,7 @@ class EventController extends Controller
 
     public function trigger(TriggerRequest $request)
     {
+        // $response->noContent();
         return [
             'paywall' => new TriggerPaywallResource(authPortal()->paywalls()->first()),
         ];
