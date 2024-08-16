@@ -97,20 +97,6 @@ function Editor({ id }: EditorProps) {
                         stepsBeforeSave: 1,
                         options: {
                             remote: {
-                                // onStore: (data, editor) => {
-                                //     console.log('data', data)
-                                //     console.log('editor', editor)
-                                //     const pagesHtml = editor.Pages.getAll().map(page => {
-                                //         const component = page.getMainComponent();
-                                //         return {
-                                //             html: editor.getHtml({ component }),
-                                //             css: editor.getCss({ component })
-                                //         }
-                                //     });
-                                //     return {
-                                //         data, pagesHtml
-                                //     };
-                                // },
                                 onLoad: result => result.content,
                             }
                         }

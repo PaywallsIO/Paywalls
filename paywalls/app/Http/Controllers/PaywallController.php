@@ -37,14 +37,6 @@ class PaywallController extends Controller
 
     public function update(UpdatePaywallRequest $request, Paywall $paywall)
     {
-        $request->validate([
-            'version' => function ($attribute, $submittedVersion, $fail) use ($paywall) {
-                if ($submittedVersion != $paywall->version) {
-                    $fail('Paywall was edited by someone else. Your edits would override those edits.');
-                }
-            },
-        ]);
-
         DB::transaction(function () use ($request, $paywall) {
             $paywall->lastModifiedBy()->associate($request->user());
             $paywall->update($request->validated());
@@ -56,14 +48,6 @@ class PaywallController extends Controller
 
     public function publish(Paywall $paywall, PublishPaywallRequest $request)
     {
-        $request->validate([
-            'version' => function ($attribute, $submittedVersion, $fail) use ($paywall) {
-                if ($submittedVersion != $paywall->version) {
-                    $fail('Paywall was edited by someone else. Your edits would override those edits.');
-                }
-            },
-        ]);
-
         DB::transaction(function () use ($request, $paywall) {
             $paywall->update($request->safe(['html', 'css', 'js']));
             $paywall->forceFill(['published_version' => $paywall->version])->save();
