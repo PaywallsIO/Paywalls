@@ -6,6 +6,7 @@ use App\Http\Requests\PublishPaywallRequest;
 use App\Http\Requests\StorePaywallRequest;
 use App\Http\Requests\UpdatePaywallRequest;
 use App\Models\Paywall;
+use App\Models\PublishedPaywall;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -28,10 +29,10 @@ class PaywallController extends Controller
         return $paywall;
     }
 
-    public function showPublished(Paywall $paywall)
+    public function showPublished(PublishedPaywall $paywall)
     {
         return view('paywall', [
-            'paywall' => $paywall,
+            'published' => $paywall,
         ]);
     }
 
@@ -49,8 +50,17 @@ class PaywallController extends Controller
     public function publish(Paywall $paywall, PublishPaywallRequest $request)
     {
         DB::transaction(function () use ($request, $paywall) {
-            $paywall->update($request->safe(['html', 'css', 'js']));
-            $paywall->forceFill(['published_version' => $paywall->version])->save();
+            $published = $paywall->publishedPaywalls()->forceCreate([
+                'html' => $request->validated('html'),
+                'css' => $request->validated('css'),
+                'js' => $request->validated('js'),
+                'paywall_version' => $paywall->version,
+                'published_by' => $request->user()->id,
+            ]);
+            $paywall->forceFill([
+                'published_uuid' => $published->uuid,
+            ])
+                ->save();
         });
 
         return response()->noContent(200);

@@ -7,23 +7,12 @@
   <meta name="description" content="" />
 
   <style>
-    :root,
-html {
-    overflow: hidden;
-    position: absolute;
-    top:0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    max-width: 100vw;
-    max-height: 100vh;
-    }
-    {{ $paywall->css }}
+    {{ $published->css }}
   </style>
 
   <script>
-    {{ $paywall->js }}
+    {{ $published->js }}
   </script>
 </head>
-{!! $paywall->html !!}
+{!! $published->html !!}
 </html>
