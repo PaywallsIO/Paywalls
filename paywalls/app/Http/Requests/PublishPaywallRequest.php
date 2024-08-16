@@ -20,7 +20,7 @@ class PublishPaywallRequest extends FormRequest
             'html' => 'string|required',
             'css' => 'string|nullable',
             'js' => 'string|nullable',
-            'version' => ['required', 'integer', 'min:1', 'version' => function ($attribute, $submittedVersion, $fail) {
+            'version' => ['required', 'integer', 'min:1', function ($attribute, $submittedVersion, $fail) {
                 if ($submittedVersion != $this->paywall->version) {
                     $fail('Paywall was edited by someone else. Your edits would override those edits.');
                 }
