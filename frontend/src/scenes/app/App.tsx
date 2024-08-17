@@ -2,7 +2,7 @@ import { BindLogic, useMountedLogic, useValues } from 'kea'
 import { Menu, Center, AppShell, Burger, Container, Flex, Group, LoadingOverlay, Avatar, Combobox } from '@mantine/core'
 import { IconChevronDown, IconChevronsDown } from '@tabler/icons-react'
 import { useDisclosure } from '@mantine/hooks'
-import AppNavigation from './navigation/Navigation'
+import ProjectNavigation from './navigation/Navigation'
 import AppLogo from '../components/AppLogo'
 
 import { sceneLogic } from '../../sceneLogic'
@@ -15,8 +15,9 @@ import { userLogic } from '../userLogic'
 import { UserButton } from '../components/UserButton'
 import ProjectsCombobox from '../projects/ProjectsCombobox'
 import { urls } from '../urls'
-import AppLayout from './layouts/AppLayout'
+import ProjectLayout from './layouts/ProjectLayout'
 import PlainLayout from './layouts/PlainLayout'
+import AppLayout from './layouts/AppLayout'
 
 const Spinner = () => (
     <LoadingOverlay visible={true} zIndex={1000} overlayProps={{ radius: 'sm', blur: 2 }} />
@@ -66,6 +67,14 @@ function AppScene(): JSX.Element | null {
             <PlainLayout>
                 {currentSceneElement}
             </PlainLayout>
+        )
+    }
+
+    if (user && sceneConfig?.layout == 'project') {
+        return (
+            <ProjectLayout>
+                {currentSceneElement}
+            </ProjectLayout>
         )
     }
 

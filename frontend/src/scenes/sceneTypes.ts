@@ -6,7 +6,11 @@ export enum Scene {
     // Projects = 'Projects',
     Editor = 'Editor',
     Login = 'Login',
+    // Project = 'Project',
+    // ProjectApp = 'ProjectApp',
+    ProjectApps = 'ProjectApps',
     Paywalls = 'Paywalls',
+    Campaigns = 'Campaigns',
     Error404 = '404',
     ErrorNetwork = '4xx',
 }
@@ -55,7 +59,7 @@ export interface SceneConfig {
      * If `plain`, there's no navigation present, and the scene has no padding.
      * @default 'app'
      */
-    layout?: 'app' | 'app-raw' | 'app-container' | 'plain'
+    layout?: 'app' | 'project' | 'plain'
     /** Route requires organization access (used e.g. by breadcrumbs) */
     organizationBased?: boolean
     /** Route requires project access (used e.g. by breadcrumbs). `true` implies also `organizationBased` */

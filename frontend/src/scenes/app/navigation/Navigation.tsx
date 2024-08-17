@@ -12,7 +12,7 @@ const tabs = [
     { link: urls.default(), label: 'Dashboard', icon: IconHome },
     { link: urls.paywalls(), label: 'Paywalls', icon: IconReceipt2 },
     { link: '', label: 'Templates', icon: IconTemplate },
-    { link: '', label: 'Campaigns', icon: IconSpeakerphone },
+    { link: urls.campaigns(), label: 'Campaigns', icon: IconSpeakerphone },
     { link: '', label: 'Charts', icon: IconChartBar },
     { link: '', label: 'Products', icon: IconShoppingCart },
     { link: '', label: 'People', icon: IconUsers },
@@ -20,7 +20,7 @@ const tabs = [
     { link: '', label: 'Settings', icon: IconSettings }
 ]
 
-export default function AppNavigation() {
+export default function ProjectNavigation() {
     // get current scene
     const { activeScene } = useValues(sceneLogic)
     const { logout } = useActions(userLogic)
