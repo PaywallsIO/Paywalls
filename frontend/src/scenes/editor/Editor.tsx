@@ -16,30 +16,33 @@ import 'grapick/dist/grapick.min.css';
 import './editor.scss'
 
 interface EditorSceneProps {
-    id?: string
+    projectId?: number
+    paywallId?: number
 }
 
 export const scene: SceneExport = {
     component: EditorScene,
     logic: editorLogic,
-    paramsToProps: ({ params: { id } }: { params: EditorSceneProps }): EditorProps => ({
-        id: id || ''
+    paramsToProps: ({ params: { projectId, paywallId } }: { params: EditorSceneProps }): EditorProps => ({
+        // @davidmoreen is there no better way than defaulting to 0?
+        projectId: projectId || 0,
+        paywallId: paywallId || 0
     }),
 }
 
 export function EditorScene(): JSX.Element {
-    const { paywallId, paywall } = useValues(editorLogic)
+    const { paywallId, projectId, paywall } = useValues(editorLogic)
     return (
         !paywall ? (
             <LoadingOverlay visible={true} zIndex={1000} overlayProps={{ radius: 'sm', blur: 2 }} />
         ) : (
-            <Editor id={paywallId} />
+            <Editor paywallId={paywallId} projectId={projectId} />
         )
     )
 }
 
-function Editor({ id }: EditorProps) {
-    const logic = editorLogic({ id })
+function Editor({ projectId, paywallId }: EditorProps) {
+    const logic = editorLogic({ projectId, paywallId })
     const { paywall } = useValues(logic)
     const { storePaywall, publishPaywall } = useActions(logic)
 

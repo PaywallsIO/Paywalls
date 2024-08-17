@@ -1,15 +1,22 @@
-import { Text, Title, Loader, Center, Table, Stack, Flex, Button, Paper, Anchor } from "@mantine/core";
+import { Text, Title, Loader, Center, Stack, Flex, Button, Badge, Group, Card, Grid, Anchor, Space } from "@mantine/core";
 import { useValues, useActions, BindLogic } from 'kea'
 import { SceneExport } from '../sceneTypes'
 
-import appsLogic from './appsLogic'
+import { AppsProps, appsLogic } from './appsLogic'
 import { router } from "kea-router";
-import { urls } from "../urls";
-import { formatDate } from "../../lib/date";
+import { IconBrandAppleFilled, IconChevronRight } from "@tabler/icons-react";
+
+interface AppsSceneProps {
+    projectId?: number
+}
 
 export const scene: SceneExport = {
     component: Apps,
     logic: appsLogic,
+    paramsToProps: ({ params: { projectId } }: { params: AppsSceneProps }): AppsProps => ({
+        // @davidmoreen is there no better way than defaulting to 0?
+        projectId: projectId || 0
+    }),
 }
 
 export function Apps(): JSX.Element {
@@ -36,25 +43,25 @@ function AppsScene() {
             {
                 appsLoading ? (
                     <Center style={{ height: '100vh' }}><Loader color="blue" /></Center>
-                ) : apps.length ? (
-                    <Paper radius="md" withBorder style={{ overflow: 'hidden' }}>
-                        <Table>
-                            <Table.Thead>
-                                <Table.Tr>
-                                    <Table.Th>Name</Table.Th>
-                                    <Table.Th>Created At</Table.Th>
-                                </Table.Tr>
-                            </Table.Thead>
-                            <Table.Tbody>
-                                {apps.map((app) => (
-                                    <Table.Tr key={app.id}>
-                                        <Table.Td><Anchor>{app.name}</Anchor></Table.Td>
-                                        <Table.Td>{formatDate(app.created_at)}</Table.Td>
-                                    </Table.Tr>
-                                ))}
-                            </Table.Tbody>
-                        </Table>
-                    </Paper>
+                ) : apps.data.length ? (
+                    <Grid>
+                        {apps.data.map((app) => (
+                            <Grid.Col span={{ base: 12, md: 6 }} key={app.id}>
+                                <Anchor underline="never" onClick={() => { }}>
+                                    <Card shadow="sm" padding="lg" radius="md" withBorder>
+                                        <Flex gap={20} align="center">
+                                            <IconBrandAppleFilled />
+                                            <Stack gap={0} w={"100%"}>
+                                                <Text fw={500}>{app.name}</Text>
+                                                <Text size="xs" c="dimmed">{app.bundle_id}</Text>
+                                            </Stack>
+                                            <IconChevronRight color="var(--mantine-color-dimmed)" />
+                                        </Flex>
+                                    </Card>
+                                </Anchor>
+                            </Grid.Col>
+                        ))}
+                    </Grid>
                 ) : (
                     <Center>
                         <Stack>

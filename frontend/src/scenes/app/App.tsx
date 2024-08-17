@@ -2,7 +2,7 @@ import { BindLogic, useMountedLogic, useValues } from 'kea'
 import { Menu, Center, AppShell, Burger, Container, Flex, Group, LoadingOverlay, Avatar, Combobox } from '@mantine/core'
 import { IconChevronDown, IconChevronsDown } from '@tabler/icons-react'
 import { useDisclosure } from '@mantine/hooks'
-import ProjectNavigation from './navigation/Navigation'
+import ProjectNavigation from './navigation/ProjectNavigation'
 import AppLogo from '../components/AppLogo'
 
 import { sceneLogic } from '../../sceneLogic'

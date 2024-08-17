@@ -2,7 +2,7 @@ import { useValues } from 'kea'
 import { AppShell, Burger, Button, Container, Flex, Group, Text } from '@mantine/core'
 import { IconChevronDown } from '@tabler/icons-react'
 import { useDisclosure } from '@mantine/hooks'
-import ProjectNavigation from '../navigation/Navigation'
+import ProjectNavigation from '../navigation/ProjectNavigation'
 import AppLogo from '../../components/AppLogo'
 
 import { Notifications } from '@mantine/notifications'
@@ -15,6 +15,7 @@ import { userLogic } from '../../userLogic'
 import { A, router } from 'kea-router'
 import { sceneLogic } from '../../../sceneLogic'
 import { Scene } from '../../sceneTypes'
+import AppHeader from '../navigation/AppHeader'
 
 interface AppLayoutProps {
     children: React.ReactNode
@@ -22,8 +23,6 @@ interface AppLayoutProps {
 
 const AppLayout = ({ children }: AppLayoutProps): JSX.Element => {
     const [opened, { toggle }] = useDisclosure()
-    const { activeScene } = useValues(sceneLogic)
-    const { user } = useValues(userLogic)
 
     return (
         <Container size="responsive">
@@ -38,49 +37,7 @@ const AppLayout = ({ children }: AppLayoutProps): JSX.Element => {
                 padding="md"
             >
                 <AppShell.Header>
-                    <Flex justify="space-between" align="center" h="100%" pr="md">
-                        <Group h="100%" px="md">
-                            <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-                            <AppLogo />
-                        </Group>
-
-                        <Group gap={5} visibleFrom="sm">
-                            <Button
-                                key={'dashboard'}
-                                onClick={() => router.actions.push(urls.default())}
-                                {...(activeScene === Scene.Dashboard ? { variant: 'transparent' } : { variant: 'transparent' })}
-                            >
-                                Dashboard
-                            </Button>
-                            <Button
-                                key={'customers'}
-                                onClick={() => router.actions.push(urls.default())}
-                                {...(false ? { variant: 'transparent' } : { variant: 'transparent' })}
-                            >
-                                <Text>Customers</Text>
-                            </Button>
-                            <ProjectsCombobox>
-                                <Button
-                                    key={'customers'}
-                                    onClick={() => router.actions.push(urls.default())}
-                                    {...(false ? { variant: 'transparent' } : { variant: 'transparent' })}
-                                >
-                                    <Group gap={3}>
-                                        Projects
-                                        <IconChevronDown size="0.9rem" stroke={1.5} />
-                                    </Group>
-                                </Button>
-                            </ProjectsCombobox>
-                        </Group>
-
-                        <Group visibleFrom="sm">
-                            <UserButton
-                                imageUrl={user?.avatar_url || null}
-                                name={user?.name || ""}
-                                detail={user?.portal?.name || ""}
-                            />
-                        </Group>
-                    </Flex>
+                    <AppHeader opened={opened} toggle={toggle} />
                 </AppShell.Header>
 
                 <AppShell.Navbar>

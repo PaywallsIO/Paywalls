@@ -1,23 +1,28 @@
-import { afterMount, kea, path, actions, defaults, listeners } from 'kea'
+import { afterMount, kea, path, actions, defaults, props } from 'kea'
 import { loaders } from 'kea-loaders'
-import { ProjectApp, AppsApiClient } from './data/AppsApiClient'
-import { apiClient } from '../../lib/api'
+import { ProjectApp, AppsApiClient, AppsApiClientInterface } from './data/AppsApiClient'
+import { apiClient, Paginated } from '../../lib/api'
 import type { appsLogicType } from './appsLogicType'
 
-const appsApiClient = new AppsApiClient(apiClient)
+export type AppsProps = {
+    projectId: number
+}
 
-const appsLogic = kea<appsLogicType>([
+const appsApiClient: AppsApiClientInterface = new AppsApiClient(apiClient)
+
+export const appsLogic = kea<appsLogicType>([
+    props({} as AppsProps),
     path(['scenes', 'apps', 'appsLogic']),
     defaults({
-        apps: {} as ProjectApp[],
+        apps: {} as Paginated<ProjectApp>,
     }),
     actions({
         loadApps: () => ({}),
     }),
-    loaders(({ }) => ({
+    loaders(({ props }) => ({
         apps: {
             loadApps: async () => {
-                return await appsApiClient.getApps()
+                return await appsApiClient.getApps(props.projectId)
             },
         },
     })),
@@ -25,5 +30,3 @@ const appsLogic = kea<appsLogicType>([
         actions.loadApps()
     }),
 ])
-
-export default appsLogic

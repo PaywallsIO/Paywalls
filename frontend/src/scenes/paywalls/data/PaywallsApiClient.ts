@@ -1,11 +1,12 @@
 import { ProjectData } from "grapesjs"
 import { ApiClientInterface, Paginated } from "../../../lib/api"
 
-interface PaywallsApiClientInterface {
-    getPaywalls(): Promise<Paginated<Paywall>>
-    getPaywall(id: string | number): Promise<Paywall>
-    create(data: Partial<CreatePaywallRequest>): Promise<Paywall>
-    update({ id, data }: { id: string | number, data: ProjectData }): Promise<Paywall>
+export interface PaywallsApiClientInterface {
+    getPaywalls(projectId: string | number): Promise<Paginated<Paywall>>
+    getPaywall(projectId: string | number, id: string | number): Promise<Paywall>
+    create(projectId: string | number, data: Partial<CreatePaywallRequest>): Promise<Paywall>
+    update(projectId: string | number, { id, data }: { id: string | number, data: ProjectData }): Promise<Paywall>
+    publish(projectId: string | number, request: PublishPaywallRequest): Promise<Paywall>
 }
 
 export type Paywall = {
@@ -14,6 +15,7 @@ export type Paywall = {
     created_at: Date
     updated_at: Date
     content: Object
+    project_id: number
 }
 
 export type CreatePaywallRequest = {
@@ -21,7 +23,7 @@ export type CreatePaywallRequest = {
 }
 
 interface PublishPaywallRequest {
-    id: string | number
+    id: number
     version: number
     html: string
     css: string
@@ -31,23 +33,23 @@ interface PublishPaywallRequest {
 export class PaywallsApiClient implements PaywallsApiClientInterface {
     constructor(public api: ApiClientInterface) { }
 
-    async getPaywalls(): Promise<Paginated<Paywall>> {
-        return this.api.get('/api/paywalls')
+    async getPaywalls(projectId: number): Promise<Paginated<Paywall>> {
+        return this.api.get(`/api/projects/${projectId}/paywalls`)
     }
 
-    async getPaywall(id: string | number): Promise<Paywall> {
-        return this.api.get(`/api/paywalls/${id}`)
+    async getPaywall(projectId: number, id: number): Promise<Paywall> {
+        return this.api.get(`/api/projects/${projectId}/paywalls/${id}`)
     }
 
-    async create(data: Partial<CreatePaywallRequest>): Promise<Paywall> {
-        return this.api.post('/api/paywalls', data)
+    async create(projectId: number, data: Partial<CreatePaywallRequest>): Promise<Paywall> {
+        return this.api.post(`/api/projects/${projectId}/paywalls`, data)
     }
 
-    async update({ id, data }: { id: string | number, data: ProjectData }): Promise<Paywall> {
-        return this.api.patch(`/api/paywalls/${id}`, data)
+    async update(projectId: number, { id, data }: { id: number, data: ProjectData }): Promise<Paywall> {
+        return this.api.patch(`/api/projects/${projectId}/paywalls/${id}`, data)
     }
 
-    async publish(request: PublishPaywallRequest): Promise<Paywall> {
-        return this.api.patch(`/api/paywalls/publish/${request.id}`, request)
+    async publish(projectId: number, request: PublishPaywallRequest): Promise<Paywall> {
+        return this.api.patch(`/api/projects/${projectId}/paywalls/${request.id}/publish`, request)
     }
 }

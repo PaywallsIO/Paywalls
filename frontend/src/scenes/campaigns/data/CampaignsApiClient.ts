@@ -1,6 +1,9 @@
 import { ApiClientInterface, Paginated } from "../../../lib/api"
 
-interface CampaignsApiClientInterface {
+export interface CampaignsApiClientInterface {
+    getCampaigns(projectId: number): Promise<Paginated<Campaign>>
+    getCampaign(projectId: number, campaignId: number): Promise<Campaign>
+    create(projectId: number, data: Partial<CreateCampaignRequest>): Promise<Campaign>
 }
 
 export type Campaign = {
@@ -17,15 +20,15 @@ export type CreateCampaignRequest = {
 export class CampaignsApiClient implements CampaignsApiClientInterface {
     constructor(public api: ApiClientInterface) { }
 
-    async getCampaigns(): Promise<Paginated<Campaign>> {
-        return this.api.get('/api/campaigns')
+    async getCampaigns(projectId: number): Promise<Paginated<Campaign>> {
+        return this.api.get(`/api/projects/${projectId}/campaigns`)
     }
 
-    async getCampaign(id: string | number): Promise<Campaign> {
-        return this.api.get(`/api/campaigns/${id}`)
+    async getCampaign(projectId: number, campaignId: number): Promise<Campaign> {
+        return this.api.get(`/api/projects/${projectId}/campaigns/${campaignId}`)
     }
 
-    async create(data: Partial<CreateCampaignRequest>): Promise<Campaign> {
+    async create(projectId: number, data: Partial<CreateCampaignRequest>): Promise<Campaign> {
         return this.api.post('/api/campaigns', data)
     }
 }

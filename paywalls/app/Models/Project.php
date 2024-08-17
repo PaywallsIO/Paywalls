@@ -37,6 +37,11 @@ class Project extends Model
         return $this->hasMany(App::class);
     }
 
+    public function paywalls(): HasMany
+    {
+        return $this->hasMany(Paywall::class);
+    }
+
     public function campaigns(): HasMany
     {
         return $this->hasMany(Campaign::class);

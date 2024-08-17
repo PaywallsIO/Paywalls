@@ -6,15 +6,16 @@ use App\Http\Requests\PublishPaywallRequest;
 use App\Http\Requests\StorePaywallRequest;
 use App\Http\Requests\UpdatePaywallRequest;
 use App\Models\Paywall;
+use App\Models\Project;
 use App\Models\PublishedPaywall;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class PaywallController extends Controller
 {
-    public function index(Request $request)
+    public function index(Project $project, Request $request)
     {
-        return $request->user()->portal->paywalls()->paginate();
+        return $project->paywalls()->paginate();
     }
 
     public function store(StorePaywallRequest $request): Paywall
@@ -24,7 +25,7 @@ class PaywallController extends Controller
         ]);
     }
 
-    public function show(Paywall $paywall)
+    public function show(Project $project, Paywall $paywall)
     {
         return $paywall;
     }

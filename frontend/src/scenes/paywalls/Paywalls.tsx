@@ -4,14 +4,22 @@ import { SceneExport } from '../sceneTypes'
 import { modals } from "@mantine/modals"
 import { CreatePaywallForm } from './create/CreatePaywallForm'
 
-import paywallsLogic from './paywallsLogic'
+import { PaywallsProps, paywallsLogic } from './paywallsLogic'
 import { router } from "kea-router";
 import { urls } from "../urls";
 import { formatDate } from "../../lib/date";
 
+
+interface PaywallsSceneProps {
+    projectId?: number
+}
+
 export const scene: SceneExport = {
     component: Paywalls,
     logic: paywallsLogic,
+    paramsToProps: ({ params: { projectId } }: { params: PaywallsSceneProps }): PaywallsProps => ({
+        projectId: projectId || 0
+    }),
 }
 
 export function Paywalls(): JSX.Element {
@@ -57,7 +65,7 @@ function PaywallsScene() {
                             <Table.Tbody>
                                 {paywalls.data.map((paywall) => (
                                     <Table.Tr key={paywall.id}>
-                                        <Table.Td><Anchor onClick={() => push(urls.editor(paywall.id))}>{paywall.name}</Anchor></Table.Td>
+                                        <Table.Td><Anchor onClick={() => push(urls.editor(paywall.project_id, paywall.id))}>{paywall.name}</Anchor></Table.Td>
                                         <Table.Td>{formatDate(paywall.created_at)}</Table.Td>
                                     </Table.Tr>
                                 ))}

@@ -9,10 +9,14 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
 
+    Route::resource('projects', App\Http\Controllers\ProjectController::class);
+});
+
+Route::prefix('projects/{project}')->middleware(['auth:sanctum'])->group(function () {
+    Route::resource('apps', App\Http\Controllers\AppController::class);
     Route::resource('paywalls', App\Http\Controllers\PaywallController::class);
     Route::resource('campaigns', App\Http\Controllers\CampaignController::class);
-    Route::patch('paywalls/publish/{paywall}', [App\Http\Controllers\PaywallController::class, 'publish']);
-    Route::resource('projects', App\Http\Controllers\ProjectController::class);
+    Route::patch('paywalls/{paywall}/publish', [App\Http\Controllers\PaywallController::class, 'publish']);
 });
 
 // Called from clients

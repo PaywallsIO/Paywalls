@@ -1,4 +1,4 @@
-import { IconSwitchHorizontal, IconLogout, IconReceipt2, IconUsers, IconSettings, IconChartBar, IconLanguage, IconSpeakerphone, IconTemplate, IconHome, IconChevronDown, IconShoppingCart } from '@tabler/icons-react'
+import { IconSwitchHorizontal, IconLogout, IconReceipt2, IconUsers, IconSettings, IconChartBar, IconLanguage, IconSpeakerphone, IconTemplate, IconHome, IconChevronDown, IconShoppingCart, IconDevices } from '@tabler/icons-react'
 import { Group, Title, Avatar, Flex, UnstyledButton, Center, Divider } from '@mantine/core'
 import classes from './Navigation.module.css'
 import { A } from 'kea-router';
@@ -8,29 +8,28 @@ import { useActions, useValues } from 'kea';
 import { userLogic } from '../../userLogic';
 import ProjectsCombobox from '../../projects/ProjectsCombobox';
 
-const tabs = [
-    { link: urls.default(), label: 'Dashboard', icon: IconHome },
-    { link: urls.paywalls(), label: 'Paywalls', icon: IconReceipt2 },
-    { link: '', label: 'Templates', icon: IconTemplate },
-    { link: urls.campaigns(), label: 'Campaigns', icon: IconSpeakerphone },
-    { link: '', label: 'Charts', icon: IconChartBar },
-    { link: '', label: 'Products', icon: IconShoppingCart },
-    { link: '', label: 'People', icon: IconUsers },
-    { link: '', label: 'Localization', icon: IconLanguage },
-    { link: '', label: 'Settings', icon: IconSettings }
-]
-
 export default function ProjectNavigation() {
-    // get current scene
-    const { activeScene } = useValues(sceneLogic)
+    const { activeScene, sceneParams } = useValues(sceneLogic)
     const { logout } = useActions(userLogic)
+
+    const tabs = [
+        { link: urls.projectApps(sceneParams.params.projectId), label: 'Apps', sceneName: 'ProjectApps', icon: IconDevices },
+        { link: urls.paywalls(sceneParams.params.projectId), label: 'Paywalls', sceneName: 'Paywalls', icon: IconReceipt2 },
+        { link: '', label: 'Templates', sceneName: 'Templates', icon: IconTemplate },
+        { link: urls.campaigns(sceneParams.params.projectId), label: 'Campaigns', sceneName: 'Campaigns', icon: IconSpeakerphone },
+        { link: '', label: 'Charts', sceneName: 'Charts', icon: IconChartBar },
+        { link: '', label: 'Products', sceneName: 'Products', icon: IconShoppingCart },
+        { link: '', label: 'People', sceneName: 'People', icon: IconUsers },
+        { link: '', label: 'Localization', sceneName: 'Localization', icon: IconLanguage },
+        { link: '', label: 'Settings', sceneName: 'Settings', icon: IconSettings }
+    ]
 
     const links = tabs.map((item) => (
         <A
             className={classes.link}
             href={item.link}
             key={item.label}
-            {...(item.label === activeScene && { 'data-active': true })}
+            {...(item.sceneName === activeScene && { 'data-active': true })}
         >
             <item.icon className={classes.linkIcon} stroke={1.5} />
             <span>{item.label}</span>

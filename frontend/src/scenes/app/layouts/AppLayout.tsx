@@ -1,6 +1,6 @@
 import { AppShell, Burger, Button, Container, Flex, Group, Text } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
-import ProjectNavigation from '../navigation/Navigation'
+import ProjectNavigation from '../navigation/ProjectNavigation'
 
 import { Notifications } from '@mantine/notifications'
 import AppHeader from '../navigation/AppHeader'

@@ -30,10 +30,10 @@ export const sceneConfigurations: Record<Scene, SceneConfig> = {
     [Scene.Login]: {
         anonymousOnly: true,
     },
-    [Scene.Project]: {
-        projectBased: true,
-        layout: 'project'
-    },
+    // [Scene.Project]: {
+    //     projectBased: true,
+    //     layout: 'project'
+    // },
     [Scene.Paywalls]: {
         projectBased: true,
         layout: 'project'
@@ -72,10 +72,11 @@ export const redirects: Record<string, string | ((params: Params, searchParams: 
 export const routes: Record<string, Scene> = {
     [urls.login()]: Scene.Login,
     [urls.default()]: Scene.Dashboard,
+
+
     // [urls.projectApp(':id')]: Scene.ProjectApp,
-    [urls.projectApps()]: Scene.ProjectApps,
-    // [urls.project(':id')]: Scene.Project,
-    [urls.paywalls()]: Scene.Paywalls,
-    [urls.campaigns()]: Scene.Campaigns,
-    [urls.editor(':id')]: Scene.Editor
+    [urls.projectApps(':projectId')]: Scene.ProjectApps,
+    [urls.paywalls(':projectId')]: Scene.Paywalls,
+    [urls.campaigns(':projectId')]: Scene.Campaigns,
+    [urls.editor(':projectId', ':paywallId')]: Scene.Editor
 }

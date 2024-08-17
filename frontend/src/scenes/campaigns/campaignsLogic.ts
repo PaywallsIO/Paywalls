@@ -1,12 +1,17 @@
-import { afterMount, kea, path, actions, defaults, listeners } from 'kea'
+import { afterMount, kea, path, actions, defaults, listeners, props } from 'kea'
 import { loaders } from 'kea-loaders'
-import { Campaign, CampaignsApiClient } from './data/CampaignsApiClient'
+import { Campaign, CampaignsApiClient, CampaignsApiClientInterface } from './data/CampaignsApiClient'
 import { apiClient, Paginated } from '../../lib/api'
 import type { campaignsLogicType } from './campaignsLogicType'
 
-const campaignsApiClient = new CampaignsApiClient(apiClient)
+export type CampaignsProps = {
+    projectId: number
+}
+
+const campaignsApiClient: CampaignsApiClientInterface = new CampaignsApiClient(apiClient)
 
 const campaignsLogic = kea<campaignsLogicType>([
+    props({} as CampaignsProps),
     path(['scenes', 'campaigns', 'campaignsLogic']),
     defaults({
         campaigns: {} as Paginated<Campaign>,
@@ -14,10 +19,10 @@ const campaignsLogic = kea<campaignsLogicType>([
     actions({
         loadCampaigns: () => ({}),
     }),
-    loaders(({ }) => ({
+    loaders(({ props }) => ({
         campaigns: {
             loadCampaigns: async () => {
-                return await campaignsApiClient.getCampaigns()
+                return await campaignsApiClient.getCampaigns(props.projectId)
             },
         },
     })),

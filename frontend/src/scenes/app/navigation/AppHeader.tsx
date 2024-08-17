@@ -11,7 +11,7 @@ import { userLogic } from '../../userLogic'
 import { Scene } from '../../sceneTypes'
 
 export default function AppHeader({ opened, toggle }: { opened: boolean; toggle: () => void }) {
-    const { activeScene } = useValues(sceneLogic)
+    const { activeScene, sceneParams } = useValues(sceneLogic)
     const { user } = useValues(userLogic)
 
     return (
@@ -19,31 +19,31 @@ export default function AppHeader({ opened, toggle }: { opened: boolean; toggle:
             <Flex justify="space-between" align="center" h="100%" pr="md">
                 <Group h="100%" px="md">
                     <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-                    < AppLogo />
+                    <AppLogo />
                 </Group >
 
                 <Group gap={5} visibleFrom="sm">
                     <Button
                         key={'dashboard'}
                         onClick={() => router.actions.push(urls.default())}
-                        {...(activeScene === Scene.Dashboard ? { variant: 'transparent' } : { variant: 'transparent' })}
+                        {...(activeScene === Scene.Dashboard ? { variant: 'filled' } : { variant: 'transparent' })}
                     >
-                        Dashboard
+                        <Text>Dashboard</Text>
                     </Button>
                     <Button
                         key={'customers'}
                         onClick={() => router.actions.push(urls.default())}
-                        {...(false ? { variant: 'transparent' } : { variant: 'transparent' })}
+                        {...(false ? { variant: 'filled' } : { variant: 'transparent' })}
                     >
                         <Text>Customers</Text>
                     </Button>
                     <ProjectsCombobox>
                         <Button
-                            key={'customers'}
-                            {...(false ? { variant: 'transparent' } : { variant: 'transparent' })}
+                            key={'projects'}
+                            {...(sceneParams.params.projectId ? { variant: 'filled' } : { variant: 'transparent' })}
                         >
                             <Group gap={3}>
-                                Projects
+                                <Text>Projects</Text>
                                 <IconChevronDown size="0.9rem" stroke={1.5} />
                             </Group>
                         </Button>
