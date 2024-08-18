@@ -9,6 +9,7 @@ export interface CampaignsApiClientInterface {
 export type Campaign = {
     id: number
     name: string
+    project_id: number
     created_at: Date
     updated_at: Date
 }

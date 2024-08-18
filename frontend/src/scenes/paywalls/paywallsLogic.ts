@@ -23,7 +23,6 @@ export const paywallsLogic = kea<paywallsLogicType>([
     loaders(({ props }) => ({
         paywalls: {
             loadPaywalls: async () => {
-                console.log(props)
                 return await paywallsApiClient.getPaywalls(props.projectId)
             },
         },

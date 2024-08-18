@@ -65,7 +65,7 @@ function CampaignsScene() {
                             <Table.Tbody>
                                 {campaigns.data.map((campaign) => (
                                     <Table.Tr key={campaign.id}>
-                                        <Table.Td><Anchor onClick={() => push(urls.campaign(campaign.id))}>{campaign.name}</Anchor></Table.Td>
+                                        <Table.Td><Anchor onClick={() => push(urls.campaign(campaign.project_id, campaign.id))}>{campaign.name}</Anchor></Table.Td>
                                         <Table.Td>{formatDate(campaign.created_at)}</Table.Td>
                                     </Table.Tr>
                                 ))}

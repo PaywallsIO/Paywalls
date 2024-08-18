@@ -23,9 +23,9 @@ class CampaignController extends Controller
         //
     }
 
-    public function show(Campaign $campaign)
+    public function show(Project $project, Campaign $campaign)
     {
-        //
+        return $campaign;
     }
 
     public function edit(Campaign $campaign)

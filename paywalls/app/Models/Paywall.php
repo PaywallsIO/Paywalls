@@ -26,9 +26,9 @@ class Paywall extends Model
         'offers',
     ];
 
-    public function portal(): BelongsTo
+    public function project(): BelongsTo
     {
-        return $this->belongsTo(Portal::class);
+        return $this->belongsTo(Project::class);
     }
 
     public function offers(): BelongsToMany

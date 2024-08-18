@@ -1,4 +1,4 @@
-import { kea, path, actions, defaults, props, key, afterMount, selectors, listeners } from 'kea'
+import { kea, path, props, key, afterMount, selectors, listeners } from 'kea'
 
 import type { editorLogicType } from './editorLogicType'
 import { apiClient } from '../../lib/api'
@@ -16,7 +16,7 @@ export type EditorProps = {
 export const editorLogic = kea<editorLogicType>([
   props({} as EditorProps),
   path((key) => ['scenes', 'editor', 'editorLogic', key]),
-  key(({ paywallId }) => paywallId),
+  key((props) => props.paywallId),
   selectors({
     paywallId: [() => [(_, props) => props], (props): number => props.paywallId],
     projectId: [() => [(_, props) => props], (props): number => props.projectId],

@@ -30,23 +30,19 @@ export const sceneConfigurations: Record<Scene, SceneConfig> = {
     [Scene.Login]: {
         anonymousOnly: true,
     },
-    // [Scene.Project]: {
-    //     projectBased: true,
-    //     layout: 'project'
-    // },
     [Scene.Paywalls]: {
         projectBased: true,
         layout: 'project'
     },
-    // [Scene.ProjectApp]: {
-    //     projectBased: true,
-    //     layout: 'project'
-    // },
-    [Scene.ProjectApps]: {
+    [Scene.Apps]: {
         projectBased: true,
         layout: 'project'
     },
     [Scene.Campaigns]: {
+        projectBased: true,
+        layout: 'project'
+    },
+    [Scene.Campaign]: {
         projectBased: true,
         layout: 'project'
     },
@@ -75,8 +71,9 @@ export const routes: Record<string, Scene> = {
 
 
     // [urls.projectApp(':id')]: Scene.ProjectApp,
-    [urls.projectApps(':projectId')]: Scene.ProjectApps,
+    [urls.apps(':projectId')]: Scene.Apps,
     [urls.paywalls(':projectId')]: Scene.Paywalls,
     [urls.campaigns(':projectId')]: Scene.Campaigns,
+    [urls.campaign(':projectId', ':campaignId')]: Scene.Campaign,
     [urls.editor(':projectId', ':paywallId')]: Scene.Editor
 }

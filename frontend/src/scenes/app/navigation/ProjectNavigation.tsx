@@ -13,15 +13,15 @@ export default function ProjectNavigation() {
     const { logout } = useActions(userLogic)
 
     const tabs = [
-        { link: urls.projectApps(sceneParams.params.projectId), label: 'Apps', sceneName: 'ProjectApps', icon: IconDevices },
-        { link: urls.paywalls(sceneParams.params.projectId), label: 'Paywalls', sceneName: 'Paywalls', icon: IconReceipt2 },
-        { link: '', label: 'Templates', sceneName: 'Templates', icon: IconTemplate },
-        { link: urls.campaigns(sceneParams.params.projectId), label: 'Campaigns', sceneName: 'Campaigns', icon: IconSpeakerphone },
-        { link: '', label: 'Charts', sceneName: 'Charts', icon: IconChartBar },
-        { link: '', label: 'Products', sceneName: 'Products', icon: IconShoppingCart },
-        { link: '', label: 'People', sceneName: 'People', icon: IconUsers },
-        { link: '', label: 'Localization', sceneName: 'Localization', icon: IconLanguage },
-        { link: '', label: 'Settings', sceneName: 'Settings', icon: IconSettings }
+        { link: urls.apps(sceneParams.params.projectId), label: 'Apps', scenes: ['Apps'], icon: IconDevices },
+        { link: urls.paywalls(sceneParams.params.projectId), label: 'Paywalls', scenes: ['Paywalls'], icon: IconReceipt2 },
+        { link: '', label: 'Templates', scenes: ['Templates'], icon: IconTemplate },
+        { link: urls.campaigns(sceneParams.params.projectId), label: 'Campaigns', scenes: ['Campaigns', 'Campaign'], icon: IconSpeakerphone },
+        { link: '', label: 'Charts', scenes: ['Charts'], icon: IconChartBar },
+        { link: '', label: 'Products', scenes: ['Products'], icon: IconShoppingCart },
+        { link: '', label: 'People', scenes: ['People'], icon: IconUsers },
+        { link: '', label: 'Localization', scenes: ['Localization'], icon: IconLanguage },
+        { link: '', label: 'Settings', scenes: ['Settings'], icon: IconSettings }
     ]
 
     const links = tabs.map((item) => (
@@ -29,7 +29,7 @@ export default function ProjectNavigation() {
             className={classes.link}
             href={item.link}
             key={item.label}
-            {...(item.sceneName === activeScene && { 'data-active': true })}
+            {...(item.scenes.includes(activeScene) && { 'data-active': true })}
         >
             <item.icon className={classes.linkIcon} stroke={1.5} />
             <span>{item.label}</span>

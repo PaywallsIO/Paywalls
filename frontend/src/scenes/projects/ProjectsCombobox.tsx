@@ -21,7 +21,7 @@ function didClickAddProject() {
 }
 
 function didClickProject(project: Project) {
-    router.actions.push(urls.projectApps(project.id))
+    router.actions.push(urls.apps(project.id))
 }
 
 const ProjectsCombobox = ({ children }: CustomComboboxProps): JSX.Element => {
