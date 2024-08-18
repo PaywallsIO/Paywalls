@@ -161,9 +161,11 @@ function AudienceDraggable({ key, index, audience }: { key: number, index: numbe
                             <Stack w={"100%"}>
                                 <Title order={4} fw={500}>Hello world </Title>
                             </Stack>
-                            <div {...provided.dragHandleProps} className={classes.dragHandle}>
-                                <IconGripVertical style={{ width: rem(18), height: rem(18) }} stroke={1.5} />
-                            </div>
+                            <Tooltip label="Reorder audience">
+                                <div {...provided.dragHandleProps} className={classes.dragHandle}>
+                                    <IconGripVertical style={{ width: rem(18), height: rem(18) }} stroke={1.5} />
+                                </div>
+                            </Tooltip>
                         </Flex>
                     </Anchor>
 
