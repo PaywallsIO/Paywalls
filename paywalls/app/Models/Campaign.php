@@ -16,6 +16,11 @@ class Campaign extends Model
         'name',
     ];
 
+    protected $with = [
+        'triggers',
+        'audiences',
+    ];
+
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);

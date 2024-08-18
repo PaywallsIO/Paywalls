@@ -1,4 +1,4 @@
-import { Text, Title, Loader, Center, Table, Stack, Flex, Button, Paper, Anchor } from "@mantine/core";
+import { Text, Title, Loader, Center, Group, Stack, Flex, Button, Paper, Anchor, Badge, Divider, Grid, Card } from "@mantine/core";
 import { useValues, useActions, BindLogic } from 'kea'
 import { SceneExport } from '../sceneTypes'
 import { modals } from "@mantine/modals"
@@ -8,6 +8,7 @@ import campaignsLogic, { CampaignsProps } from './campaignsLogic'
 import { router } from "kea-router";
 import { urls } from "../urls";
 import { formatDate } from "../../lib/date";
+import { IconBolt, IconChevronRight } from "@tabler/icons-react";
 
 
 interface CampaignsSceneProps {
@@ -54,24 +55,29 @@ function CampaignsScene() {
                 campaignsLoading ? (
                     <Center style={{ height: '100vh' }}><Loader color="blue" /></Center>
                 ) : campaigns.data.length ? (
-                    <Paper radius="md" withBorder style={{ overflow: 'hidden' }}>
-                        <Table>
-                            <Table.Thead>
-                                <Table.Tr>
-                                    <Table.Th>Name</Table.Th>
-                                    <Table.Th>Created At</Table.Th>
-                                </Table.Tr>
-                            </Table.Thead>
-                            <Table.Tbody>
-                                {campaigns.data.map((campaign) => (
-                                    <Table.Tr key={campaign.id}>
-                                        <Table.Td><Anchor onClick={() => push(urls.campaign(campaign.project_id, campaign.id))}>{campaign.name}</Anchor></Table.Td>
-                                        <Table.Td>{formatDate(campaign.created_at)}</Table.Td>
-                                    </Table.Tr>
-                                ))}
-                            </Table.Tbody>
-                        </Table>
-                    </Paper>
+                    <Grid>
+                        {campaigns.data.map((campaign) => (
+                            <Grid.Col span={{ base: 12, md: 6 }} key={campaign.id}>
+                                <Anchor underline="never" onClick={() => push(urls.campaign(campaign.project_id, campaign.id))}>
+                                    <Card shadow="sm" padding="md" radius="md" withBorder>
+                                        <Flex align={"center"}>
+                                            <Stack w={"100%"} gap={10}>
+                                                <Text c={"primary"} fw={600}>{campaign.name}</Text>
+                                                <Group gap={5}>
+                                                    {campaign.triggers.map((trigger) => (
+                                                        <Badge color="blue" variant="light" radius="md" size="lg" mr={10} leftSection={<IconBolt size={18} />}>
+                                                            <Text fw={500} size="xs">{trigger.event_name}</Text>
+                                                        </Badge>
+                                                    ))}
+                                                </Group>
+                                            </Stack>
+                                            <IconChevronRight color="var(--mantine-color-dimmed)" />
+                                        </Flex>
+                                    </Card>
+                                </Anchor>
+                            </Grid.Col>
+                        ))}
+                    </Grid>
                 ) : (
                     <Center>
                         <Stack>

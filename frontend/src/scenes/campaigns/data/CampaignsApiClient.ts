@@ -6,10 +6,32 @@ export interface CampaignsApiClientInterface {
     create(projectId: number, data: Partial<CreateCampaignRequest>): Promise<Campaign>
 }
 
+export type CampaignTrigger = {
+    id: number
+    campaign_id: number
+    event_name: string
+    is_active: boolean
+    created_at: Date
+    updated_at: Date
+}
+
+export type CampaignAudience = {
+    id: number
+    name: string
+    campaign_id: number
+    sort_order: number
+    filters: any[] // TODO
+    match_limit: number | null
+    created_at: Date
+    updated_at: Date
+}
+
 export type Campaign = {
     id: number
     name: string
     project_id: number
+    triggers: CampaignTrigger[]
+    audiences: CampaignAudience[]
     created_at: Date
     updated_at: Date
 }

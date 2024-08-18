@@ -20,8 +20,17 @@ class CampaignAudience extends Model
         'filters' => 'array',
     ];
 
+    protected $appends = [
+        'name',
+    ];
+
     public function campaign(): BelongsTo
     {
         return $this->belongsTo(Campaign::class);
+    }
+
+    public function getNameAttribute(): string
+    {
+        return json_encode($this->filters, JSON_UNESCAPED_UNICODE);
     }
 }
