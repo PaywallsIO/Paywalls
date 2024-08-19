@@ -69,8 +69,6 @@ export const routes: Record<string, Scene> = {
     [urls.login()]: Scene.Login,
     [urls.default()]: Scene.Dashboard,
 
-
-    // [urls.projectApp(':id')]: Scene.ProjectApp,
     [urls.apps(':projectId')]: Scene.Apps,
     [urls.paywalls(':projectId')]: Scene.Paywalls,
     [urls.campaigns(':projectId')]: Scene.Campaigns,

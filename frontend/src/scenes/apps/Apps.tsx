@@ -38,7 +38,7 @@ function AppsScene() {
                     <Title>Apps</Title>
                     <Button>New App</Button>
                 </Flex>
-                <Text size="sm">Create Apps for the applications that are apart of this projects. Apps can be iOS apps that are in production or development. Each app will get it's own API key. You'll then be able to attach app store products to specific apps however you'd like.</Text>
+                <Text size="sm">Create Apps for the applications that are apart of this projects. Apps can be iOS apps that are in production or development. Each app will get its own API key. You'll then be able to attach app store products to specific apps however you'd like.</Text>
             </Stack>
             {
                 appsLoading ? (

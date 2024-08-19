@@ -10,30 +10,26 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::resource('projects', App\Http\Controllers\ProjectController::class);
-});
+})->scopeBindings();
 
 Route::prefix('projects/{project}')->middleware(['auth:sanctum'])->group(function () {
     Route::resource('apps', App\Http\Controllers\AppController::class)
         ->middleware([
             'can:view,project',
-            'can:viewRelated,project,app',
         ]);
     Route::resource('paywalls', App\Http\Controllers\PaywallController::class)
         ->middleware([
             'can:view,project',
-            'can:viewRelated,project,paywall',
         ]);
     Route::resource('campaigns', App\Http\Controllers\CampaignController::class)
         ->middleware([
             'can:view,project',
-            'can:viewRelated,project,campaign',
         ]);
     Route::patch('paywalls/{paywall}/publish', [App\Http\Controllers\PaywallController::class, 'publish'])
         ->middleware([
             'can:update,project',
-            'can:viewRelated,project,paywall',
         ]);
-});
+})->scopeBindings();
 
 // Called from clients
 Route::middleware('auth:app')->group(function () {

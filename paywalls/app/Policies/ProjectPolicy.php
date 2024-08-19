@@ -15,15 +15,6 @@ class ProjectPolicy
         return true;
     }
 
-    public function viewRelated(User $user, Project $project, $related)
-    {
-        if (! $related) {
-            return $user->portal->id === $project->portal_id;
-        }
-
-        return $related->project_id === $project->id && $user->portal->id === $project->portal_id;
-    }
-
     /**
      * Determine whether the user can view the model.
      */
