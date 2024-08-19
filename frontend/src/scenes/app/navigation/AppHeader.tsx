@@ -26,21 +26,21 @@ export default function AppHeader({ opened, toggle }: { opened: boolean; toggle:
                     <Button
                         key={'dashboard'}
                         onClick={() => router.actions.push(urls.default())}
-                        {...(activeScene === Scene.Dashboard ? { variant: 'filled' } : { variant: 'transparent' })}
+                        {...(activeScene === Scene.Dashboard ? { variant: 'light' } : { variant: 'transparent' })}
                     >
                         <Text>Dashboard</Text>
                     </Button>
                     <Button
                         key={'customers'}
                         onClick={() => router.actions.push(urls.default())}
-                        {...(false ? { variant: 'filled' } : { variant: 'transparent' })}
+                        {...(false ? { variant: 'light' } : { variant: 'transparent' })}
                     >
                         <Text>Customers</Text>
                     </Button>
                     <ProjectsCombobox>
                         <Button
                             key={'projects'}
-                            {...(sceneParams.params.projectId ? { variant: 'filled' } : { variant: 'transparent' })}
+                            {...(sceneParams.params.projectId ? { variant: 'light' } : { variant: 'transparent' })}
                         >
                             <Group gap={3}>
                                 <Text>Projects</Text>

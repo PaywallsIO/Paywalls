@@ -17,7 +17,7 @@ initKea()
 
 export function Initial() {
   const theme = createTheme({
-    fontFamily: '"Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif'
+    fontFamily: '"Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif',
   })
 
   return (

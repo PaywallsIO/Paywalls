@@ -64,7 +64,7 @@ function CampaignsScene() {
                                             <Stack w={"100%"} gap={10}>
                                                 <Text c={"primary"} fw={600}>{campaign.name}</Text>
                                                 <Group gap={5}>
-                                                    {campaign.triggers.map((trigger) => (
+                                                    {campaign.triggers.filter((trigger) => trigger.is_active).map((trigger) => (
                                                         <Badge color="blue" variant="light" radius="md" size="lg" mr={10} leftSection={<IconBolt size={18} />}>
                                                             <Text fw={500} size="xs">{trigger.event_name}</Text>
                                                         </Badge>

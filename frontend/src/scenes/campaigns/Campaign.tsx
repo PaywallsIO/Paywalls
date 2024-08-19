@@ -4,7 +4,7 @@ import { SceneExport } from '../sceneTypes'
 import { useDisclosure, useListState } from '@mantine/hooks'
 import cx from 'clsx';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
-import { IconChevronDown, IconChevronRight, IconGripVertical, IconInfoCircle } from '@tabler/icons-react';
+import { IconChevronDown, IconChevronRight, IconGripVertical, IconInfoCircle, IconPlus } from '@tabler/icons-react';
 
 
 import { campaignLogic, CampaignProps } from './campaignLogic'
@@ -12,7 +12,12 @@ import { router } from "kea-router";
 import classes from './Campaign.module.scss'
 import { IconBolt, IconChevronLeft, IconPlayerPause, IconPlayerPauseFilled, IconPlayerPlayFilled, IconTrash, IconUsers } from "@tabler/icons-react";
 import { CampaignAudience } from "./data/CampaignsApiClient";
-
+import { useState } from 'react';
+import type { RuleGroupType } from 'react-querybuilder';
+import { QueryBuilder } from 'react-querybuilder';
+import 'react-querybuilder/dist/query-builder.scss';
+import { MantineProvider } from '@mantine/core';
+import { QueryBuilderMantine } from '@react-querybuilder/mantine';
 
 interface CampaignSceneProps {
     projectId?: number
@@ -64,10 +69,15 @@ function CampaignScene({ projectId, campaignId }: CampaignProps) {
                             </Group>
                         </Stack>
 
-                        <Group mb={0} gap={5}>
+                        <Flex mb={0} gap={5} align={"center"}>
                             <IconBolt size={22} />
-                            <Title order={4}>Triggers</Title>
-                        </Group>
+                            <Title order={4} w={"100%"}>Triggers</Title>
+                            <Tooltip label="Add trigger">
+                                <Button variant="light" radius="lg" size="compact-md" onClick={() => { }}>
+                                    <IconPlus />
+                                </Button>
+                            </Tooltip>
+                        </Flex>
 
                         <Group gap={10}>
                             {campaign.triggers.map((trigger) => (
@@ -101,12 +111,17 @@ function CampaignScene({ projectId, campaignId }: CampaignProps) {
 
                         <Space />
 
-                        <Group mb={0} gap={5}>
+                        <Flex mb={0} gap={5} align={"center"}>
                             <IconUsers size={22} />
-                            <Title order={4}>Audiences</Title>
-                        </Group>
+                            <Title order={4} w={"100%"}>Audiences</Title>
+                            <Tooltip label="New Audience">
+                                <Button variant="light" radius="lg" size="compact-md" onClick={() => { }}>
+                                    <IconPlus />
+                                </Button>
+                            </Tooltip>
+                        </Flex>
 
-                        <Text>Create audiences with filters and an optional match limit. Audiences will be evaludated in order from top to bottom. The first matching audience will be used. In that sense it is better to put more permissive audiences first. For example, you would place an audience that matches users in the United States before matching users in North America (because United States is a part of North America).</Text>
+                        <Text>Create audiences with filters and an optional match limit. Audiences will be evaludated in order from top to bottom. The first matching audience will be used. In that sense it is better to put more specific audiences first. For example, you would place an audience that matches users in the United States before matching users in North America (because United States is a part of North America).</Text>
 
                         <Audiences audiences={campaign.audiences} />
                     </>
@@ -170,11 +185,34 @@ function AudienceDraggable({ key, index, audience }: { key: number, index: numbe
                     </Anchor>
 
                     <Collapse in={opened}>
-                        <Text>Hello world</Text>
+                        <AudienceQueryBuilder />
                     </Collapse>
                 </Paper>
             )
             }
         </Draggable >
+    );
+}
+
+function AudienceQueryBuilder(): JSX.Element {
+    const initialQuery: RuleGroupType = { combinator: 'and', rules: [] }
+    const [query, setQuery] = useState(initialQuery)
+    const fields = [
+        {
+            name: 'firstName',
+            label: 'First Name',
+            placeholder: 'Enter first name',
+        },
+    ]
+
+    return (
+        <QueryBuilderMantine>
+            <QueryBuilder
+                fields={fields}
+                query={query}
+                onQueryChange={setQuery}
+                controlClassnames={{ queryBuilder: 'queryBuilder' }}
+            />
+        </QueryBuilderMantine>
     );
 }
