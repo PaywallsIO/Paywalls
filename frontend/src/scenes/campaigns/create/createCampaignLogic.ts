@@ -4,10 +4,10 @@ import type { createCampaignLogicType } from './createCampaignLogicType'
 import { notifications } from '@mantine/notifications'
 import { router } from 'kea-router'
 import { modals } from '@mantine/modals'
-import { CreateCampaignRequest, CampaignsApiClient } from '../data/CampaignsApiClient'
+import { CreateCampaignRequest, CampaignsApiClient, CampaignsApiClientInterface } from '../data/CampaignsApiClient'
 import { apiClient } from '../../../lib/api'
 
-const campaignsApiClient = new CampaignsApiClient(apiClient)
+const campaignsApiClient: CampaignsApiClientInterface = new CampaignsApiClient(apiClient)
 
 const createCampaignLogic = kea<createCampaignLogicType>([
   path(['scenes', 'campaigns', 'create', 'createCampaignLogic']),
@@ -17,7 +17,7 @@ const createCampaignLogic = kea<createCampaignLogicType>([
         name: '',
       } as CreateCampaignRequest,
       errors: ({ name }: CreateCampaignRequest) => ({
-        password: !name ? 'A name is required' : null,
+        name: !name ? 'A name is required' : null,
       }),
       submit: async ({ name }) => {
         try {

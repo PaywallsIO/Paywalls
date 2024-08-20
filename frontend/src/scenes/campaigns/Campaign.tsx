@@ -18,6 +18,7 @@ import { QueryBuilder } from 'react-querybuilder';
 import 'react-querybuilder/dist/query-builder.scss';
 import { MantineProvider } from '@mantine/core';
 import { QueryBuilderMantine } from '@react-querybuilder/mantine';
+import { Audience } from "./audience/Audience";
 
 interface CampaignSceneProps {
     projectId?: number
@@ -156,7 +157,7 @@ function Audiences({ audiences }: { audiences: CampaignAudience[] }): JSX.Elemen
     )
 }
 
-function AudienceDraggable({ key, index, audience }: { key: number, index: number, audience: CampaignAudience }): JSX.Element {
+function AudienceDraggable({ index, audience }: { index: number, audience: CampaignAudience }): JSX.Element {
     const [opened, { toggle }] = useDisclosure(false);
 
     return (
@@ -174,7 +175,7 @@ function AudienceDraggable({ key, index, audience }: { key: number, index: numbe
                                 {opened ? <IconChevronDown /> : <IconChevronRight />}
                             </Button>
                             <Stack w={"100%"}>
-                                <Title order={4} fw={500}>Hello world </Title>
+                                <Title order={4} fw={500}>{audience.name}</Title>
                             </Stack>
                             <Tooltip label="Reorder audience">
                                 <div {...provided.dragHandleProps} className={classes.dragHandle}>
@@ -185,34 +186,11 @@ function AudienceDraggable({ key, index, audience }: { key: number, index: numbe
                     </Anchor>
 
                     <Collapse in={opened}>
-                        <AudienceQueryBuilder />
+                        <Audience audience={audience} />
                     </Collapse>
                 </Paper>
             )
             }
         </Draggable >
-    );
-}
-
-function AudienceQueryBuilder(): JSX.Element {
-    const initialQuery: RuleGroupType = { combinator: 'and', rules: [] }
-    const [query, setQuery] = useState(initialQuery)
-    const fields = [
-        {
-            name: 'firstName',
-            label: 'First Name',
-            placeholder: 'Enter first name',
-        },
-    ]
-
-    return (
-        <QueryBuilderMantine>
-            <QueryBuilder
-                fields={fields}
-                query={query}
-                onQueryChange={setQuery}
-                controlClassnames={{ queryBuilder: 'queryBuilder' }}
-            />
-        </QueryBuilderMantine>
     );
 }
