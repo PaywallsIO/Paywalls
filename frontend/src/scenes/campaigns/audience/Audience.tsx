@@ -7,6 +7,8 @@ import QueryBuilder, { formatQuery, RuleGroupType } from 'react-querybuilder'
 import { parseJsonLogic } from "react-querybuilder/parseJsonLogic";
 import { QueryBuilderMantine } from '@react-querybuilder/mantine'
 import { IconFilter, IconFlame } from '@tabler/icons-react'
+import './QueryBuilder.scss'
+import { useState } from 'react'
 
 export function Audience({ audience }: { audience: CampaignAudience }): JSX.Element {
     return (
@@ -18,6 +20,9 @@ export function Audience({ audience }: { audience: CampaignAudience }): JSX.Elem
 
 function AudienceForm(): JSX.Element {
     const { isAudienceFormSubmitting } = useValues(audienceLogic)
+    const initialQuery: RuleGroupType = { combinator: 'and', rules: [] };
+    const [query, setQuery] = useState(initialQuery);
+
     return (
         <Form logic={audienceLogic} formKey="audienceForm" enableFormOnSubmit>
             <Divider my="sm" />
@@ -26,11 +31,16 @@ function AudienceForm(): JSX.Element {
                     <IconFilter size={16} />
                     <Title order={5}>Filters</Title>
                 </Group>
-                <Text size='sm' c="dimmed">Filter this audience by user property, device property, or event property</Text>
+                <Text size='sm' c="dimmed">Filter by user properties, device properties, or event properties</Text>
 
                 <Field name="filters">
-                    {({ value, onChange }) => (
-                        <AudienceQueryBuilder query={parseJsonLogic(value)} onChange={onChange} />
+                    {({ value: queryValue, onChange }) => (
+                        <>
+                            <AudienceQueryBuilder query={query} onQueryChange={(query) => {
+                                setQuery(query)
+                                onChange(formatQuery(query, 'jsonlogic'))
+                            }} />
+                        </>
                     )}
                 </Field>
 
@@ -46,6 +56,7 @@ function AudienceForm(): JSX.Element {
                     <Field name="matchLimit">
                         {({ value, onChange }) => (
                             <NumberInput
+                                variant='filled'
                                 min={0}
                                 placeholder="Match limit"
                                 radius="md"
@@ -59,6 +70,7 @@ function AudienceForm(): JSX.Element {
                     <Field name="matchPeriod">
                         {({ value, onChange }) => (
                             <NumberInput
+                                variant='filled'
                                 min={0}
                                 placeholder="Match period"
                                 radius="md"
@@ -77,7 +89,7 @@ function AudienceForm(): JSX.Element {
     )
 }
 
-function AudienceQueryBuilder({ query, onChange }: { query: RuleGroupType, onChange: (value: RuleGroupType) => void }): JSX.Element {
+function AudienceQueryBuilder({ query, onQueryChange }: { query: RuleGroupType, onQueryChange: (value: RuleGroupType) => void }): JSX.Element {
     const fields = [
         {
             name: 'firstName',
@@ -87,14 +99,11 @@ function AudienceQueryBuilder({ query, onChange }: { query: RuleGroupType, onCha
     ]
 
     return (
-
         <QueryBuilderMantine>
             <QueryBuilder
                 fields={fields}
                 query={query}
-                onQueryChange={(query) => {
-                    onChange(formatQuery(query, 'jsonlogic'))
-                }}
+                onQueryChange={onQueryChange}
                 controlClassnames={{ queryBuilder: 'queryBuilder-branches' }}
             />
         </QueryBuilderMantine>

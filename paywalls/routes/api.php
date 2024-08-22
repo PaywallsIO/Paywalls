@@ -29,6 +29,13 @@ Route::prefix('projects/{project}')->middleware(['auth:sanctum'])->group(functio
         ->middleware([
             'can:update,project',
         ]);
+
+    Route::prefix(('campaigns/{campaign}'))->group(function () {
+        Route::resource('audiences', App\Http\Controllers\CampaignController::class)
+            ->middleware([
+                'can:view,project',
+            ]);
+    });
 })->scopeBindings();
 
 // Called from clients
