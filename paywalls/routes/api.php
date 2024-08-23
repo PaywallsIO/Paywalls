@@ -4,24 +4,24 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 // Called from FE
-Route::middleware('auth:sanctum')->group(function () {
+Route::scopeBindings()->middleware('auth:sanctum')->group(function () {
     Route::get('user', function (Request $request) {
         return $request->user();
     });
 
-    Route::resource('projects', App\Http\Controllers\ProjectController::class);
-})->scopeBindings();
+    Route::apiResource('projects', App\Http\Controllers\ProjectController::class);
+});
 
-Route::prefix('projects/{project}')->middleware(['auth:sanctum'])->group(function () {
-    Route::resource('apps', App\Http\Controllers\AppController::class)
+Route::scopeBindings()->prefix('projects/{project}')->middleware(['auth:sanctum'])->group(function () {
+    Route::apiResource('apps', App\Http\Controllers\AppController::class)
         ->middleware([
             'can:view,project',
         ]);
-    Route::resource('paywalls', App\Http\Controllers\PaywallController::class)
+    Route::apiResource('paywalls', App\Http\Controllers\PaywallController::class)
         ->middleware([
             'can:view,project',
         ]);
-    Route::resource('campaigns', App\Http\Controllers\CampaignController::class)
+    Route::apiResource('campaigns', App\Http\Controllers\CampaignController::class)
         ->middleware([
             'can:view,project',
         ]);
@@ -30,13 +30,10 @@ Route::prefix('projects/{project}')->middleware(['auth:sanctum'])->group(functio
             'can:update,project',
         ]);
 
-    Route::prefix(('campaigns/{campaign}'))->group(function () {
-        Route::resource('audiences', App\Http\Controllers\CampaignController::class)
-            ->middleware([
-                'can:view,project',
-            ]);
+    Route::scopeBindings()->prefix('campaigns/{campaign}')->middleware(['auth:sanctum', 'can:update,project'])->group(function () {
+        Route::apiResource('audiences', App\Http\Controllers\AudienceController::class);
     });
-})->scopeBindings();
+});
 
 // Called from clients
 Route::middleware('auth:app')->group(function () {

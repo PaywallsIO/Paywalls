@@ -10,9 +10,9 @@ import { IconFilter, IconFlame } from '@tabler/icons-react'
 import './QueryBuilder.scss'
 import { useState } from 'react'
 
-export function Audience({ audience }: { audience: CampaignAudience }): JSX.Element {
+export function Audience({ projectId, audience }: { projectId: number, audience: CampaignAudience }): JSX.Element {
     return (
-        <BindLogic logic={audienceLogic} props={{ audience }}>
+        <BindLogic logic={audienceLogic} props={{ projectId, audience }}>
             <AudienceForm />
         </BindLogic>
     )
@@ -20,7 +20,7 @@ export function Audience({ audience }: { audience: CampaignAudience }): JSX.Elem
 
 function AudienceForm(): JSX.Element {
     const { isAudienceFormSubmitting } = useValues(audienceLogic)
-    const initialQuery: RuleGroupType = { combinator: 'and', rules: [] };
+    const initialQuery: RuleGroupType = { combinator: 'or', rules: [] };
     const [query, setQuery] = useState(initialQuery);
 
     return (
@@ -34,7 +34,7 @@ function AudienceForm(): JSX.Element {
                 <Text size='sm' c="dimmed">Filter by user properties, device properties, or event properties</Text>
 
                 <Field name="filters">
-                    {({ value: queryValue, onChange }) => (
+                    {({ value: queryValue, onChange }: { value: RuleGroupType, onChange: (value: RuleGroupType) => void }) => (
                         <>
                             <AudienceQueryBuilder query={query} onQueryChange={(query) => {
                                 setQuery(query)
@@ -53,7 +53,7 @@ function AudienceForm(): JSX.Element {
                 <Text size='sm' c="dimmed">The amount of times in which a user can match this audience for a given time period</Text>
                 <Group>
                     <Text>up to</Text>
-                    <Field name="matchLimit">
+                    <Field name="match_limit">
                         {({ value, onChange }) => (
                             <NumberInput
                                 variant='filled'
@@ -67,7 +67,7 @@ function AudienceForm(): JSX.Element {
                         )}
                     </Field>
                     <Text>times every</Text>
-                    <Field name="matchPeriod">
+                    <Field name="match_period">
                         {({ value, onChange }) => (
                             <NumberInput
                                 variant='filled'

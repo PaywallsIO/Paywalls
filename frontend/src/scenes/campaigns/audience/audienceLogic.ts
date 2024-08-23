@@ -1,4 +1,4 @@
-import { kea, key, path, props } from 'kea'
+import { actions, afterMount, kea, key, listeners, path, props } from 'kea'
 import { forms } from 'kea-forms'
 import { notifications } from '@mantine/notifications'
 import type { audienceLogicType } from './audienceLogicType'
@@ -19,19 +19,18 @@ export const audienceLogic = kea<audienceLogicType>([
     forms(({ props, actions }) => ({
         audienceForm: {
             defaults: {
-                filters: [],
-                matchLimit: null,
-                matchPeriod: null
+                filters: props.audience.filters,
+                match_limit: props.audience.match_limit,
+                match_period: props.audience.match_period
             } as AudienceRequest,
             errors: (request: AudienceRequest) => ({
                 // no-op
             }),
             submit: async (request: AudienceRequest) => {
-                console.log(request)
                 try {
                     const response = await campaignApiClient.saveAudience(
                         props.projectId,
-                        props.audience.id,
+                        props.audience,
                         request
                     )
 
@@ -51,5 +50,5 @@ export const audienceLogic = kea<audienceLogicType>([
                 }
             },
         },
-    })),
+    }))
 ])

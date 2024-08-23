@@ -3,7 +3,8 @@ import { ApiClientInterface, Paginated } from "../../../lib/api"
 export interface CampaignsApiClientInterface {
     getCampaigns(projectId: number): Promise<Paginated<Campaign>>
     getCampaign(projectId: number, campaignId: number): Promise<Campaign>
-    saveAudience(projectId: number, campaignId: number, data: AudienceRequest): Promise<CampaignAudience>
+    createAudience(projectId: number, campaignId: number, data: CreateAudienceRequest): Promise<CampaignAudience>
+    saveAudience(projectId: number, audience: CampaignAudience, data: AudienceRequest): Promise<CampaignAudience>
     create(projectId: number, data: Partial<CreateCampaignRequest>): Promise<Campaign>
 }
 
@@ -21,8 +22,9 @@ export type CampaignAudience = {
     name: string
     campaign_id: number
     sort_order: number
-    filters: any[] // TODO
+    filters: any[]
     match_limit: number | null
+    match_period: number | null
     created_at: Date
     updated_at: Date
 }
@@ -41,10 +43,14 @@ export type CreateCampaignRequest = {
     name: string
 }
 
+export type CreateAudienceRequest = {
+    name: string
+}
+
 export type AudienceRequest = {
     filters: Object
-    matchLimit: string | number | null
-    matchPeriod: string | number | null
+    match_limit: string | number | null
+    match_period: string | number | null
 }
 
 export class CampaignsApiClient implements CampaignsApiClientInterface {
@@ -58,8 +64,12 @@ export class CampaignsApiClient implements CampaignsApiClientInterface {
         return this.api.get(`/api/projects/${projectId}/campaigns/${campaignId}`)
     }
 
-    async saveAudience(projectId: number, campaignId: number, data: AudienceRequest): Promise<CampaignAudience> {
-        return this.api.patch(`/api/projects/${projectId}/campaigns/${campaignId}/audiences`, data)
+    async createAudience(projectId: number, campaignId: number, data: CreateAudienceRequest): Promise<CampaignAudience> {
+        return this.api.post(`/api/projects/${projectId}/campaigns/${campaignId}/audiences`, data)
+    }
+
+    async saveAudience(projectId: number, audience: CampaignAudience, data: AudienceRequest): Promise<CampaignAudience> {
+        return this.api.patch(`/api/projects/${projectId}/campaigns/${audience.campaign_id}/audiences/${audience.id}`, data)
     }
 
     async create(projectId: number, data: Partial<CreateCampaignRequest>): Promise<Campaign> {

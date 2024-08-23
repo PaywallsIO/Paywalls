@@ -11,26 +11,19 @@ class CampaignAudience extends Model
     use HasFactory;
 
     protected $fillable = [
+        'name',
         'filters',
         'sort_order',
         'match_limit',
+        'match_period',
     ];
 
     protected $casts = [
         'filters' => 'array',
     ];
 
-    protected $appends = [
-        'name',
-    ];
-
     public function campaign(): BelongsTo
     {
         return $this->belongsTo(Campaign::class);
-    }
-
-    public function getNameAttribute(): string
-    {
-        return json_encode($this->filters, JSON_UNESCAPED_UNICODE);
     }
 }

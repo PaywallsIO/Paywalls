@@ -19,6 +19,8 @@ import 'react-querybuilder/dist/query-builder.scss';
 import { MantineProvider } from '@mantine/core';
 import { QueryBuilderMantine } from '@react-querybuilder/mantine';
 import { Audience } from "./audience/Audience";
+import { modals } from "@mantine/modals";
+import { CreateAudienceForm } from "./audience/create/CreateAudienceForm";
 
 interface CampaignSceneProps {
     projectId?: number
@@ -41,6 +43,13 @@ export function Campaign(): JSX.Element {
             <CampaignScene {...{ projectId, campaignId }} />
         </BindLogic>
     )
+}
+
+function didClickCreateAudience(projectId: number, campaignId: number) {
+    modals.open({
+        title: 'Create Audience',
+        children: <CreateAudienceForm projectId={projectId} campaignId={campaignId} />
+    })
 }
 
 function CampaignScene({ projectId, campaignId }: CampaignProps) {
@@ -116,7 +125,7 @@ function CampaignScene({ projectId, campaignId }: CampaignProps) {
                             <IconUsers size={22} />
                             <Title order={4} w={"100%"}>Audiences</Title>
                             <Tooltip label="New Audience">
-                                <Button variant="light" radius="lg" size="compact-md" onClick={() => { }}>
+                                <Button variant="light" radius="lg" size="compact-md" onClick={() => didClickCreateAudience(projectId, campaignId)}>
                                     <IconPlus />
                                 </Button>
                             </Tooltip>
@@ -124,7 +133,7 @@ function CampaignScene({ projectId, campaignId }: CampaignProps) {
 
                         <Text>Create audiences with filters and an optional match limit. Audiences will be evaludated in order from top to bottom. The first matching audience will be used. In that sense it is better to put more specific audiences first. For example, you would place an audience that matches users in the United States before matching users in North America (because United States is a part of North America).</Text>
 
-                        <Audiences audiences={campaign.audiences} />
+                        <Audiences audiences={campaign.audiences} projectId={projectId} />
                     </>
                 )
             }
@@ -132,11 +141,11 @@ function CampaignScene({ projectId, campaignId }: CampaignProps) {
     )
 }
 
-function Audiences({ audiences }: { audiences: CampaignAudience[] }): JSX.Element {
+function Audiences({ projectId, audiences }: { projectId: number, audiences: CampaignAudience[] }): JSX.Element {
     const [state, handlers] = useListState(audiences);
 
     const items = state.map((audience, index) => (
-        <AudienceDraggable key={audience.id} index={index} audience={audience} />
+        <AudienceDraggable key={audience.id} index={index} audience={audience} projectId={projectId} />
     ));
 
     return (
@@ -157,7 +166,7 @@ function Audiences({ audiences }: { audiences: CampaignAudience[] }): JSX.Elemen
     )
 }
 
-function AudienceDraggable({ index, audience }: { index: number, audience: CampaignAudience }): JSX.Element {
+function AudienceDraggable({ index, projectId, audience }: { index: number, projectId: number, audience: CampaignAudience }): JSX.Element {
     const [opened, { toggle }] = useDisclosure(false);
 
     return (
@@ -186,7 +195,7 @@ function AudienceDraggable({ index, audience }: { index: number, audience: Campa
                     </Anchor>
 
                     <Collapse in={opened}>
-                        <Audience audience={audience} />
+                        <Audience audience={audience} projectId={projectId} />
                     </Collapse>
                 </Paper>
             )
