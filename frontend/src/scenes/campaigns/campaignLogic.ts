@@ -1,6 +1,6 @@
 import { afterMount, kea, path, actions, defaults, key, props, selectors } from 'kea'
 import { loaders } from 'kea-loaders'
-import { Campaign, CampaignsApiClient, CampaignsApiClientInterface } from './data/CampaignsApiClient'
+import { Campaign, CampaignAudience, CampaignsApiClient, CampaignsApiClientInterface, UpdateSortOrderRequest } from './data/CampaignsApiClient'
 import { apiClient, Paginated } from '../../lib/api'
 import type { campaignLogicType } from './campaignLogicType'
 
@@ -22,14 +22,14 @@ export const campaignLogic = kea<campaignLogicType>([
         projectId: [() => [(_, props) => props], (props): number => props.projectId],
         campaignId: [() => [(_, props) => props], (props): number => props.campaignId],
     }),
-    actions({
-        loadCampaigns: () => ({}),
-    }),
     loaders(({ props }) => ({
         campaign: {
             loadCampaign: async () => {
                 return await campaignsApiClient.getCampaign(props.projectId, props.campaignId)
             },
+            updateSortOrder: async (request: UpdateSortOrderRequest) => {
+                return await campaignsApiClient.updateSortOrder(props.projectId, props.campaignId, request)
+            }
         },
     })),
     afterMount(({ actions }) => {

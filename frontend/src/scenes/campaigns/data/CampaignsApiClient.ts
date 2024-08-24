@@ -5,6 +5,7 @@ export interface CampaignsApiClientInterface {
     getCampaign(projectId: number, campaignId: number): Promise<Campaign>
     createAudience(projectId: number, campaignId: number, data: CreateAudienceRequest): Promise<CampaignAudience>
     saveAudience(projectId: number, audience: CampaignAudience, data: AudienceRequest): Promise<CampaignAudience>
+    updateSortOrder(projectId: number, campaignId: number, audiences: UpdateSortOrderRequest): Promise<Campaign>
     create(projectId: number, data: Partial<CreateCampaignRequest>): Promise<Campaign>
 }
 
@@ -53,6 +54,10 @@ export type AudienceRequest = {
     match_period: string | number | null
 }
 
+export type UpdateSortOrderRequest = {
+    audiences: { id: number, sort_order: number }[]
+}
+
 export class CampaignsApiClient implements CampaignsApiClientInterface {
     constructor(public api: ApiClientInterface) { }
 
@@ -70,6 +75,10 @@ export class CampaignsApiClient implements CampaignsApiClientInterface {
 
     async saveAudience(projectId: number, audience: CampaignAudience, data: AudienceRequest): Promise<CampaignAudience> {
         return this.api.patch(`/api/projects/${projectId}/campaigns/${audience.campaign_id}/audiences/${audience.id}`, data)
+    }
+
+    async updateSortOrder(projectId: number, campaignId: number, audiences: UpdateSortOrderRequest): Promise<Campaign> {
+        return this.api.patch(`/api/projects/${projectId}/campaigns/${campaignId}/audiences/sort_order`, audiences)
     }
 
     async create(projectId: number, data: Partial<CreateCampaignRequest>): Promise<Campaign> {

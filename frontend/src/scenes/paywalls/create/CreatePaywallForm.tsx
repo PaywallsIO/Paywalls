@@ -25,7 +25,7 @@ export function CreatePaywallForm(): JSX.Element {
                     </Field>
                 </Stack>
 
-                <Button type="submit" mt="xl" disabled={isCreatePaywallFormSubmitting}>Let's go!</Button>
+                <Button type="submit" mt="xl" disabled={isCreatePaywallFormSubmitting}>Create Paywall</Button>
             </Form>
         </>
     )

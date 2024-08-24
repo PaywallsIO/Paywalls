@@ -38,6 +38,6 @@ class Campaign extends Model
 
     public function audiences(): HasMany
     {
-        return $this->hasMany(CampaignAudience::class);
+        return $this->hasMany(CampaignAudience::class)->orderBy('sort_order', 'asc');
     }
 }

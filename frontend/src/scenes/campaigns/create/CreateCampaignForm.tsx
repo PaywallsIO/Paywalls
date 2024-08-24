@@ -25,7 +25,7 @@ export function CreateCampaignForm(): JSX.Element {
                     </Field>
                 </Stack>
 
-                <Button type="submit" mt="xl" disabled={isCreateCampaignFormSubmitting}>Let's go!</Button>
+                <Button type="submit" mt="xl" disabled={isCreateCampaignFormSubmitting}>Create Campaign</Button>
             </Form>
         </>
     )

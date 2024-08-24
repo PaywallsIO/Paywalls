@@ -25,7 +25,7 @@ export function CreateAudienceForm({ projectId, campaignId }: CreateAudienceProp
                     </Field>
                 </Stack>
 
-                <Button type="submit" mt="xl" disabled={isCreateAudienceFormSubmitting}>Let's go!</Button>
+                <Button type="submit" mt="xl" disabled={isCreateAudienceFormSubmitting}>Create Audience</Button>
             </Form>
         </>
     )

@@ -31,6 +31,8 @@ Route::scopeBindings()->prefix('projects/{project}')->middleware(['auth:sanctum'
         ]);
 
     Route::scopeBindings()->prefix('campaigns/{campaign}')->middleware(['auth:sanctum', 'can:update,project'])->group(function () {
+        Route::patch('audiences/sort_order', [App\Http\Controllers\AudienceController::class, 'updateSortOrder'])
+            ->name('audiences.updateSortOrder');
         Route::apiResource('audiences', App\Http\Controllers\AudienceController::class);
     });
 });
