@@ -20,7 +20,7 @@ const createProjectLogic = kea<createProjectLogicType>([
                 name: '',
             } as CreateProjectRequest,
             errors: ({ name }: CreateProjectRequest) => ({
-                password: !name ? 'A name is required' : null,
+                name: !name ? 'A name is required' : null,
             }),
             submit: async ({ name }) => {
                 try {
