@@ -34,7 +34,8 @@ function AudienceForm(): JSX.Element {
     const { isAudienceFormSubmitting } = useValues(audienceLogic)
     const { deleteAudience } = useActions(campaignLogic)
     const { audience } = useValues(audienceLogic)
-    const [query, setQuery] = useState(parseJsonLogic(audience.filters));
+    const initialQuery: RuleGroupType = parseJsonLogic(audience.filters)
+    const [query, setQuery] = useState(initialQuery);
 
     return (
         <Form logic={audienceLogic} formKey="audienceForm" enableFormOnSubmit>

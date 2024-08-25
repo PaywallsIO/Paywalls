@@ -1,4 +1,4 @@
-import { IconSwitchHorizontal, IconLogout, IconReceipt2, IconUsers, IconSettings, IconChartBar, IconLanguage, IconSpeakerphone, IconTemplate, IconHome, IconChevronDown, IconShoppingCart, IconDevices } from '@tabler/icons-react'
+import { IconSwitchHorizontal, IconLogout, IconReceipt2, IconUsers, IconSettings, IconChartBar, IconLanguage, IconSpeakerphone, IconTemplate, IconChevronDown, IconShoppingCart, IconDevices } from '@tabler/icons-react'
 import { Group, Title, Avatar, Flex, UnstyledButton, Center, Divider } from '@mantine/core'
 import classes from './Navigation.module.css'
 import { A } from 'kea-router';
@@ -29,7 +29,7 @@ export default function ProjectNavigation() {
             className={classes.link}
             href={item.link}
             key={item.label}
-            {...(item.scenes.includes(activeScene) && { 'data-active': true })}
+            {...(activeScene && item.scenes.includes(activeScene) && { 'data-active': true })}
         >
             <item.icon className={classes.linkIcon} stroke={1.5} />
             <span>{item.label}</span>

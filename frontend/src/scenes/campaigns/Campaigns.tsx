@@ -8,6 +8,7 @@ import campaignsLogic, { CampaignsProps } from './campaignsLogic'
 import { router } from "kea-router";
 import { urls } from "../urls";
 import { IconBolt, IconChevronRight } from "@tabler/icons-react";
+import { CampaignTrigger } from "./data/CampaignsApiClient";
 
 
 interface CampaignsSceneProps {
@@ -56,7 +57,7 @@ function CampaignsScene() {
                                                 <Text c={"primary"} fw={600}>{campaign.name}</Text>
                                                 {campaign.triggers.length > 0 ? (
                                                     <Group gap={5}>
-                                                        {campaign.triggers.filter((trigger) => trigger.is_active).map((trigger) => (
+                                                        {campaign.triggers.filter((trigger: CampaignTrigger) => trigger.is_active).map((trigger: CampaignTrigger) => (
                                                             <Badge key={trigger.id} color="blue" variant="light" radius="md" size="lg" mr={10} leftSection={<IconBolt size={18} />}>
                                                                 <Text fw={500} size="xs" style={{ textTransform: 'none' }}><pre>{trigger.event_name}</pre></Text>
                                                             </Badge>

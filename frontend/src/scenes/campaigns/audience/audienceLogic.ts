@@ -9,9 +9,8 @@ import {
     CampaignsApiClient,
     CampaignsApiClientInterface,
 } from '../data/CampaignsApiClient'
-import { apiClient } from '../../../lib/api'
 
-type AudienceProps = {
+export type AudienceProps = {
     projectId: number
     audience: CampaignAudience
 }

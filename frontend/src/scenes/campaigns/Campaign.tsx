@@ -114,7 +114,7 @@ function CampaignScene({ projectId, campaignId }: CampaignProps) {
                             {campaign.triggers.length > 0 ? (
                                 <Group gap={10}>
                                     {
-                                        campaign.triggers.map((trigger) => (
+                                        campaign.triggers.map((trigger: CampaignTrigger) => (
                                             <Badge key={trigger.id} color="blue" variant={trigger.is_active ? "light" : "default"} radius="lg" size="xl" rightSection={(
                                                 <>
                                                     {trigger.is_active ? (
@@ -134,7 +134,7 @@ function CampaignScene({ projectId, campaignId }: CampaignProps) {
                                                     )}
                                                     <Tooltip label="Delete trigger">
                                                         <Button variant="transparent" p={0} className={classes.deleteButton} size="compact-xs" onClick={
-                                                            () => didClickDeleteTrigger(() => deleteTrigger({ triggerId: trigger.id }))
+                                                            () => didClickDeleteTrigger(() => deleteTrigger(trigger.id))
                                                         }>
                                                             <IconTrash style={{ width: rem(15), height: rem(15) }} />
                                                         </Button>

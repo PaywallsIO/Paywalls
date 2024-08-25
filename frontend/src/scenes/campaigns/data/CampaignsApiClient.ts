@@ -59,7 +59,7 @@ export type CreateEditAudienceRequest = {
 }
 
 export type AudienceRequest = {
-    name: string
+    name?: string
     filters: Object
     match_limit: string | number | null
     match_period: string | number | null
