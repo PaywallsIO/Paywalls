@@ -2,11 +2,12 @@ import { LogicWrapper } from 'kea'
 
 export enum Scene {
     Dashboard = 'Dashboard',
-    // Customers = 'Customers',
-    // Projects = 'Projects',
     Editor = 'Editor',
     Login = 'Login',
+    Apps = 'Apps',
     Paywalls = 'Paywalls',
+    Campaigns = 'Campaigns',
+    Campaign = 'Campaign',
     Error404 = '404',
     ErrorNetwork = '4xx',
 }
@@ -55,13 +56,5 @@ export interface SceneConfig {
      * If `plain`, there's no navigation present, and the scene has no padding.
      * @default 'app'
      */
-    layout?: 'app' | 'app-raw' | 'app-container' | 'plain'
-    /** Route requires organization access (used e.g. by breadcrumbs) */
-    organizationBased?: boolean
-    /** Route requires project access (used e.g. by breadcrumbs). `true` implies also `organizationBased` */
-    projectBased?: boolean
-    /** Instance management (used e.g. by breadcrumbs) */
-    instanceLevel?: boolean
-    /** Default docs path - what the docs side panel will open by default if this scene is active  */
-    defaultDocsPath?: string
+    layout?: 'app' | 'project' | 'plain'
 }

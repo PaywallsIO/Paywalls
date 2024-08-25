@@ -2,26 +2,25 @@
 
 namespace App\Policies;
 
-use App\Models\Paywall;
+use App\Models\Project;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
-class PaywallPolicy
+class ProjectPolicy
 {
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-        //
+        return true;
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Paywall $paywall): bool
+    public function view(User $user, Project $project): bool
     {
-        //
+        return $user->portal->id === $project->portal_id;
     }
 
     /**
@@ -29,38 +28,38 @@ class PaywallPolicy
      */
     public function create(User $user): bool
     {
-        //
+        return true;
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Paywall $paywall): bool
+    public function update(User $user, Project $project): bool
     {
-        //
+        return $user->portal->id === $project->portal_id;
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Paywall $paywall): bool
+    public function delete(User $user, Project $project): bool
     {
-        //
+        return $user->portal->id === $project->portal_id;
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Paywall $paywall): bool
+    public function restore(User $user, Project $project): bool
     {
-        //
+        return $user->portal->id === $project->portal_id;
     }
 
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Paywall $paywall): bool
+    public function forceDelete(User $user, Project $project): bool
     {
-        //
+        return $user->portal->id === $project->portal_id;
     }
 }

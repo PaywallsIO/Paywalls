@@ -113,7 +113,7 @@ class ProcessAppUserService
         $mergeIntoAppUser = $this->portal->fetchAppUser($mergeIntoDistinctId);
 
         if ($otherAppUser && ! $mergeIntoAppUser) {
-            // @davidmoreen Merge user doesnt exists but other does. Attach the merge distinct id to the other user by inserting it into the app_user_distinct_ids table
+            // @davidmoreen Merge user doesnt exists but other does. Attach the merge distinct id to the other user by inserting it into the app_user_distinct_id table
             // with the other users' app_user_id
             $this->portal->appUserDistinctIds()->create([
                 'app_user_id' => $otherAppUser->id,
@@ -122,7 +122,7 @@ class ProcessAppUserService
 
             return $otherAppUser;
         } elseif (! $otherAppUser && $mergeIntoAppUser) {
-            // @davidmoreen Merge user exists but other doesn't. Attach the other distinct id to the other user by inserting it into the app_user_distinct_ids table
+            // @davidmoreen Merge user exists but other doesn't. Attach the other distinct id to the other user by inserting it into the app_user_distinct_id table
             // with the other users' app_user_id
             $this->portal->appUserDistinctIds()->create([
                 'app_user_id' => $mergeIntoAppUser->id,

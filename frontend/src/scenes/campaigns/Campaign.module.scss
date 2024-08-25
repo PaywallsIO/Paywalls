@@ -1,0 +1,50 @@
+.pausePlayButton {
+    color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-1));
+
+    &:hover {
+        color: light-dark(var(--mantine-color-blue-7), var(--mantine-color-blue-2));
+    }
+}
+
+.deleteButton {
+    color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-1));
+
+    &:hover {
+        color: light-dark(var(--mantine-color-red-7), var(--mantine-color-red-2));
+    }
+}
+
+.item {
+    color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-dark-1));
+    background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-6));
+
+    h4 {
+        color: light-dark(var(--mantine-color-dark-8), var(--mantine-color-dark-1));
+    }
+}
+
+.dragHandle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-dark-1));
+    padding-left: var(--mantine-spacing-md);
+    padding-right: var(--mantine-spacing-md);
+}
+
+.ruleGroup {
+    border-color: red !important;
+}
+
+.audienceTitle {
+    Button {
+        display: none;
+    }
+
+    &:hover {
+        Button {
+            display: block;
+        }
+    }
+}

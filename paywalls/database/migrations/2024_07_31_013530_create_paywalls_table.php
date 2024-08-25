@@ -35,6 +35,10 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('paywalls', function (Blueprint $table) {
+            $table->dropForeign(['portal_id']);
+            $table->dropForeign(['last_modified_by']);
+        });
         Schema::dropIfExists('paywalls');
     }
 };

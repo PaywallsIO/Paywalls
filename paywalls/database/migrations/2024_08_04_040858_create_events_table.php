@@ -22,7 +22,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->index('distinct_id');
-            $table->index('uuid');
+            $table->index('name');
         });
     }
 
@@ -31,6 +31,9 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('events', function (Blueprint $table) {
+            $table->dropForeign(['app_id']);
+        });
         Schema::dropIfExists('events');
     }
 };

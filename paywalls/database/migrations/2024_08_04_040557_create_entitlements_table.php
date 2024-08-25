@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('entitlements', function (Blueprint $table) {
@@ -20,11 +17,11 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
+        Schema::table('entitlements', function (Blueprint $table) {
+            $table->dropForeign(['project_id']);
+        });
         Schema::dropIfExists('entitlements');
     }
 };

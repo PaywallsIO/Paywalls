@@ -2,9 +2,11 @@ import React, { useState } from 'react'
 import { Combobox, useCombobox, Group, Avatar, LoadingOverlay, Anchor } from '@mantine/core'
 import projectsLogic from './projectsLogic'
 import { useActions, useValues } from 'kea'
-import { A } from 'kea-router'
+import { A, router } from 'kea-router'
 import { modals } from '@mantine/modals'
 import { CreateProjectForm } from './create/CreateProjectForm'
+import { urls } from '../urls'
+import { Project } from './ProjectsData'
 
 
 interface CustomComboboxProps {
@@ -16,6 +18,10 @@ function didClickAddProject() {
         title: 'New Project',
         children: <CreateProjectForm />
     })
+}
+
+function didClickProject(project: Project) {
+    router.actions.push(urls.apps(project.id))
 }
 
 const ProjectsCombobox = ({ children }: CustomComboboxProps): JSX.Element => {
@@ -36,7 +42,7 @@ const ProjectsCombobox = ({ children }: CustomComboboxProps): JSX.Element => {
     const options = projects
         .filter((project) => project.name.toLowerCase().includes(search.toLowerCase().trim()))
         .map((project) => (
-            <Combobox.Option value={project.id.toString()} key={project.id}>
+            <Combobox.Option value={project.id.toString()} key={project.id} onClick={() => { didClickProject(project) }}>
                 <Group w={"100%"}>
                     {project.avatar_url ? (
                         <Avatar

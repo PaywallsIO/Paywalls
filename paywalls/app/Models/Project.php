@@ -37,6 +37,16 @@ class Project extends Model
         return $this->hasMany(App::class);
     }
 
+    public function paywalls(): HasMany
+    {
+        return $this->hasMany(Paywall::class);
+    }
+
+    public function campaigns(): HasMany
+    {
+        return $this->hasMany(Campaign::class);
+    }
+
     public function getAvatarUrlAttribute(): ?string
     {
         $bundle_id = optional($this->apps()->whereNotNull('bundle_id')->first())->bundle_id;

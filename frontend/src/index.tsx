@@ -9,8 +9,7 @@ import { routerPlugin } from 'kea-router'
 import { resetContext } from 'kea'
 import { App } from './scenes/app/App'
 import posthog from 'posthog-js'
-import { posthogKey, sentryDsn } from './lib/constants';
-import { useEffect } from "react"
+import { posthogKey, sentryDsn } from './lib/constants'
 import * as Sentry from "@sentry/react"
 
 initMonitoring()
@@ -18,7 +17,7 @@ initKea()
 
 export function Initial() {
   const theme = createTheme({
-    fontFamily: '"Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif'
+    fontFamily: '"Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif',
   })
 
   return (
@@ -56,11 +55,23 @@ function initMonitoring() {
   posthogKey && posthog.init(posthogKey,
     {
       api_host: 'https://us.i.posthog.com',
-      person_profiles: 'always'
+      person_profiles: 'identified_only'
     }
   )
 }
 
 function initKea() {
-  resetContext({ plugins: [loadersPlugin, formsPlugin, routerPlugin] })
+  resetContext({
+    plugins: [
+      routerPlugin({
+        urlPatternOptions: {
+          // What chars to allow in named segment values i.e. ":key"
+          // in "/url/:key". Default: "a-zA-Z0-9-_~ %".
+          segmentValueCharset: "a-zA-Z0-9-_~ %.@()!'|",
+        },
+      }),
+      loadersPlugin,
+      formsPlugin
+    ]
+  })
 }

@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class AppUserDistinctId extends Model
 {
+    protected $table = 'app_user_distinct_id';
+
     use HasFactory;
 
     public $timestamps = false;

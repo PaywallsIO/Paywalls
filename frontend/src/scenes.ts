@@ -22,7 +22,6 @@ export const preloadedScenes: Record<string, LoadedScene> = {
 export const sceneConfigurations: Record<Scene, SceneConfig> = {
     [Scene.Error404]: {
         name: 'Not found',
-        projectBased: true,
     },
     [Scene.ErrorNetwork]: {
         name: 'Network error',
@@ -31,13 +30,21 @@ export const sceneConfigurations: Record<Scene, SceneConfig> = {
         anonymousOnly: true,
     },
     [Scene.Paywalls]: {
-        projectBased: true
+        layout: 'project'
+    },
+    [Scene.Apps]: {
+        layout: 'project'
+    },
+    [Scene.Campaigns]: {
+        layout: 'project'
+    },
+    [Scene.Campaign]: {
+        layout: 'project'
     },
     [Scene.Dashboard]: {
-        projectBased: true
+        layout: 'app'
     },
     [Scene.Editor]: {
-        projectBased: true,
         layout: 'plain'
     }
 }
@@ -53,7 +60,11 @@ export const redirects: Record<string, string | ((params: Params, searchParams: 
 
 export const routes: Record<string, Scene> = {
     [urls.login()]: Scene.Login,
-    [urls.paywalls()]: Scene.Paywalls,
     [urls.default()]: Scene.Dashboard,
-    [urls.editor(':id')]: Scene.Editor
+
+    [urls.apps(':projectId')]: Scene.Apps,
+    [urls.paywalls(':projectId')]: Scene.Paywalls,
+    [urls.campaigns(':projectId')]: Scene.Campaigns,
+    [urls.campaign(':projectId', ':campaignId')]: Scene.Campaign,
+    [urls.editor(':projectId', ':paywallId')]: Scene.Editor
 }

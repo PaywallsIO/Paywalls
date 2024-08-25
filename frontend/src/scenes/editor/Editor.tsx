@@ -16,32 +16,35 @@ import 'grapick/dist/grapick.min.css';
 import './editor.scss'
 
 interface EditorSceneProps {
-    id?: string
+    projectId?: number
+    paywallId?: number
 }
 
 export const scene: SceneExport = {
     component: EditorScene,
     logic: editorLogic,
-    paramsToProps: ({ params: { id } }: { params: EditorSceneProps }): EditorProps => ({
-        id: id || ''
+    paramsToProps: ({ params: { projectId, paywallId } }: { params: EditorSceneProps }): EditorProps => ({
+        // @davidmoreen is there no better way than defaulting to 0?
+        projectId: projectId || 0,
+        paywallId: paywallId || 0
     }),
 }
 
 export function EditorScene(): JSX.Element {
-    const { paywallId, paywall } = useValues(editorLogic)
+    const { paywallId, projectId, paywall } = useValues(editorLogic)
     return (
         !paywall ? (
             <LoadingOverlay visible={true} zIndex={1000} overlayProps={{ radius: 'sm', blur: 2 }} />
         ) : (
-            <Editor id={paywallId} />
+            <Editor paywallId={paywallId} projectId={projectId} />
         )
     )
 }
 
-function Editor({ id }: EditorProps) {
-    const logic = editorLogic({ id })
+function Editor({ projectId, paywallId }: EditorProps) {
+    const logic = editorLogic({ projectId, paywallId })
     const { paywall } = useValues(logic)
-    const { storePaywall } = useActions(logic)
+    const { storePaywall, publishPaywall } = useActions(logic)
 
     const onEditor = (editor: GrapesJsEditorType) => {
         editor.Storage.add('remote', {
@@ -52,6 +55,24 @@ function Editor({ id }: EditorProps) {
                 return storePaywall(data)
             }
         })
+
+        editor.Panels.addButton('options', {
+            id: 'publish',
+            togglable: false,
+            command: 'publish-paywall',
+            label: 'Publish',
+            attributes: { title: 'Publish' },
+        });
+
+        editor.Commands.add('publish-paywall', {
+            run(editor) {
+                publishPaywall({
+                    html: editor.getHtml(),
+                    css: editor.getCss() || "",
+                    js: editor.getJs()
+                })
+            },
+        });
     }
 
     return (
@@ -72,7 +93,6 @@ function Editor({ id }: EditorProps) {
                         }
                     },
                     selectorManager: { componentFirst: true },
-
                     height: '100vh',
                     storageManager: {
                         type: 'remote',

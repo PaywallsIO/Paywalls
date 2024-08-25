@@ -22,6 +22,7 @@ export type UserType = {
     name: string
     email_verified_at?: string
     avatar_url?: string
+    current_portal_id: number
     created_at: Date
     updated_at?: Date
 }
