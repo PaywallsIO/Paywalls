@@ -2,14 +2,14 @@ import { useValues } from 'kea'
 import { Stack, TextInput, Button } from '@mantine/core'
 import { Form, Field } from 'kea-forms'
 
-import createCampaignLogic from './createCampaignLogic'
+import { createCampaignLogic } from './createCampaignLogic'
 
-export function CreateCampaignForm(): JSX.Element {
+export function CreateCampaignForm({ projectId }: { projectId: number }): JSX.Element {
     const { isCreateCampaignFormSubmitting } = useValues(createCampaignLogic)
 
     return (
         <>
-            <Form logic={createCampaignLogic} formKey="createCampaignForm" enableFormOnSubmit>
+            <Form logic={createCampaignLogic} props={{ projectId }} formKey="createCampaignForm" enableFormOnSubmit>
                 <Stack>
                     <Field name="name">
                         {({ value, onChange }) => (

@@ -14,7 +14,8 @@ class CampaignAudienceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'filters' => ['required', function ($attribute, $value, $fail) {
+            'name' => 'string|max:255',
+            'filters' => [function ($attribute, $value, $fail) {
                 if (! is_array($value) && ! is_bool($value)) {
                     $fail('filters must be an array or a boolean');
                 }

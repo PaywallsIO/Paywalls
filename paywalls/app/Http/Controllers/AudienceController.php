@@ -47,4 +47,14 @@ class AudienceController extends Controller
             throw $exception;
         }
     }
+
+    public function destroy(Project $project, Campaign $campaign, CampaignAudience $audience)
+    {
+        $audience->delete();
+    }
+
+    public function restore(Project $project, Campaign $campaign, CampaignAudience $audience)
+    {
+        $audience->restore();
+    }
 }

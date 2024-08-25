@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Campaign\CreateCampaignRequest;
 use App\Models\Campaign;
 use App\Models\Project;
-use Illuminate\Http\Request;
 
 class CampaignController extends Controller
 {
@@ -13,33 +13,13 @@ class CampaignController extends Controller
         return $project->campaigns()->paginate();
     }
 
-    public function create()
+    public function store(Project $project, CreateCampaignRequest $request)
     {
-        //
-    }
-
-    public function store(Request $request)
-    {
-        //
+        return $project->campaigns()->create($request->validated());
     }
 
     public function show(Project $project, Campaign $campaign)
     {
         return $campaign;
-    }
-
-    public function edit(Campaign $campaign)
-    {
-        //
-    }
-
-    public function update(Request $request, Campaign $campaign)
-    {
-        //
-    }
-
-    public function destroy(Campaign $campaign)
-    {
-        //
     }
 }

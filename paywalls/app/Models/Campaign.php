@@ -33,7 +33,7 @@ class Campaign extends Model
 
     public function triggers(): HasMany
     {
-        return $this->hasMany(CampaignTrigger::class);
+        return $this->hasMany(CampaignTrigger::class)->orderBy('created_at', 'asc');
     }
 
     public function audiences(): HasMany

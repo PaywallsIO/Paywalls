@@ -1,14 +1,16 @@
-import { Text, Stack, Group, Title, Button, Divider, NumberInput, Space } from '@mantine/core'
-import { BindLogic, useValues } from 'kea'
+import { Text, Stack, Group, Title, Button, Divider, NumberInput, Space, Flex, Notification } from '@mantine/core'
+import { BindLogic, useActions, useValues } from 'kea'
 import { Form, Field } from 'kea-forms'
 import { audienceLogic } from './audienceLogic'
 import { CampaignAudience } from '../data/CampaignsApiClient'
 import QueryBuilder, { formatQuery, RuleGroupType } from 'react-querybuilder'
-import { parseJsonLogic } from "react-querybuilder/parseJsonLogic";
+import { parseJsonLogic } from 'react-querybuilder/parseJsonLogic'
 import { QueryBuilderMantine } from '@react-querybuilder/mantine'
-import { IconFilter, IconFlame } from '@tabler/icons-react'
+import { IconArrowBackUp, IconFilter, IconFlame, IconTrack } from '@tabler/icons-react'
 import './QueryBuilder.scss'
 import { useState } from 'react'
+import { modals } from '@mantine/modals'
+import { campaignLogic } from '../campaignLogic'
 
 export function Audience({ projectId, audience }: { projectId: number, audience: CampaignAudience }): JSX.Element {
     return (
@@ -18,10 +20,21 @@ export function Audience({ projectId, audience }: { projectId: number, audience:
     )
 }
 
+function didClickDeleteAudience(onConfirm: () => void) {
+    modals.openConfirmModal({
+        title: 'Delete Audience',
+        children: <Text size="sm">Are you sure you want to delete this audience?</Text>,
+        labels: { confirm: 'Delete', cancel: 'Cancel' },
+        centered: true,
+        onConfirm: onConfirm
+    })
+}
+
 function AudienceForm(): JSX.Element {
     const { isAudienceFormSubmitting } = useValues(audienceLogic)
-    const initialQuery: RuleGroupType = { combinator: 'or', rules: [] };
-    const [query, setQuery] = useState(initialQuery);
+    const { deleteAudience } = useActions(campaignLogic)
+    const { audience } = useValues(audienceLogic)
+    const [query, setQuery] = useState(parseJsonLogic(audience.filters));
 
     return (
         <Form logic={audienceLogic} formKey="audienceForm" enableFormOnSubmit>
@@ -84,7 +97,10 @@ function AudienceForm(): JSX.Element {
                 </Group>
             </Stack>
 
-            <Button type="submit" radius="md" variant='light' mt="xl" disabled={isAudienceFormSubmitting}>Save</Button>
+            <Flex justify="space-between">
+                <Button type="submit" radius="md" variant='light' mt="xl" disabled={isAudienceFormSubmitting}>Save</Button>
+                <Button radius="md" variant='subtle' mt="xl" color="dimmed" disabled={isAudienceFormSubmitting} onClick={() => { didClickDeleteAudience(() => deleteAudience(audience.id)) }}>Delete Audience</Button>
+            </Flex>
         </Form>
     )
 }

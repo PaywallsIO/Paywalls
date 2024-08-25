@@ -1,22 +1,23 @@
 import { useValues } from 'kea'
 import { Stack, TextInput, Button } from '@mantine/core'
 import { Form, Field } from 'kea-forms'
-import { createAudienceLogic, CreateAudienceProps } from './createAudienceLogic'
+import { createEditAudienceLogic, CreateEditAudienceProps } from './createEditAudienceLogic'
 
-export function CreateAudienceForm({ projectId, campaignId }: CreateAudienceProps): JSX.Element {
-    const audienceLogic = createAudienceLogic({ projectId, campaignId })
-    const { isCreateAudienceFormSubmitting } = useValues(audienceLogic)
+export function CreateEditAudienceForm(props: CreateEditAudienceProps): JSX.Element {
+    const audienceLogic = createEditAudienceLogic(props)
+    const { isCreateEditAudienceFormSubmitting } = useValues(audienceLogic)
 
     return (
         <>
-            <Form logic={createAudienceLogic} props={{ projectId, campaignId }} formKey="createAudienceForm" enableFormOnSubmit>
+            <Form logic={createEditAudienceLogic} props={props} formKey="createEditAudienceForm" enableFormOnSubmit>
                 <Stack>
                     <Field name="name">
                         {({ value, onChange }) => (
                             <TextInput
                                 required
+                                data-autofocus
                                 label="Audience Name"
-                                placeholder="Give them a name"
+                                placeholder="Audience Name"
                                 radius="md"
                                 value={value}
                                 onChange={(e) => onChange(e.currentTarget.value)}
@@ -25,7 +26,7 @@ export function CreateAudienceForm({ projectId, campaignId }: CreateAudienceProp
                     </Field>
                 </Stack>
 
-                <Button type="submit" mt="xl" disabled={isCreateAudienceFormSubmitting}>Create Audience</Button>
+                <Button type="submit" mt="xl" disabled={isCreateEditAudienceFormSubmitting}>{props.isEditing ? 'Save' : 'Create'} Audience</Button>
             </Form>
         </>
     )

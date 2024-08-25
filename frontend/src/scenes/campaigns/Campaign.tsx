@@ -1,18 +1,20 @@
-import { rem, Text, Title, Loader, Center, Table, Stack, Group, Paper, Anchor, Breadcrumbs, ThemeIcon, Grid, Badge, Spoiler, Flex, Box, Button, Tooltip, Space, Collapse, Blockquote } from "@mantine/core";
+import { rem, Text, Title, Loader, Center, Table, Stack, Group, Paper, Anchor, Breadcrumbs, ThemeIcon, Grid, Badge, Spoiler, Flex, Box, Button, Tooltip, Space, Collapse, Blockquote, Input } from "@mantine/core";
 import { useValues, useActions, BindLogic } from 'kea'
 import { SceneExport } from '../sceneTypes'
 import { useDisclosure } from '@mantine/hooks'
 import cx from 'clsx'
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd'
-import { IconChevronDown, IconChevronRight, IconGripVertical, IconInfoCircle, IconPlus } from '@tabler/icons-react'
+import { IconArrowBack, IconChevronDown, IconChevronRight, IconGripVertical, IconInfoCircle, IconPencil, IconPlus } from '@tabler/icons-react'
 import { campaignLogic, CampaignProps } from './campaignLogic'
 import { router } from "kea-router"
 import classes from './Campaign.module.scss'
 import { IconBolt, IconChevronLeft, IconPlayerPause, IconPlayerPauseFilled, IconPlayerPlayFilled, IconTrash, IconUsers } from "@tabler/icons-react"
-import { CampaignAudience } from "./data/CampaignsApiClient"
+import { CampaignAudience, CampaignTrigger } from "./data/CampaignsApiClient"
 import { Audience } from "./audience/Audience"
 import { modals } from "@mantine/modals"
-import { CreateAudienceForm } from "./audience/create/CreateAudienceForm"
+import { CreateEditAudienceForm } from "./audience/create/CreateEditAudienceForm"
+import 'react-querybuilder/dist/query-builder.scss';
+import { CreateTriggerForm } from "./trigger/create/CreateTriggerForm";
 
 interface CampaignSceneProps {
     projectId?: number
@@ -37,15 +39,41 @@ export function Campaign(): JSX.Element {
     )
 }
 
-function didClickCreateAudience(projectId: number, campaignId: number) {
+function didClickCreateTrigger(projectId: number, campaignId: number, completion: () => void) {
+    modals.open({
+        title: 'Create Trigger',
+        children: <CreateTriggerForm projectId={projectId} campaignId={campaignId} completion={completion} />
+    })
+}
+
+function didClickDeleteTrigger(onConfirm: () => void) {
+    modals.openConfirmModal({
+        title: 'Delete Trigger',
+        children: <Text size="sm">Are you sure you want to delete this trigger?</Text>,
+        labels: { confirm: 'Delete', cancel: 'Cancel' },
+        centered: true,
+        onConfirm: onConfirm
+    })
+}
+
+function didClickCreateAudience(projectId: number, campaignId: number, completion: () => void) {
     modals.open({
         title: 'Create Audience',
-        children: <CreateAudienceForm projectId={projectId} campaignId={campaignId} />
+        children: <CreateEditAudienceForm isEditing={false} projectId={projectId} campaignId={campaignId} completion={completion} />
+    })
+}
+
+function didClickEditAudience(projectId: number, campaignId: number, audience: CampaignAudience, completion: () => void) {
+    modals.open({
+        title: 'Edit Audience',
+        children: <CreateEditAudienceForm isEditing={true} projectId={projectId} campaignId={campaignId} audience={audience} completion={completion} />
     })
 }
 
 function CampaignScene({ projectId, campaignId }: CampaignProps) {
     const logic = campaignLogic({ projectId, campaignId })
+    const { loadCampaign } = useActions(logic)
+    const { updateTrigger, deleteTrigger } = useActions(campaignLogic)
     const { campaign, campaignLoading } = useValues(logic)
     const { push } = useActions(router)
 
@@ -75,42 +103,60 @@ function CampaignScene({ projectId, campaignId }: CampaignProps) {
                             <Flex mb={0} gap={5} align={"center"}>
                                 <IconBolt size={22} />
                                 <Title order={4} w={"100%"}>Triggers</Title>
-                                <Tooltip label="Add trigger">
-                                    <Button variant="light" radius="lg" size="compact-md" onClick={() => { }}>
+                                <Tooltip label="Create trigger">
+                                    <Button variant="light" radius="lg" size="compact-md" onClick={() => didClickCreateTrigger(projectId, campaignId, loadCampaign)}>
                                         <IconPlus />
                                     </Button>
                                 </Tooltip>
                             </Flex>
 
-                            <Group gap={10}>
-                                {campaign.triggers.map((trigger) => (
-                                    <Badge key={trigger.id} color="blue" variant={trigger.is_active ? "light" : "default"} radius="lg" size="xl" rightSection={(
-                                        <>
-                                            {trigger.is_active ? (
-                                                <Tooltip label="Pause trigger">
-                                                    <Button variant="transparent" className={classes.pausePlayButton} size="compact-xs">
-                                                        <IconPlayerPauseFilled style={{ width: rem(15), height: rem(15) }} />
-                                                    </Button>
-                                                </Tooltip>
-                                            ) : (
-                                                <Tooltip label="Resume triggering for users">
-                                                    <Button variant="transparent" className={classes.pausePlayButton} size="compact-xs">
-                                                        <IconPlayerPlayFilled style={{ width: rem(15), height: rem(15) }} />
-                                                    </Button>
-                                                </Tooltip>
-                                            )}
-                                            <Tooltip label="Delete trigger">
-                                                <Button variant="transparent" p={0} className={classes.deleteButton} size="compact-xs">
-                                                    <IconTrash style={{ width: rem(15), height: rem(15) }} />
-                                                </Button>
-                                            </Tooltip>
 
-                                        </>
-                                    )}>
-                                        <Text fw={500} size="xs">{trigger.event_name}</Text>
-                                    </Badge>
-                                ))}
-                            </Group>
+                            {campaign.triggers.length > 0 ? (
+                                <Group gap={10}>
+                                    {
+                                        campaign.triggers.map((trigger) => (
+                                            <Badge key={trigger.id} color="blue" variant={trigger.is_active ? "light" : "default"} radius="lg" size="xl" rightSection={(
+                                                <>
+                                                    {trigger.is_active ? (
+                                                        <Tooltip label="Pause trigger">
+                                                            <Button variant="transparent" className={classes.pausePlayButton} size="compact-xs" onClick={() => updateTrigger({ triggerId: trigger.id, request: { is_active: false } })}>
+                                                                <IconPlayerPauseFilled style={{ width: rem(15), height: rem(15) }} />
+                                                            </Button>
+                                                        </Tooltip>
+                                                    ) : (
+                                                        <Tooltip label="Resume triggering for users">
+                                                            <Button variant="transparent" className={classes.pausePlayButton} size="compact-xs" onClick={
+                                                                () => updateTrigger({ triggerId: trigger.id, request: { is_active: true } })
+                                                            }>
+                                                                <IconPlayerPlayFilled style={{ width: rem(15), height: rem(15) }} />
+                                                            </Button>
+                                                        </Tooltip>
+                                                    )}
+                                                    <Tooltip label="Delete trigger">
+                                                        <Button variant="transparent" p={0} className={classes.deleteButton} size="compact-xs" onClick={
+                                                            () => didClickDeleteTrigger(() => deleteTrigger({ triggerId: trigger.id }))
+                                                        }>
+                                                            <IconTrash style={{ width: rem(15), height: rem(15) }} />
+                                                        </Button>
+                                                    </Tooltip>
+
+                                                </>
+                                            )}>
+                                                <Text fw={500} size="xs" style={{ textTransform: 'none' }}><pre>{trigger.event_name}</pre></Text>
+                                            </Badge>
+                                        ))
+                                    }
+                                </Group>
+                            ) : (
+                                <>
+                                    <Stack align="center">
+                                        <Title order={3}>No Triggers Yet</Title>
+                                        <Button onClick={() => didClickCreateTrigger(projectId, campaignId, loadCampaign)}>
+                                            Create Trigger
+                                        </Button>
+                                    </Stack>
+                                </>
+                            )}
 
                             <Space />
 
@@ -118,7 +164,7 @@ function CampaignScene({ projectId, campaignId }: CampaignProps) {
                                 <IconUsers size={22} />
                                 <Title order={4} w={"100%"}>Audiences</Title>
                                 <Tooltip label="New Audience">
-                                    <Button variant="light" radius="lg" size="compact-md" onClick={() => didClickCreateAudience(projectId, campaignId)}>
+                                    <Button variant="light" radius="lg" size="compact-md" onClick={() => didClickCreateAudience(projectId, campaignId, loadCampaign)}>
                                         <IconPlus />
                                     </Button>
                                 </Tooltip>
@@ -126,11 +172,22 @@ function CampaignScene({ projectId, campaignId }: CampaignProps) {
 
                             <Text>Create audiences with filters and an optional match limit. Audiences will be evaludated in order from top to bottom. The first matching audience will be used. In that sense it is better to put more specific audiences first. For example, you would place an audience that matches users in the United States before matching users in North America (because United States is a part of North America).</Text>
 
-                            <Audiences audiences={campaign.audiences} projectId={projectId} />
+                            {
+                                campaign.audiences.length ? (
+                                    <Audiences audiences={campaign.audiences} projectId={projectId} />
+                                ) : (
+                                    <Stack align="center">
+                                        <Title order={3}>No Audiences Yet</Title>
+                                        <Button onClick={() => didClickCreateAudience(projectId, campaignId, loadCampaign)}>
+                                            Create Audience
+                                        </Button>
+                                    </Stack>
+                                )
+                            }
                         </>
                     )
                 }
-            </Stack >
+            </Stack>
         </BindLogic>
     )
 }
@@ -169,7 +226,8 @@ function Audiences({ projectId, audiences }: { projectId: number, audiences: Cam
 }
 
 function AudienceDraggable({ index, projectId, audience }: { index: number, projectId: number, audience: CampaignAudience }): JSX.Element {
-    const [opened, { toggle }] = useDisclosure(false);
+    const [opened, { toggle }] = useDisclosure(false)
+    const { loadCampaign } = useActions(campaignLogic)
 
     return (
         <Draggable key={audience.id} index={index} draggableId={audience.name}>
@@ -185,9 +243,15 @@ function AudienceDraggable({ index, projectId, audience }: { index: number, proj
                             <Button variant="transparent">
                                 {opened ? <IconChevronDown /> : <IconChevronRight />}
                             </Button>
-                            <Stack w={"100%"}>
+                            <Group w={"100%"} gap={3} className={classes.audienceTitle}>
                                 <Title order={4} fw={500}>{audience.name}</Title>
-                            </Stack>
+                                <Button variant="transparent" size="compact-xs" onClick={(e) => {
+                                    e.stopPropagation()
+                                    didClickEditAudience(projectId, audience.campaign_id, audience, loadCampaign)
+                                }}>
+                                    <IconPencil style={{ width: rem(15), height: rem(15) }} />
+                                </Button>
+                            </Group>
                             <Tooltip label="Reorder audience">
                                 <div {...provided.dragHandleProps} className={classes.dragHandle}>
                                     <IconGripVertical style={{ width: rem(18), height: rem(18) }} stroke={1.5} />
@@ -204,6 +268,15 @@ function AudienceDraggable({ index, projectId, audience }: { index: number, proj
             }
         </Draggable >
     );
+}
+
+export function undoNotificationMessage(title: string, undoAction: () => void): JSX.Element {
+    return (
+        <Group>
+            <Text size="sm">{title}</Text>
+            <Button size="xs" onClick={undoAction} leftSection={<IconArrowBack size={14} />}>Undo</Button>
+        </Group>
+    )
 }
 
 const reorder = (list: any[], startIndex: number, endIndex: number) => {

@@ -36,3 +36,15 @@
 .ruleGroup {
     border-color: red !important;
 }
+
+.audienceTitle {
+    Button {
+        display: none;
+    }
+
+    &:hover {
+        Button {
+            display: block;
+        }
+    }
+}

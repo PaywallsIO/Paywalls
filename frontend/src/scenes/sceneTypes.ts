@@ -57,12 +57,4 @@ export interface SceneConfig {
      * @default 'app'
      */
     layout?: 'app' | 'project' | 'plain'
-    /** Route requires organization access (used e.g. by breadcrumbs) */
-    organizationBased?: boolean
-    /** Route requires project access (used e.g. by breadcrumbs). `true` implies also `organizationBased` */
-    projectBased?: boolean
-    /** Instance management (used e.g. by breadcrumbs) */
-    instanceLevel?: boolean
-    /** Default docs path - what the docs side panel will open by default if this scene is active  */
-    defaultDocsPath?: string
 }

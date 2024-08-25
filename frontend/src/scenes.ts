@@ -22,7 +22,6 @@ export const preloadedScenes: Record<string, LoadedScene> = {
 export const sceneConfigurations: Record<Scene, SceneConfig> = {
     [Scene.Error404]: {
         name: 'Not found',
-        projectBased: true,
     },
     [Scene.ErrorNetwork]: {
         name: 'Network error',
@@ -31,27 +30,21 @@ export const sceneConfigurations: Record<Scene, SceneConfig> = {
         anonymousOnly: true,
     },
     [Scene.Paywalls]: {
-        projectBased: true,
         layout: 'project'
     },
     [Scene.Apps]: {
-        projectBased: true,
         layout: 'project'
     },
     [Scene.Campaigns]: {
-        projectBased: true,
         layout: 'project'
     },
     [Scene.Campaign]: {
-        projectBased: true,
         layout: 'project'
     },
     [Scene.Dashboard]: {
-        projectBased: true,
         layout: 'app'
     },
     [Scene.Editor]: {
-        projectBased: true,
         layout: 'plain'
     }
 }

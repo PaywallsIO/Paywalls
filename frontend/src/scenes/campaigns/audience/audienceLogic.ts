@@ -1,11 +1,15 @@
-import { actions, afterMount, kea, key, listeners, path, props } from 'kea'
+import { kea, key, path, props, selectors } from 'kea'
 import { forms } from 'kea-forms'
 import { notifications } from '@mantine/notifications'
 import type { audienceLogicType } from './audienceLogicType'
-import { AudienceRequest, CampaignAudience, CampaignsApiClient, CampaignsApiClientInterface } from '../data/CampaignsApiClient'
+import {
+    AudienceRequest,
+    CampaignAudience,
+    campaignsApiClient,
+    CampaignsApiClient,
+    CampaignsApiClientInterface,
+} from '../data/CampaignsApiClient'
 import { apiClient } from '../../../lib/api'
-
-const campaignApiClient: CampaignsApiClientInterface = new CampaignsApiClient(apiClient)
 
 type AudienceProps = {
     projectId: number
@@ -16,23 +20,22 @@ export const audienceLogic = kea<audienceLogicType>([
     props({} as AudienceProps),
     key((props) => props.audience.id),
     path((key) => ['scenes', 'audience', 'audienceLogic', key]),
-    forms(({ props, actions }) => ({
+    selectors({
+        audience: [() => [(_, props) => props], (props): CampaignAudience => props.audience],
+    }),
+    forms(({ props }) => ({
         audienceForm: {
             defaults: {
                 filters: props.audience.filters,
                 match_limit: props.audience.match_limit,
-                match_period: props.audience.match_period
+                match_period: props.audience.match_period,
             } as AudienceRequest,
             errors: (request: AudienceRequest) => ({
                 // no-op
             }),
             submit: async (request: AudienceRequest) => {
                 try {
-                    const response = await campaignApiClient.saveAudience(
-                        props.projectId,
-                        props.audience,
-                        request
-                    )
+                    const response = await campaignsApiClient.saveAudience(props.projectId, props.audience, request)
 
                     notifications.show({
                         color: 'green',
@@ -50,5 +53,5 @@ export const audienceLogic = kea<audienceLogicType>([
                 }
             },
         },
-    }))
+    })),
 ])
