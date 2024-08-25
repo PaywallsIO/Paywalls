@@ -45,11 +45,6 @@ class Portal extends Model
         return $this->hasManyThrough(Event::class, App::class);
     }
 
-    public function paywalls(): HasMany
-    {
-        return $this->hasMany(Paywall::class);
-    }
-
     public function fetchAppUser(string $distinctId): ?AppUser
     {
         return $this->appUserDistinctIds()->where('distinct_id', $distinctId)->first()?->appUser;

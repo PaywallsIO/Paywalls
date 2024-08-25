@@ -38,7 +38,7 @@ class DevSeeder extends Seeder
         $app->portal()->associate($user->portal);
         $app->save();
 
-        $paywall = $app->portal->paywalls()->create([
+        $paywall = $project->paywalls()->create([
             'name' => 'Progress Pic',
         ]);
 
@@ -60,9 +60,9 @@ class DevSeeder extends Seeder
             'event_name' => EventName::appOpened->value,
         ]);
 
-        $campaign->paywalls()->save($project->portal->paywalls()->first(), [
+        $campaign->paywalls()->save($project->paywalls()->first(), [
             'percentage' => 100,
         ]);
-        $campaign->audiences()->create();
+        // $campaign->audiences()->create();
     }
 }
