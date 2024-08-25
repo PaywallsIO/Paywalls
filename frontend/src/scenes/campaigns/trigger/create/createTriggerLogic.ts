@@ -21,7 +21,7 @@ export const createTriggerLogic = kea<createTriggerLogicType>([
         event_name: '',
       } as CreateTriggerRequest,
       errors: ({ event_name }: CreateTriggerRequest) => ({
-        event_name: !event_name ? 'Trigger name is required' : null,
+        event_name: !event_name ? 'Event name is required' : null,
       }),
       submit: async (request: CreateTriggerRequest) => {
         try {
