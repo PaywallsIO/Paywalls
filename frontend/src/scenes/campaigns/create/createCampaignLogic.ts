@@ -6,7 +6,7 @@ import { router } from 'kea-router'
 import { modals } from '@mantine/modals'
 import { campaignsApiClient, CreateCampaignRequest } from '../data/CampaignsApiClient'
 
-type CreateCampaignProps = {
+export type CreateCampaignProps = {
   projectId: number
 }
 

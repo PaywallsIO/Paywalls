@@ -15,30 +15,22 @@ interface PaywallsSceneProps {
 }
 
 export const scene: SceneExport = {
-    component: Paywalls,
+    component: PaywallsScene,
     logic: paywallsLogic,
     paramsToProps: ({ params: { projectId } }: { params: PaywallsSceneProps }): PaywallsProps => ({
         projectId: projectId || 0
     }),
 }
 
-export function Paywalls(): JSX.Element {
-    return (
-        <BindLogic logic={paywallsLogic} props={{}}>
-            <PaywallsScene />
-        </BindLogic>
-    )
-}
-
-function didClickAddPaywall() {
+function didClickAddPaywall(projectId: number) {
     modals.open({
         title: 'New Paywall',
-        children: <CreatePaywallForm />
+        children: <CreatePaywallForm projectId={projectId} />
     })
 }
 
 function PaywallsScene() {
-    const { paywalls, paywallsLoading } = useValues(paywallsLogic)
+    const { projectId, paywalls, paywallsLoading } = useValues(paywallsLogic)
     const { push } = useActions(router)
 
     return (
@@ -46,7 +38,7 @@ function PaywallsScene() {
             <Stack>
                 <Flex justify="space-between" align="center">
                     <Title>Paywalls</Title>
-                    <Button onClick={() => didClickAddPaywall()}>Add Paywall</Button>
+                    <Button onClick={() => didClickAddPaywall(projectId)}>Add Paywall</Button>
                 </Flex>
                 <Text size="sm">Paywalls are configurable screens that you can build and present to users using triggers in your app. They can be customized and tested to find the best combinations.</Text>
             </Stack>

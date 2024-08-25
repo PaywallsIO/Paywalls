@@ -13,12 +13,18 @@ export type PaywallsProps = {
 
 export const paywallsLogic = kea<paywallsLogicType>([
     props({} as PaywallsProps),
-    path(['scenes', 'paywalls', 'paywallsLogic']),
+    path((key) => ['scenes', 'paywalls', 'paywallsLogic', key]),
     defaults({
         paywalls: {} as Paginated<Paywall>,
     }),
     actions({
         loadPaywalls: () => ({}),
+    }),
+    selectors({
+        projectId: [
+            () => [(_, props) => props],
+            (props: PaywallsProps): number => props.projectId
+        ],
     }),
     loaders(({ props }) => ({
         paywalls: {

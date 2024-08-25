@@ -2,11 +2,11 @@ import { ProjectData } from "grapesjs"
 import { ApiClientInterface, Paginated } from "../../../lib/api"
 
 export interface PaywallsApiClientInterface {
-    getPaywalls(projectId: string | number): Promise<Paginated<Paywall>>
-    getPaywall(projectId: string | number, id: string | number): Promise<Paywall>
-    create(projectId: string | number, data: Partial<CreatePaywallRequest>): Promise<Paywall>
-    update(projectId: string | number, { id, data }: { id: string | number, data: ProjectData }): Promise<Paywall>
-    publish(projectId: string | number, request: PublishPaywallRequest): Promise<Paywall>
+    getPaywalls(projectId: number): Promise<Paginated<Paywall>>
+    getPaywall(projectId: number, id: string | number): Promise<Paywall>
+    create(projectId: number, data: Partial<CreatePaywallRequest>): Promise<Paywall>
+    update(projectId: number, { id, data }: { id: string | number, data: ProjectData }): Promise<Paywall>
+    publish(projectId: number, request: PublishPaywallRequest): Promise<Paywall>
 }
 
 export type Paywall = {

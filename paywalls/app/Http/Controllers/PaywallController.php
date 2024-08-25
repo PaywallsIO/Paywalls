@@ -8,21 +8,18 @@ use App\Http\Requests\UpdatePaywallRequest;
 use App\Models\Paywall;
 use App\Models\Project;
 use App\Models\PublishedPaywall;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class PaywallController extends Controller
 {
-    public function index(Project $project, Request $request)
+    public function index(Project $project)
     {
         return $project->paywalls()->paginate();
     }
 
-    public function store(StorePaywallRequest $request): Paywall
+    public function store(Project $project, StorePaywallRequest $request): Paywall
     {
-        return $request->user()->portal->paywalls()->create([
-            'name' => $request->validated('name'),
-        ]);
+        return $project->paywalls()->create($request->validated());
     }
 
     public function show(Project $project, Paywall $paywall)
@@ -37,7 +34,7 @@ class PaywallController extends Controller
         ]);
     }
 
-    public function update(UpdatePaywallRequest $request, Paywall $paywall)
+    public function update(Project $project, Paywall $paywall, UpdatePaywallRequest $request)
     {
         DB::transaction(function () use ($request, $paywall) {
             $paywall->lastModifiedBy()->associate($request->user());
@@ -48,7 +45,7 @@ class PaywallController extends Controller
         return $paywall;
     }
 
-    public function publish(Paywall $paywall, PublishPaywallRequest $request)
+    public function publish(Project $project, Paywall $paywall, PublishPaywallRequest $request)
     {
         DB::transaction(function () use ($request, $paywall) {
             $published = $paywall->publishedPaywalls()->forceCreate([
@@ -65,10 +62,5 @@ class PaywallController extends Controller
         });
 
         return response()->noContent(200);
-    }
-
-    public function destroy(Paywall $paywall)
-    {
-        //
     }
 }
