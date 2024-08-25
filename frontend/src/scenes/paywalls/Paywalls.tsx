@@ -66,8 +66,11 @@ function PaywallsScene() {
                     </Paper>
                 ) : (
                     <Center>
-                        <Stack>
-                            <Text>No paywalls found</Text>
+                        <Stack align="center">
+                            <Title order={3}>No Paywalls Yet</Title>
+                            <Button onClick={() => didClickAddPaywall(projectId)}>
+                                Create Paywall
+                            </Button>
                         </Stack>
                     </Center>
                 )

@@ -1,4 +1,4 @@
-import { afterMount, kea, path, actions, defaults, props, selectors } from 'kea'
+import { afterMount, kea, path, actions, defaults, props, selectors, key } from 'kea'
 import { loaders } from 'kea-loaders'
 import { Paywall, PaywallsApiClientInterface } from './data/PaywallsApiClient'
 import { apiClient, Paginated } from '../../lib/api'
@@ -14,6 +14,7 @@ export type PaywallsProps = {
 export const paywallsLogic = kea<paywallsLogicType>([
     props({} as PaywallsProps),
     path((key) => ['scenes', 'paywalls', 'paywallsLogic', key]),
+    key((props) => `paywalls-${props.projectId}`),
     defaults({
         paywalls: {} as Paginated<Paywall>,
     }),

@@ -11,20 +11,12 @@ interface AppsSceneProps {
 }
 
 export const scene: SceneExport = {
-    component: Apps,
+    component: AppsScene,
     logic: appsLogic,
     paramsToProps: ({ params: { projectId } }: { params: AppsSceneProps }): AppsProps => ({
         // @davidmoreen is there no better way than defaulting to 0?
         projectId: projectId || 0
     }),
-}
-
-export function Apps(): JSX.Element {
-    return (
-        <BindLogic logic={appsLogic} props={{}}>
-            <AppsScene />
-        </BindLogic>
-    )
 }
 
 function AppsScene() {
@@ -36,7 +28,7 @@ function AppsScene() {
             <Stack>
                 <Flex justify="space-between" align="center">
                     <Title>Apps</Title>
-                    <Button>New App</Button>
+                    <Button>Create App</Button>
                 </Flex>
                 <Text size="sm">Create Apps for the applications that are apart of this projects. Apps can be iOS apps that are in production or development. Each app will get its own API key. You'll then be able to attach app store products to specific apps however you'd like.</Text>
             </Stack>
@@ -64,8 +56,11 @@ function AppsScene() {
                     </Grid>
                 ) : (
                     <Center>
-                        <Stack>
-                            <Text>No Apps yet</Text>
+                        <Stack align="center">
+                            <Title order={3}>No Apps Yet</Title>
+                            <Button onClick={() => { }}>
+                                Create App
+                            </Button>
                         </Stack>
                     </Center>
                 )

@@ -76,8 +76,11 @@ function CampaignsScene() {
                     </Grid>
                 ) : (
                     <Center>
-                        <Stack>
-                            <Text>No Campaigns yet</Text>
+                        <Stack align="center">
+                            <Title order={3}>No Campaigns Yet</Title>
+                            <Button onClick={() => didClickAddCampaign(projectId)}>
+                                Create Trigger
+                            </Button>
                         </Stack>
                     </Center>
                 )

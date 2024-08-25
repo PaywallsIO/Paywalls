@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('paywalls', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->foreignId('portal_id')
+            $table->foreignId('project_id')
                 ->constrained()
                 ->onDelete('cascade');
             $table->jsonb('content')->default('{}');
@@ -36,7 +36,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('paywalls', function (Blueprint $table) {
-            $table->dropForeign(['portal_id']);
+            $table->dropForeign(['project_id']);
             $table->dropForeign(['last_modified_by']);
         });
         Schema::dropIfExists('paywalls');
