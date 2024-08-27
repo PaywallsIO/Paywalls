@@ -51,6 +51,7 @@ function didClickDeleteTrigger(onConfirm: () => void) {
         title: 'Delete Trigger',
         children: <Text size="sm">Are you sure you want to delete this trigger?</Text>,
         labels: { confirm: 'Delete', cancel: 'Cancel' },
+        confirmProps: { color: 'red' },
         centered: true,
         onConfirm: onConfirm
     })

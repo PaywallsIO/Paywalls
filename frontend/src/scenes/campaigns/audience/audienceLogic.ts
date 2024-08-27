@@ -6,8 +6,6 @@ import {
     AudienceRequest,
     CampaignAudience,
     campaignsApiClient,
-    CampaignsApiClient,
-    CampaignsApiClientInterface,
 } from '../data/CampaignsApiClient'
 
 export type AudienceProps = {

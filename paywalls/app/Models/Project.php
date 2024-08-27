@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 enum RestoreBehavior
 {
@@ -40,6 +41,11 @@ class Project extends Model
     public function paywalls(): HasMany
     {
         return $this->hasMany(Paywall::class);
+    }
+
+    public function triggers(): HasManyThrough
+    {
+        return $this->hasManyThrough(CampaignTrigger::class, Campaign::class);
     }
 
     public function campaigns(): HasMany

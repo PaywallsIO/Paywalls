@@ -25,6 +25,7 @@ function didClickDeleteAudience(onConfirm: () => void) {
         title: 'Delete Audience',
         children: <Text size="sm">Are you sure you want to delete this audience?</Text>,
         labels: { confirm: 'Delete', cancel: 'Cancel' },
+        confirmProps: { color: 'red' },
         centered: true,
         onConfirm: onConfirm
     })

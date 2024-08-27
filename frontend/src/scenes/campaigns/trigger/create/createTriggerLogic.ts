@@ -41,7 +41,7 @@ export const createTriggerLogic = kea<createTriggerLogicType>([
           notifications.show({
             color: 'red',
             title: 'Error',
-            message: 'Something went wrong. Please try again.',
+            message: error.response.data.message || 'Something went wrong. Please try again.',
             radius: 'md',
           })
         }
