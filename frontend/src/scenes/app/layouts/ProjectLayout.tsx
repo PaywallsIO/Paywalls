@@ -21,7 +21,7 @@ interface AppLayoutProps {
     children: React.ReactNode
 }
 
-const AppLayout = ({ children }: AppLayoutProps): JSX.Element => {
+const ProjectLayout = ({ children }: AppLayoutProps): JSX.Element => {
     const [opened, { toggle }] = useDisclosure()
 
     return (
@@ -52,4 +52,4 @@ const AppLayout = ({ children }: AppLayoutProps): JSX.Element => {
     );
 };
 
-export default AppLayout;
+export default ProjectLayout;

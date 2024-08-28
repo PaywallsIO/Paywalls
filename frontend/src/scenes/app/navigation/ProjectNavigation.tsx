@@ -7,16 +7,24 @@ import { sceneLogic } from '../../../sceneLogic';
 import { useActions, useValues } from 'kea';
 import { userLogic } from '../../userLogic';
 import ProjectsCombobox from '../../projects/ProjectsCombobox';
+import { Project } from '../../projects/ProjectsData';
 
 export default function ProjectNavigation() {
-    const { activeScene, sceneParams } = useValues(sceneLogic)
+    const { activeScene } = useValues(sceneLogic)
     const { logout } = useActions(userLogic)
 
+    const project = {
+        id: 1,
+        name: 'Demo Project',
+        avatar_url: 'https://www.appatar.io/com.apple.Music',
+
+    }
+
     const tabs = [
-        { link: urls.apps(sceneParams.params.projectId), label: 'Apps', scenes: ['Apps'], icon: IconDevices },
-        { link: urls.paywalls(sceneParams.params.projectId), label: 'Paywalls', scenes: ['Paywalls'], icon: IconReceipt2 },
+        { link: urls.apps(project.id), label: 'Apps', scenes: ['Apps'], icon: IconDevices },
+        { link: urls.paywalls(project.id), label: 'Paywalls', scenes: ['Paywalls'], icon: IconReceipt2 },
         { link: '', label: 'Templates', scenes: ['Templates'], icon: IconTemplate },
-        { link: urls.campaigns(sceneParams.params.projectId), label: 'Campaigns', scenes: ['Campaigns', 'Campaign'], icon: IconSpeakerphone },
+        { link: urls.campaigns(project.id), label: 'Campaigns', scenes: ['Campaigns', 'Campaign'], icon: IconSpeakerphone },
         { link: '', label: 'Charts', scenes: ['Charts'], icon: IconChartBar },
         { link: '', label: 'Products', scenes: ['Products'], icon: IconShoppingCart },
         { link: '', label: 'People', scenes: ['People'], icon: IconUsers },
@@ -44,11 +52,11 @@ export default function ProjectNavigation() {
                         <Flex gap={"xs"}>
                             <Group w={"100%"}>
                                 <Avatar
-                                    src="https://www.appatar.io/com.legacybits.ProgressPicRelease/small"
+                                    src={project.avatar_url}
                                     size="md"
                                     radius="md"
                                 />
-                                <Title order={5}>ProgressPic</Title>
+                                <Title order={5}>{project.name}</Title>
                             </Group>
 
                             <Center><IconChevronDown color="var(--mantine-color-gray-filled)" /></Center>

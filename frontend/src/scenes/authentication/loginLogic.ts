@@ -7,6 +7,7 @@ import type { loginLogicType } from './loginLogicType'
 import { userLogic } from '../userLogic'
 import { apiClient } from '../../lib/api'
 import { AuthApiClient, LoginRequest, LoginResponse } from './data/AuthApiClient'
+import { isDemo } from '../../lib/constants'
 
 const authApiClient = new AuthApiClient(apiClient)
 
@@ -15,8 +16,8 @@ const loginLogic = kea<loginLogicType>([
   forms(({ actions }) => ({
     loginForm: {
       defaults: {
-        email: '',
-        password: '',
+        email: isDemo ? 'demo@paywalls.io' : '',
+        password: isDemo ? 'DemoPassword' : '',
       } as LoginRequest,
       errors: ({ email, password }: LoginRequest) => ({
         email: email ? (/^\S+@\S+$/.test(email) ? null : 'Please enter a valid email') : 'Please enter an email',

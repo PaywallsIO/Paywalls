@@ -4,6 +4,8 @@ import ProjectNavigation from '../navigation/ProjectNavigation'
 
 import { Notifications } from '@mantine/notifications'
 import AppHeader from '../navigation/AppHeader'
+import { isDemo } from '../../../lib/constants'
+import { DemoBanner } from './shared/DemoBanner'
 
 interface AppLayoutProps {
     children: React.ReactNode
@@ -14,6 +16,7 @@ const AppLayout = ({ children }: AppLayoutProps): JSX.Element => {
 
     return (
         <Container size="responsive">
+            {isDemo && <DemoBanner />}
             <Notifications position="bottom-right" zIndex={1000} />
             <AppShell
                 header={{ height: 60 }}
