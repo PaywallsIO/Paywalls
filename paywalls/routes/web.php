@@ -7,3 +7,7 @@ Route::get('paywalls/{paywall}', [App\Http\Controllers\PaywallController::class,
 Route::get('/', function () {
     return view('index');
 });
+
+Route::get('/{any}', function () {
+    return redirect('/');
+})->where('any', '^(?!api).*');
