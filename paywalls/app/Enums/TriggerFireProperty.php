@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum TriggerProperty: string
+enum TriggerFireProperty: string
 {
     case userFirstSeen = 'user.first_seen';
     case userIsIdentified = 'user.is_identified';
@@ -17,7 +17,6 @@ enum TriggerProperty: string
     case appVersion = 'app.version';
     case appBuildNumber = 'app.build_number';
     case appBundleId = 'app.bundle_id';
-    case appBuildNumber = 'app.build_number';
 
     case deviceScreenWidth = 'device.screen_width';
     case deviceScreenHeight = 'device.screen_height';
