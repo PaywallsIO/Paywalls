@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Enums\TriggerFireProperty;
 use App\Http\Requests\IngestEventsRequest;
 use App\Http\Requests\TriggerRequest;
+use App\Http\Resources\TriggerPaywallResource;
 use App\Jobs\Models\ProcessEvent;
 use App\Jobs\ProcessEventJob;
+use App\Models\Paywall;
 
 class EventController extends Controller
 {
@@ -19,7 +21,7 @@ class EventController extends Controller
 
     public function trigger(TriggerRequest $request)
     {
-        return [
+        $data = [
             TriggerFireProperty::userFirstSeen->value => 'user.first_seen',
             TriggerFireProperty::userIsIdentified->value => 'user.is_identified',
             TriggerFireProperty::userTotalSessions->value => 'user.total_sessions',
@@ -41,6 +43,10 @@ class EventController extends Controller
             TriggerFireProperty::deviceManufacturer->value => 'device.manufacturer',
             TriggerFireProperty::deviceModel->value => 'device.model',
             TriggerFireProperty::deviceOs->value => 'device.os',
+        ];
+
+        return [
+            'paywall' => new TriggerPaywallResource(Paywall::first()),
         ];
     }
 }

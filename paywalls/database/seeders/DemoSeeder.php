@@ -33,7 +33,7 @@ class DemoSeeder extends Seeder
         $app = $project->apps()->make([
             'name' => 'Demo App',
             'platform' => 'apple',
-            'bundle_id' => 'com.apple.Music',
+            'bundle_id' => 'com.legacybits.ProgressPicRelease',
         ]);
         $app->portal()->associate($user->portal);
         $app->save();
