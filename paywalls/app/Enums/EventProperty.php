@@ -10,6 +10,4 @@ enum EventProperty: string
     case alias = 'alias';
     case anonDistinctId = '$anon_distinct_id';
     case creatorEventUuid = '$creator_event_uuid';
-
-    case initialPrefix = '$initial_';
 }

@@ -2,10 +2,15 @@
 
 namespace App\Enums;
 
-enum EventName: string
+final class EventName
 {
-    case createAlias = '$create_alias';
-    case identify = '$identify';
-    case mergeDangerously = '$merge_dangerously';
-    case appOpened = '$app_opened';
+    public const createAlias = '$create_alias';
+
+    public const identify = '$identify';
+
+    public const mergeDangerously = '$merge_dangerously';
+
+    public const appOpened = '$app_opened';
+
+    public const paywallVisit = '$paywall_visit';
 }

@@ -2,26 +2,43 @@
 
 namespace App\Enums;
 
-enum TriggerFireProperty: string
+final class TriggerFireProperty
 {
-    case userFirstSeen = 'user.first_seen';
-    case userIsIdentified = 'user.is_identified';
-    case userTotalSessions = 'user.total_sessions';
-    case userSecondsSinceLastSeenPaywall = 'user.time_since_last_seen_paywall';
-    case userTotalSeenPaywalls = 'user.total_seen_paywalls';
-    case userLastPaywallId = 'user.last_paywall_id';
-    case userTimesinceSessionStart = 'user.timesince_session_start';
+    public const userFirstSeen = 'user.first_seen';
 
-    case sessionDurationSeconds = 'session.duration_seconds';
+    public const userIsIdentified = 'user.is_identified';
 
-    case appVersion = 'app.version';
-    case appBuildNumber = 'app.build_number';
-    case appBundleId = 'app.bundle_id';
+    public const userTotalSessions = 'user.total_sessions';
 
-    case deviceScreenWidth = 'device.screen_width';
-    case deviceScreenHeight = 'device.screen_height';
-    case deviceOsVersion = 'device.os_version';
-    case deviceManufacturer = 'device.manufacturer';
-    case deviceModel = 'device.model';
-    case deviceOs = 'device.os';
+    public const userSecondsSinceLastSeenPaywall = 'user.time_since_last_seen_paywall';
+
+    public const userTotalSeenPaywalls = 'user.total_seen_paywalls';
+
+    public const userLastPaywallId = 'user.last_paywall_id';
+
+    public const sessionDurationSeconds = 'session.duration_seconds';
+
+    public const totalSessionCountInclusive = 'session.total_session_count';
+
+    public const appVersion = 'app.version';
+
+    public const appBuildNumber = 'app.build_number';
+
+    public const appNamespace = 'app.namespace';
+
+    public const deviceScreenWidth = 'device.screen_width';
+
+    public const deviceScreenHeight = 'device.screen_height';
+
+    public const deviceOsVersion = 'device.os_version';
+
+    public const deviceManufacturer = 'device.manufacturer';
+
+    public const deviceType = 'device.type';
+
+    public const deviceName = 'device.name';
+
+    public const deviceOs = 'device.os';
+
+    public const networkMode = 'device.network_mode';
 }

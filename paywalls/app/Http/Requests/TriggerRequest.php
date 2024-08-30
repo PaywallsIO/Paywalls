@@ -14,7 +14,11 @@ class TriggerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'event' => 'required|string|max:255',
+            'distinct_id' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
+            'properties' => 'required|array',
+            'timestamp' => 'required|integer',
+            'uuid' => 'required|uuid',
         ];
     }
 }

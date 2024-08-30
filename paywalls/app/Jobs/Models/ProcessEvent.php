@@ -3,6 +3,7 @@
 namespace App\Jobs\Models;
 
 use App\Enums\EventProperty;
+use App\Enums\PropertyName;
 
 final class ProcessEvent
 {
@@ -19,17 +20,17 @@ final class ProcessEvent
     private $eventToUserProperties;
 
     private const eventToUserProperties = [
-        '$app_version',
-        '$app_name',
-        '$app_namespace',
-        '$app_build_number',
-        '$os_version',
-        '$app_namespace',
-        '$lib_version',
-        '$device_type',
-        '$os',
-        '$device_type',
-        '$device_model',
+        PropertyName::appVersion,
+        PropertyName::appName,
+        PropertyName::appNamespace,
+        PropertyName::appBuildNumber,
+        PropertyName::osVersion,
+        PropertyName::appNamespace,
+        PropertyName::libVersion,
+        PropertyName::deviceType,
+        PropertyName::os,
+        PropertyName::deviceType,
+        PropertyName::deviceModel,
     ];
 
     public function __construct(array $event)
@@ -53,7 +54,7 @@ final class ProcessEvent
 
         $setOnceProperties = $userProperties->mapWithKeys(function ($value, $key) {
             return [
-                EventProperty::initialPrefix->value.str_replace('$', '', $key) => $value,
+                '$initial_'.str_replace('$', '', $key) => $value,
             ];
         });
 

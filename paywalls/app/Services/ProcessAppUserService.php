@@ -71,8 +71,8 @@ class ProcessAppUserService
         try {
             if (
                 collect([
-                    EventName::createAlias->value,
-                    EventName::mergeDangerously->value,
+                    EventName::createAlias,
+                    EventName::mergeDangerously,
                 ])->contains($this->event->name)
                 && isset($this->event->properties[EventProperty::alias->value])
             ) {
@@ -81,7 +81,7 @@ class ProcessAppUserService
                     $this->event->distinctId
                 );
             } elseif (
-                $this->event->name == EventName::identify->value
+                $this->event->name == EventName::identify
                 && $anonDistinctId = $this->event->properties[EventProperty::anonDistinctId->value] ?? null
             ) {
                 // Merge anonomous distinct id into identified distinct id
@@ -239,7 +239,7 @@ class ProcessAppUserService
      */
     private function canMerge(AppUser $appUser): bool
     {
-        return $this->event->name == EventName::mergeDangerously->value || ! $appUser->is_identified;
+        return $this->event->name == EventName::mergeDangerously || ! $appUser->is_identified;
     }
 
     private function eventPropertiesUpdated(array $personProperties = []): array

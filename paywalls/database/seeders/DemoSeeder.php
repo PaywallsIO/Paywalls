@@ -55,7 +55,7 @@ class DemoSeeder extends Seeder
         ]);
 
         $campaign->triggers()->create([
-            'event_name' => EventName::appOpened->value,
+            'event_name' => EventName::appOpened,
         ]);
 
         $campaign->paywalls()->save($project->paywalls()->first(), [
