@@ -10,4 +10,4 @@ Route::get('/', function () {
 
 Route::get('/{any}', function () {
     return redirect('/');
-})->where('any', '^(?!api).*');
+})->where('any', '^(?!.*\b(api|sanctum)\b).*');
