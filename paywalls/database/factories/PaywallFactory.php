@@ -2,22 +2,19 @@
 
 namespace Database\Factories;
 
+use App\Models\Project;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Paywall>
- */
 class PaywallFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
     public function definition(): array
     {
+        // create a published paywall with this is set as the paywall_id in the published_paywalls table
         return [
-            //
+            'name' => $this->faker->name(),
+            'content' => [],
+            'project_id' => Project::factory(),
+            'version' => 1,
         ];
     }
 }

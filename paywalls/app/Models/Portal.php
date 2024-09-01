@@ -40,6 +40,27 @@ class Portal extends Model
         return $this->hasMany(AppUserDistinctId::class);
     }
 
+    public function campaigns(): HasManyThrough
+    {
+        return $this->hasManyThrough(Campaign::class, Project::class);
+    }
+
+    public function campaignTriggers()
+    {
+        return CampaignTrigger::where('is_active', true)
+            ->whereHas('campaign', function ($query) {
+                $query
+                    ->whereHas('project', function ($query) {
+                        $query->where('portal_id', $this->id);
+                    });
+            });
+    }
+
+    public function getCampaignTriggersAttribute()
+    {
+        return $this->campaignTriggers()->get();
+    }
+
     public function events(): HasManyThrough
     {
         return $this->hasManyThrough(Event::class, App::class);

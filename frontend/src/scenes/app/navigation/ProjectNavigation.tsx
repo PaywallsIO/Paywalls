@@ -1,4 +1,4 @@
-import { IconSwitchHorizontal, IconLogout, IconReceipt2, IconUsers, IconSettings, IconChartBar, IconLanguage, IconSpeakerphone, IconTemplate, IconChevronDown, IconShoppingCart, IconDevices } from '@tabler/icons-react'
+import { IconSwitchHorizontal, IconLogout, IconReceipt2, IconUsers, IconSettings, IconChartBar, IconLanguage, IconSpeakerphone, IconTemplate, IconChevronDown, IconShoppingCart, IconDevices, IconLifebuoy } from '@tabler/icons-react'
 import { Group, Title, Avatar, Flex, UnstyledButton, Center, Divider } from '@mantine/core'
 import classes from './Navigation.module.css'
 import { A } from 'kea-router';
@@ -23,11 +23,10 @@ export default function ProjectNavigation() {
     const tabs = [
         { link: urls.apps(project.id), label: 'Apps', scenes: ['Apps'], icon: IconDevices },
         { link: urls.paywalls(project.id), label: 'Paywalls', scenes: ['Paywalls'], icon: IconReceipt2 },
-        { link: '', label: 'Templates', scenes: ['Templates'], icon: IconTemplate },
         { link: urls.campaigns(project.id), label: 'Campaigns', scenes: ['Campaigns', 'Campaign'], icon: IconSpeakerphone },
         { link: '', label: 'Charts', scenes: ['Charts'], icon: IconChartBar },
         { link: '', label: 'Products', scenes: ['Products'], icon: IconShoppingCart },
-        { link: '', label: 'People', scenes: ['People'], icon: IconUsers },
+        { link: '', label: 'Users', scenes: ['AppUsers'], icon: IconUsers },
         { link: '', label: 'Localization', scenes: ['Localization'], icon: IconLanguage },
         { link: '', label: 'Settings', scenes: ['Settings'], icon: IconSettings }
     ]
@@ -71,8 +70,8 @@ export default function ProjectNavigation() {
 
             <div className={classes.footer}>
                 <a href="#" className={classes.link} onClick={(event) => event.preventDefault()}>
-                    <IconSwitchHorizontal className={classes.linkIcon} stroke={1.5} />
-                    <span>Change account</span>
+                    <IconLifebuoy className={classes.linkIcon} stroke={1.5} />
+                    <span>Support</span>
                 </a>
 
                 <a href="#" className={classes.link} onClick={() => logout()}>

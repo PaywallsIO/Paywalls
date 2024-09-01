@@ -3,7 +3,7 @@ import { BindLogic, useActions, useValues } from 'kea'
 import { Form, Field } from 'kea-forms'
 import { audienceLogic } from './audienceLogic'
 import { CampaignAudience } from '../data/CampaignsApiClient'
-import QueryBuilder, { formatQuery, RuleGroupType } from 'react-querybuilder'
+import QueryBuilder, { formatQuery, defaultOperators, RuleGroupType, RuleType } from 'react-querybuilder'
 import { parseJsonLogic } from 'react-querybuilder/parseJsonLogic'
 import { QueryBuilderMantine } from '@react-querybuilder/mantine'
 import { IconArrowBackUp, IconFilter, IconFlame, IconTrack } from '@tabler/icons-react'
@@ -108,11 +108,156 @@ function AudienceForm(): JSX.Element {
 }
 
 function AudienceQueryBuilder({ query, onQueryChange }: { query: RuleGroupType, onQueryChange: (value: RuleGroupType) => void }): JSX.Element {
+    const validator = (r: RuleType) => !!r.value;
     const fields = [
         {
-            name: 'firstName',
-            label: 'First Name',
-            placeholder: 'Enter first name',
+            name: 'user_time_since_first_seen',
+            label: 'Time Since First Seen',
+            placeholder: 'Seconds',
+            inputType: 'number',
+            validator,
+        },
+        {
+            name: 'user_first_seen',
+            label: 'User First Seen Date',
+            inputType: 'date',
+            validator,
+        },
+        {
+            name: 'user_user_type',
+            label: 'User Type',
+            valueEditorType: 'select',
+            defaultValue: 'Anonymous',
+            operators: defaultOperators.filter((op) => ['=', '!='].includes(op.name)),
+            values: [
+                { name: 'Identified', label: 'Identified', value: "Identified" },
+                { name: 'Anonymous', label: 'Anonymous', value: "Anonymous" },
+            ]
+        },
+        {
+            name: 'user_total_sessions',
+            label: 'User Total Sessions',
+            placeholder: 'Count of Sessions',
+            inputType: 'number',
+            validator,
+        },
+        {
+            name: 'user_time_since_last_seen_paywall',
+            label: 'User Total Sessions',
+            placeholder: 'Seconds',
+            inputType: 'number',
+            validator,
+        },
+        {
+            name: 'user_total_seen_paywalls',
+            label: 'Total Seen Paywalls',
+            placeholder: 'Count of Paywalls',
+            inputType: 'number',
+            validator,
+        },
+        {
+            name: 'user_last_paywall_id',
+            label: 'Last Seen Paywall ID',
+            placeholder: 'Paywalls ID',
+            inputType: 'number',
+            validator,
+        },
+        {
+            name: 'session_duration_seconds',
+            label: 'Current Session Duration',
+            placeholder: 'Session length in Seconds',
+            inputType: 'number',
+            validator,
+        },
+        {
+            name: 'app_version',
+            label: 'App Version',
+            placeholder: 'Semantic version number',
+            inputType: 'text',
+            validator,
+        },
+        {
+            name: 'app_build_number',
+            label: 'App Build Number',
+            placeholder: 'Build number',
+            inputType: 'number',
+            validator,
+        },
+        {
+            name: 'app_namespace',
+            label: 'App Bundle ID',
+            placeholder: 'com.example.app',
+            inputType: 'number',
+            validator,
+        },
+        {
+            name: 'device_screen_width',
+            label: 'Device Screen Width',
+            placeholder: 'Pixels',
+            inputType: 'number',
+            validator,
+        },
+        {
+            name: 'device_screen_height',
+            label: 'Device Screen Height',
+            placeholder: 'Pixels',
+            inputType: 'number',
+            validator,
+        },
+        {
+            name: 'device_os_version',
+            label: 'Device OS Version',
+            placeholder: 'Semantic version number',
+            inputType: 'text',
+            validator,
+        },
+        {
+            name: 'device_manufacturer',
+            label: 'Device Manufacturer',
+            valueEditorType: 'select',
+            defaultValue: 'Apple',
+            operators: defaultOperators.filter((op) => ['=', '!=', 'contains', 'null', 'notNull', 'in', 'notIn'].includes(op.name)),
+            values: [
+                { name: 'Apple', label: 'Apple', value: 'Apple' },
+            ]
+        },
+        {
+            name: 'device_type',
+            label: 'Device Type',
+            valueEditorType: 'select',
+            defaultValue: 'Mobile',
+            operators: defaultOperators.filter((op) => ['=', '!=', 'contains', 'null', 'notNull', 'in', 'notIn'].includes(op.name)),
+            values: [
+                { name: 'Mobile', label: 'Mobile', value: 'Mobile' },
+                { name: 'Tablet', label: 'Tablet', value: 'Tablet' },
+                { name: 'TV', label: 'TV', value: 'TV' },
+                { name: 'CarPlay', label: 'CarPlay', value: 'CarPlay' },
+                { name: 'Desktop', label: 'Desktop', value: 'Desktop' },
+            ]
+        },
+        {
+            name: 'ios_device_model',
+            label: 'iOS Device Model',
+            placeholder: 'Raw UIDevice.model',
+            inputType: 'text',
+        },
+        {
+            name: 'device_os',
+            label: 'Device OS',
+            placeholder: 'Device OS',
+            inputType: 'text',
+        },
+        {
+            name: 'device_network_mode',
+            label: 'Network Mode',
+            valueEditorType: 'select',
+            defaultValue: 'Wifi',
+            operators: defaultOperators.filter((op) => ['=', '!='].includes(op.name)),
+            values: [
+                { name: 'Wifi', label: 'Wifi', value: 'Wifi' },
+                { name: 'Cellular', label: 'Cellular', value: 'Cellular' },
+                { name: 'Unknown', label: 'Unknown', value: 'Unknown' },
+            ]
         },
     ]
 

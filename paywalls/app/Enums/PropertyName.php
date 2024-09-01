@@ -38,7 +38,7 @@ final class PropertyName
 
     const deviceModel = '$device_model';
 
-    const deviceName = '$device_name';
+    const iosDeviceModel = '$ios_device_model';
 
     const initialDeviceModel = '$initial_device_model';
 

@@ -10,6 +10,7 @@
     "require": {
         "php": "^8.2",
         "filament/filament": "^3.2",
+        "jwadhams/json-logic-php": "^1.5",
         "laravel/fortify": "^1.22",
         "laravel/framework": "^11.9",
         "laravel/sanctum": "^4.0",

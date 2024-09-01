@@ -31,6 +31,11 @@ class Campaign extends Model
         return $this->belongsToMany(Paywall::class);
     }
 
+    public function publishedPaywalls(): BelongsToMany
+    {
+        return $this->belongsToMany(Paywall::class)->whereNotNull('published_uuid');
+    }
+
     public function triggers(): HasMany
     {
         return $this->hasMany(CampaignTrigger::class)->orderBy('created_at', 'asc');
