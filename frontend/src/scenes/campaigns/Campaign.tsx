@@ -1,10 +1,10 @@
-import { rem, Text, Title, Loader, Center, Table, Stack, Group, Paper, Anchor, Breadcrumbs, ThemeIcon, Grid, Badge, Spoiler, Flex, Box, Button, Tooltip, Space, Collapse, Blockquote, Input } from "@mantine/core";
+import { rem, Text, Title, Loader, Center, Table, Stack, Group, Paper, Anchor, Breadcrumbs, ThemeIcon, Grid, Badge, Spoiler, Flex, Box, Button, Tooltip, Space, Collapse, Blockquote, Input, Tabs } from "@mantine/core";
 import { useValues, useActions, BindLogic } from 'kea'
 import { SceneExport } from '../sceneTypes'
 import { useDisclosure } from '@mantine/hooks'
 import cx from 'clsx'
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd'
-import { IconArrowBack, IconChevronDown, IconChevronRight, IconGripVertical, IconInfoCircle, IconPencil, IconPlus } from '@tabler/icons-react'
+import { IconArrowBack, IconChevronDown, IconChevronRight, IconGripVertical, IconInfoCircle, IconPencil, IconPlus, IconReceipt, IconReceipt2 } from '@tabler/icons-react'
 import { campaignLogic, CampaignProps } from './campaignLogic'
 import { router } from "kea-router"
 import classes from './Campaign.module.scss'
@@ -81,113 +81,124 @@ function CampaignScene({ projectId, campaignId }: CampaignProps) {
     return (
         <BindLogic logic={campaignLogic} props={{ projectId, campaignId }}>
             <Stack>
-                {
-                    campaignLoading ? (
-                        <Center style={{ height: '100vh' }}><Loader color="blue" /></Center>
-                    ) : (
-                        <>
-                            <Stack>
-                                <Breadcrumbs>
-                                    <Anchor onClick={() => push(`/projects/${projectId}/campaigns`)}>Campaigns</Anchor>
-                                    <Text>{campaign?.name}</Text>
-                                </Breadcrumbs>
-                                <Group align="baseline">
-                                    <Anchor onClick={() => push(`/projects/${projectId}/campaigns`)}>
-                                        <ThemeIcon color="blue" variant="light" size="lg">
-                                            <IconChevronLeft />
-                                        </ThemeIcon>
-                                    </Anchor>
-                                    <Title>{campaign?.name}</Title>
-                                </Group>
-                            </Stack>
+                <Stack>
+                    <Breadcrumbs>
+                        <Anchor onClick={() => push(`/projects/${projectId}/campaigns`)}>Campaigns</Anchor>
+                        <Text>{campaign?.name}</Text>
+                    </Breadcrumbs>
+                    <Group align="baseline">
+                        <Anchor onClick={() => push(`/projects/${projectId}/campaigns`)}>
+                            <ThemeIcon color="blue" variant="light" size="lg">
+                                <IconChevronLeft />
+                            </ThemeIcon>
+                        </Anchor>
+                        <Title>{campaign?.name}</Title>
+                    </Group>
+                </Stack>
+                <Tabs defaultValue="triggers_audiences">
+                    <Tabs.List>
+                        <Tabs.Tab value="triggers_audiences" leftSection={<IconBolt size={14} />}>Triggers & Audiences</Tabs.Tab>
+                        <Tabs.Tab value="paywalls" leftSection={<IconReceipt2 size={14} />}>Paywalls</Tabs.Tab>
+                    </Tabs.List>
 
-                            <Flex mb={0} gap={5} align={"center"}>
-                                <IconBolt size={22} />
-                                <Title order={4} w={"100%"}>Triggers</Title>
-                                <Tooltip label="Create trigger">
-                                    <Button variant="light" radius="lg" size="compact-md" onClick={() => didClickCreateTrigger(projectId, campaignId, loadCampaign)}>
-                                        <IconPlus />
-                                    </Button>
-                                </Tooltip>
-                            </Flex>
-
-
-                            {campaign.triggers.length > 0 ? (
-                                <Group gap={10}>
-                                    {
-                                        campaign.triggers.map((trigger: CampaignTrigger) => (
-                                            <Badge key={trigger.id} color="blue" variant={trigger.is_active ? "light" : "default"} radius="lg" size="xl" rightSection={(
-                                                <>
-                                                    {trigger.is_active ? (
-                                                        <Tooltip label="Pause trigger">
-                                                            <Button variant="transparent" className={classes.pausePlayButton} size="compact-xs" onClick={() => updateTrigger({ triggerId: trigger.id, request: { is_active: false } })}>
-                                                                <IconPlayerPauseFilled style={{ width: rem(15), height: rem(15) }} />
-                                                            </Button>
-                                                        </Tooltip>
-                                                    ) : (
-                                                        <Tooltip label="Resume triggering for users">
-                                                            <Button variant="transparent" className={classes.pausePlayButton} size="compact-xs" onClick={
-                                                                () => updateTrigger({ triggerId: trigger.id, request: { is_active: true } })
-                                                            }>
-                                                                <IconPlayerPlayFilled style={{ width: rem(15), height: rem(15) }} />
-                                                            </Button>
-                                                        </Tooltip>
-                                                    )}
-                                                    <Tooltip label="Delete trigger">
-                                                        <Button variant="transparent" p={0} className={classes.deleteButton} size="compact-xs" onClick={
-                                                            () => didClickDeleteTrigger(() => deleteTrigger(trigger.id))
-                                                        }>
-                                                            <IconTrash style={{ width: rem(15), height: rem(15) }} />
-                                                        </Button>
-                                                    </Tooltip>
-
-                                                </>
-                                            )}>
-                                                <Text fw={500} size="xs" style={{ textTransform: 'none' }}><pre>{trigger.event_name}</pre></Text>
-                                            </Badge>
-                                        ))
-                                    }
-                                </Group>
+                    <Tabs.Panel value="triggers_audiences">
+                        {
+                            campaignLoading ? (
+                                <Center style={{ height: '100vh' }}><Loader color="blue" /></Center>
                             ) : (
                                 <>
-                                    <Stack align="center">
-                                        <Title order={3}>No Triggers Yet</Title>
-                                        <Button onClick={() => didClickCreateTrigger(projectId, campaignId, loadCampaign)}>
-                                            Create Trigger
-                                        </Button>
-                                    </Stack>
+                                    <Flex mb={0} gap={5} align={"center"}>
+                                        <IconBolt size={22} />
+                                        <Title order={4} w={"100%"}>Triggers</Title>
+                                        <Tooltip label="Create trigger">
+                                            <Button variant="light" radius="lg" size="compact-md" onClick={() => didClickCreateTrigger(projectId, campaignId, loadCampaign)}>
+                                                <IconPlus />
+                                            </Button>
+                                        </Tooltip>
+                                    </Flex>
+
+
+                                    {campaign.triggers.length > 0 ? (
+                                        <Group gap={10}>
+                                            {
+                                                campaign.triggers.map((trigger: CampaignTrigger) => (
+                                                    <Badge key={trigger.id} color="blue" variant={trigger.is_active ? "light" : "default"} radius="lg" size="xl" rightSection={(
+                                                        <>
+                                                            {trigger.is_active ? (
+                                                                <Tooltip label="Pause trigger">
+                                                                    <Button variant="transparent" className={classes.pausePlayButton} size="compact-xs" onClick={() => updateTrigger({ triggerId: trigger.id, request: { is_active: false } })}>
+                                                                        <IconPlayerPauseFilled style={{ width: rem(15), height: rem(15) }} />
+                                                                    </Button>
+                                                                </Tooltip>
+                                                            ) : (
+                                                                <Tooltip label="Resume triggering for users">
+                                                                    <Button variant="transparent" className={classes.pausePlayButton} size="compact-xs" onClick={
+                                                                        () => updateTrigger({ triggerId: trigger.id, request: { is_active: true } })
+                                                                    }>
+                                                                        <IconPlayerPlayFilled style={{ width: rem(15), height: rem(15) }} />
+                                                                    </Button>
+                                                                </Tooltip>
+                                                            )}
+                                                            <Tooltip label="Delete trigger">
+                                                                <Button variant="transparent" p={0} className={classes.deleteButton} size="compact-xs" onClick={
+                                                                    () => didClickDeleteTrigger(() => deleteTrigger(trigger.id))
+                                                                }>
+                                                                    <IconTrash style={{ width: rem(15), height: rem(15) }} />
+                                                                </Button>
+                                                            </Tooltip>
+
+                                                        </>
+                                                    )}>
+                                                        <Text fw={500} size="xs" style={{ textTransform: 'none' }}><pre>{trigger.event_name}</pre></Text>
+                                                    </Badge>
+                                                ))
+                                            }
+                                        </Group>
+                                    ) : (
+                                        <>
+                                            <Stack align="center">
+                                                <Title order={3}>No Triggers Yet</Title>
+                                                <Button onClick={() => didClickCreateTrigger(projectId, campaignId, loadCampaign)}>
+                                                    Create Trigger
+                                                </Button>
+                                            </Stack>
+                                        </>
+                                    )}
+
+                                    <Space />
+
+                                    <Flex mb={0} gap={5} align={"center"}>
+                                        <IconUsers size={22} />
+                                        <Title order={4} w={"100%"}>Audiences</Title>
+                                        <Tooltip label="New Audience">
+                                            <Button variant="light" radius="lg" size="compact-md" onClick={() => didClickCreateAudience(projectId, campaignId, loadCampaign)}>
+                                                <IconPlus />
+                                            </Button>
+                                        </Tooltip>
+                                    </Flex>
+
+                                    <Text>Create audiences with filters and an optional match limit. Audiences will be evaludated in order from top to bottom. The first matching audience will be used. In that sense it is better to put more specific audiences first. For example, you would place an audience that matches users in the United States before matching users in North America (because United States is a part of North America).</Text>
+
+                                    {
+                                        campaign.audiences.length ? (
+                                            <Audiences audiences={campaign.audiences} projectId={projectId} />
+                                        ) : (
+                                            <Stack align="center">
+                                                <Title order={3}>No Audiences Yet</Title>
+                                                <Button onClick={() => didClickCreateAudience(projectId, campaignId, loadCampaign)}>
+                                                    Create Audience
+                                                </Button>
+                                            </Stack>
+                                        )
+                                    }
                                 </>
-                            )}
-
-                            <Space />
-
-                            <Flex mb={0} gap={5} align={"center"}>
-                                <IconUsers size={22} />
-                                <Title order={4} w={"100%"}>Audiences</Title>
-                                <Tooltip label="New Audience">
-                                    <Button variant="light" radius="lg" size="compact-md" onClick={() => didClickCreateAudience(projectId, campaignId, loadCampaign)}>
-                                        <IconPlus />
-                                    </Button>
-                                </Tooltip>
-                            </Flex>
-
-                            <Text>Create audiences with filters and an optional match limit. Audiences will be evaludated in order from top to bottom. The first matching audience will be used. In that sense it is better to put more specific audiences first. For example, you would place an audience that matches users in the United States before matching users in North America (because United States is a part of North America).</Text>
-
-                            {
-                                campaign.audiences.length ? (
-                                    <Audiences audiences={campaign.audiences} projectId={projectId} />
-                                ) : (
-                                    <Stack align="center">
-                                        <Title order={3}>No Audiences Yet</Title>
-                                        <Button onClick={() => didClickCreateAudience(projectId, campaignId, loadCampaign)}>
-                                            Create Audience
-                                        </Button>
-                                    </Stack>
-                                )
-                            }
-                        </>
-                    )
-                }
+                            )
+                        }
+                    </Tabs.Panel>
+                    <Tabs.Panel value="paywalls">
+                        Paywalls
+                    </Tabs.Panel>
+                </Tabs>
             </Stack>
         </BindLogic>
     )

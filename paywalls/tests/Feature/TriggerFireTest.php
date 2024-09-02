@@ -68,35 +68,23 @@ class TriggerFireTest extends TestCase
 }
 EOF;
         $filtersJson = '{"and": [{"==": [{"var": "user_user_type"}, "Anonymous"]}]}';
-        $trigger = $this->campaign->triggers()->forceCreate([
+        $this->campaign->triggers()->forceCreate([
             'event_name' => '$app_opened',
             'is_active' => true,
         ]);
-        $audience = $this->campaign->audiences()->forceCreate([
+        $this->campaign->audiences()->forceCreate([
             'name' => 'test',
             'sort_order' => 0,
             'match_limit' => null,
             'match_period' => null,
             'filters' => json_decode($filtersJson, true),
         ]);
-        $paywall = Paywall::factory()->for($this->project)->create();
-        $this->campaign->paywalls()->attach($paywall, ['percentage' => 100]);
-        $publishedPaywall = PublishedPaywall::factory()->for($paywall)->create();
-        $paywall->forceFill(['published_uuid' => $publishedPaywall->uuid])->save();
+        $paywall = $this->buildPaywall();
         $expectedPaywall = [
             'name' => $paywall->name,
             'url' => route('paywall.showPublished', $paywall->published_uuid),
             'offers' => $paywall->offers->map(fn ($o) => ['name' => $o->name, 'identifier' => $o->identifier])->toArray(),
         ];
-
-        dump('app', $this->appModel->toArray());
-        dump('all projs', Project::all()->toArray());
-        dump('all campaigns', Campaign::with(['audiences', 'triggers'])->get()->toArray());
-        dump('all triggers', Campaign::with(['audiences', 'triggers'])->get()->toArray());
-        dump('portal triggers', $this->appModel->portal->campaignTriggers->toArray());
-        dump('paywalls', Paywall::all()->toArray());
-        $this->campaign = $this->campaign->fresh();
-        dump('campaign paywalls', $this->campaign->publishedPaywalls->toArray());
 
         // When
         $response = $this->be($this->appModel, 'app')->postJson(route('trigger.fire'), json_decode($eventData, true));
@@ -106,5 +94,15 @@ EOF;
         $response->assertJson([
             'paywall' => $expectedPaywall,
         ]);
+    }
+
+    private function buildPaywall(): Paywall
+    {
+        $paywall = Paywall::factory()->for($this->project)->create();
+        $this->campaign->paywalls()->attach($paywall, ['percentage' => 100]);
+        $publishedPaywall = PublishedPaywall::factory()->for($paywall)->create();
+        $paywall->forceFill(['published_uuid' => $publishedPaywall->uuid])->save();
+
+        return $paywall;
     }
 }
