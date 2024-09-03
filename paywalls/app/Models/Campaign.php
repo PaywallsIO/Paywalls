@@ -19,6 +19,7 @@ class Campaign extends Model
     protected $with = [
         'triggers',
         'audiences',
+        'paywalls:id,name,preview_image_url',
     ];
 
     public function project(): BelongsTo
@@ -26,14 +27,14 @@ class Campaign extends Model
         return $this->belongsTo(Project::class);
     }
 
-    public function paywalls(): BelongsToMany
+    public function paywalls(): belongsToMany
     {
-        return $this->belongsToMany(Paywall::class);
+        return $this->belongsToMany(Paywall::class, CampaignPaywall::class)->withPivot('percentage');
     }
 
-    public function publishedPaywalls(): BelongsToMany
+    public function publishedPaywalls(): belongsToMany
     {
-        return $this->belongsToMany(Paywall::class)->whereNotNull('published_uuid');
+        return $this->paywalls()->whereNotNull('published_uuid');
     }
 
     public function triggers(): HasMany

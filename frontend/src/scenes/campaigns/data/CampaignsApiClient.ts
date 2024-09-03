@@ -40,12 +40,22 @@ export type CampaignAudience = {
     updated_at: Date
 }
 
+export type CampaignPaywall = {
+    id: number
+    name: string
+    preview_image_url: string | null
+    pivot: {
+        percentage: number
+    }
+}
+
 export type Campaign = {
     id: number
     name: string
     project_id: number
     triggers: CampaignTrigger[]
     audiences: CampaignAudience[]
+    paywalls: CampaignPaywall[]
     created_at: Date
     updated_at: Date
 }
