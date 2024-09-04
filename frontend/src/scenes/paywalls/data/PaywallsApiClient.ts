@@ -1,8 +1,8 @@
 import { ProjectData } from "grapesjs"
-import { ApiClientInterface, Paginated } from "../../../lib/api"
+import { apiClient, ApiClientInterface, Paginated } from "../../../lib/api"
 
 export interface PaywallsApiClientInterface {
-    getPaywalls(projectId: number): Promise<Paginated<Paywall>>
+    getPaywalls(projectId: number, query?: string): Promise<Paginated<Paywall>>
     getPaywall(projectId: number, id: string | number): Promise<Paywall>
     create(projectId: number, data: Partial<CreatePaywallRequest>): Promise<Paywall>
     update(projectId: number, { id, data }: { id: string | number, data: ProjectData }): Promise<Paywall>
@@ -22,6 +22,7 @@ export type CreatePaywallRequest = {
     name: string
 }
 
+
 interface PublishPaywallRequest {
     id: number
     version: number
@@ -33,8 +34,8 @@ interface PublishPaywallRequest {
 export class PaywallsApiClient implements PaywallsApiClientInterface {
     constructor(public api: ApiClientInterface) { }
 
-    async getPaywalls(projectId: number): Promise<Paginated<Paywall>> {
-        return this.api.get(`/api/projects/${projectId}/paywalls`)
+    async getPaywalls(projectId: number, query?: string): Promise<Paginated<Paywall>> {
+        return this.api.get(`/api/projects/${projectId}/paywalls?q=${query || ''}`)
     }
 
     async getPaywall(projectId: number, id: number): Promise<Paywall> {
@@ -53,3 +54,5 @@ export class PaywallsApiClient implements PaywallsApiClientInterface {
         return this.api.patch(`/api/projects/${projectId}/paywalls/${request.id}/publish`, request)
     }
 }
+
+export const paywallsApiClient = new PaywallsApiClient(apiClient)

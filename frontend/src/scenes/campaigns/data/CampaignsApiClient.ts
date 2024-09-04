@@ -17,6 +17,9 @@ export interface CampaignsApiClientInterface {
     deleteAudience(projectId: number, campaignId: number, audienceId: number): Promise<void>
     restoreAudience(projectId: number, campaignId: number, audienceId: number): Promise<void>
     updateSortOrder(projectId: number, campaignId: number, audiences: UpdateSortOrderRequest): Promise<Campaign>
+
+    // Paywalls
+    attachPaywall(projectId: number, campaignId: number, request: AttachCampaignPaywallRequest): Promise<void>
 }
 
 export type CampaignTrigger = {
@@ -87,6 +90,10 @@ export type EditTriggerRequest = {
     is_active: boolean
 }
 
+export type AttachCampaignPaywallRequest = {
+    paywallId: number | null // @davidmoreen can be null in form default but will fail server side validation if null is sent
+}
+
 export class CampaignsApiClient implements CampaignsApiClientInterface {
     constructor(public api: ApiClientInterface) { }
 
@@ -136,6 +143,10 @@ export class CampaignsApiClient implements CampaignsApiClientInterface {
 
     async restoreTrigger(projectId: number, campaignId: number, triggerId: number): Promise<void> {
         return this.api.patch(`/api/projects/${projectId}/campaigns/${campaignId}/triggers/${triggerId}/restore`)
+    }
+
+    async attachPaywall(projectId: number, campaignId: number, request: AttachCampaignPaywallRequest): Promise<void> {
+        return this.api.post(`/api/projects/${projectId}/campaigns/${campaignId}/attach_paywall`, request)
     }
 }
 

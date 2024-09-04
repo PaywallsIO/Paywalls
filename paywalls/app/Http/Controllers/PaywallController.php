@@ -8,13 +8,20 @@ use App\Http\Requests\UpdatePaywallRequest;
 use App\Models\Paywall;
 use App\Models\Project;
 use App\Models\PublishedPaywall;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class PaywallController extends Controller
 {
-    public function index(Project $project)
+    public function index(Project $project, Request $request)
     {
-        return $project->paywalls()->paginate();
+        $query = $project->paywalls();
+
+        if ($searchTerm = $request->input('q')) {
+            $query->whereRaw('LOWER(name) LIKE ?', ['%'.strtolower($searchTerm).'%']);
+        }
+
+        return $query->paginate();
     }
 
     public function store(Project $project, StorePaywallRequest $request): Paywall

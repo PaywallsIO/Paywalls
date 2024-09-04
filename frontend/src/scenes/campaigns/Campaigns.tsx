@@ -59,7 +59,7 @@ function CampaignsScene() {
                                                     <Group gap={5}>
                                                         {campaign.triggers.filter((trigger: CampaignTrigger) => trigger.is_active).map((trigger: CampaignTrigger) => (
                                                             <Badge key={trigger.id} color="blue" variant="light" radius="md" size="lg" mr={10} leftSection={<IconBolt size={18} />}>
-                                                                <Text fw={500} size="xs" style={{ textTransform: 'none' }}><pre>{trigger.event_name}</pre></Text>
+                                                                <Text fw={500} size="xs" style={{ textTransform: 'none', fontFamily: 'monospace' }}>{trigger.event_name}</Text>
                                                             </Badge>
                                                         ))}
                                                     </Group>

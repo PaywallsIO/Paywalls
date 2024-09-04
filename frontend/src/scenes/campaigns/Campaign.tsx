@@ -9,12 +9,13 @@ import { campaignLogic, CampaignProps } from './campaignLogic'
 import { router } from "kea-router"
 import classes from './Campaign.module.scss'
 import { IconBolt, IconChevronLeft, IconPlayerPause, IconPlayerPauseFilled, IconPlayerPlayFilled, IconTrash, IconUsers } from "@tabler/icons-react"
-import { CampaignAudience, CampaignTrigger } from "./data/CampaignsApiClient"
+import { Campaign as CampaignModel, CampaignAudience, CampaignTrigger } from "./data/CampaignsApiClient"
 import { Audience } from "./audience/Audience"
 import { modals } from "@mantine/modals"
 import { CreateEditAudienceForm } from "./audience/create/CreateEditAudienceForm"
 import 'react-querybuilder/dist/query-builder.scss';
 import { CreateTriggerForm } from "./trigger/create/CreateTriggerForm";
+import { AttachCampaignPaywallForm } from "./attach/AttachCampaignPaywallForm";
 
 interface CampaignSceneProps {
     projectId?: number
@@ -61,6 +62,14 @@ function didClickCreateAudience(projectId: number, campaignId: number, completio
     modals.open({
         title: 'Create Audience',
         children: <CreateEditAudienceForm isEditing={false} projectId={projectId} campaignId={campaignId} completion={completion} />
+    })
+}
+
+function didClickAttachPaywall(projectId: number, campaign: CampaignModel, completion: () => void) {
+    const currentPaywallIds = campaign.paywalls.map((paywall) => paywall.id)
+    modals.open({
+        title: 'Attach Paywall',
+        children: <AttachCampaignPaywallForm props={{ projectId, campaignId: campaign.id, currentPaywallIds, completion }} />
     })
 }
 
@@ -151,7 +160,7 @@ function CampaignScene({ projectId, campaignId }: CampaignProps) {
 
                                                             </>
                                                         )}>
-                                                            <Text fw={500} size="xs" style={{ textTransform: 'none' }}><pre>{trigger.event_name}</pre></Text>
+                                                            <Text fw={500} size="xs" style={{ textTransform: 'none', fontFamily: 'monospace' }}>{trigger.event_name}</Text>
                                                         </Badge>
                                                     ))
                                                 }
@@ -201,7 +210,7 @@ function CampaignScene({ projectId, campaignId }: CampaignProps) {
                                             <IconReceipt2 size={22} />
                                             <Title order={4} w={"100%"}>Paywalls</Title>
                                             <Tooltip label="Attach Paywall">
-                                                <Button variant="light" radius="lg" size="compact-md" onClick={() => didClickCreateTrigger(projectId, campaignId, loadCampaign)}>
+                                                <Button variant="light" radius="lg" size="compact-md" onClick={() => didClickAttachPaywall(projectId, campaign, loadCampaign)}>
                                                     <IconPlus />
                                                 </Button>
                                             </Tooltip>
