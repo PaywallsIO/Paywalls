@@ -22,4 +22,9 @@ class CampaignController extends Controller
     {
         return $campaign;
     }
+
+    public function attachPaywall(Project $project, Campaign $campaign)
+    {
+        // $campaign->paywalls()->syncWithoutDetaching([$paywall->id]);
+    }
 }

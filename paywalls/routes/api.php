@@ -26,6 +26,10 @@ Route::scopeBindings()->prefix('projects/{project}')->middleware(['auth:sanctum'
         ->middleware([
             'can:view,project',
         ]);
+    Route::post('campaigns/{campaign}/attach_paywall', [App\Http\Controllers\CampaignController::class, 'attachPaywall'])
+        ->middleware([
+            'can:view,project',
+        ]);
     Route::patch('paywalls/{paywall}/publish', [App\Http\Controllers\PaywallController::class, 'publish'])
         ->middleware([
             'can:update,project',

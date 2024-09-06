@@ -70,7 +70,7 @@ export function AttachCampaignPaywallForm({ props }: { props: AttachCampaignPayw
                                                     <Text fz="sm" fw={500}>
                                                         {paywall.name}
                                                     </Text>
-                                                    {props.currentPaywallIds.includes(paywall.id) && <Text fz="xs" c="dimmed">Already attached to Campaign</Text>}
+                                                    {props.currentPaywallIds.includes(paywall.id) && <Text fz="xs">Already attached to this Campaign</Text>}
                                                 </Combobox.Option>
                                             ))
                                         ) : (
