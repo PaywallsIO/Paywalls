@@ -31,7 +31,7 @@ export function AttachCampaignPaywallForm({ props }: { props: AttachCampaignPayw
         <>
             <Form logic={attachCampaignPaywallLogic} props={props} formKey="attachCampaignPaywallForm" enableFormOnSubmit>
                 <Input.Wrapper label="Choose a paywall">
-                    <Field name="paywallId">
+                    <Field name="paywall_id">
                         {({ value, onChange }) => (
                             <Combobox
                                 store={combobox}
@@ -50,7 +50,11 @@ export function AttachCampaignPaywallForm({ props }: { props: AttachCampaignPayw
                                         onClick={() => combobox.toggleDropdown()}
                                         rightSectionPointerEvents="none"
                                     >
-                                        {value || <Input.Placeholder>Choose a paywall</Input.Placeholder>}
+                                        {
+                                            paywallsLoading
+                                                ? <Input.Placeholder>Loading...</Input.Placeholder>
+                                                : paywalls?.data.find((paywall: Paywall) => paywall.id == value)?.name || <Input.Placeholder>Choose a paywall</Input.Placeholder>
+                                        }
                                     </InputBase>
                                 </Combobox.Target>
 
@@ -66,7 +70,7 @@ export function AttachCampaignPaywallForm({ props }: { props: AttachCampaignPayw
                                     <Combobox.Options>
                                         {paywallsLoading ? <Combobox.Empty>Loading....</Combobox.Empty> : paywalls.data.length > 0 ? (
                                             paywalls.data.map((paywall: Paywall) => (
-                                                <Combobox.Option disabled={props.currentPaywallIds.includes(paywall.id)} value={paywall.name} key={paywall.id}>
+                                                <Combobox.Option disabled={props.currentPaywallIds.includes(paywall.id)} value={String(paywall.id)} key={String(paywall.id)}>
                                                     <Text fz="sm" fw={500}>
                                                         {paywall.name}
                                                     </Text>

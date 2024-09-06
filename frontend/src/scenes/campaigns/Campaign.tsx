@@ -1,10 +1,10 @@
 import { rem, Text, Title, Loader, Center, Image, Stack, Group, Paper, Anchor, Breadcrumbs, ThemeIcon, Grid, Badge, Button, Flex, Box, Tooltip, Space, Collapse, Blockquote, Input, Tabs, Card, NumberInput } from "@mantine/core";
 import { useValues, useActions, BindLogic } from 'kea'
 import { SceneExport } from '../sceneTypes'
-import { useDisclosure } from '@mantine/hooks'
+import { useDisclosure, useToggle } from '@mantine/hooks'
 import cx from 'clsx'
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd'
-import { IconArrowBack, IconCheck, IconChevronDown, IconChevronRight, IconGripVertical, IconInfoCircle, IconPencil, IconPlus, IconReceipt, IconReceipt2 } from '@tabler/icons-react'
+import { IconArrowBack, IconCancel, IconCheck, IconChevronDown, IconChevronRight, IconGripVertical, IconInfoCircle, IconPencil, IconPlus, IconReceipt, IconReceipt2 } from '@tabler/icons-react'
 import { campaignLogic, CampaignProps } from './campaignLogic'
 import { router } from "kea-router"
 import classes from './Campaign.module.scss'
@@ -86,6 +86,7 @@ function CampaignScene({ projectId, campaignId }: CampaignProps) {
     const { updateTrigger, deleteTrigger } = useActions(campaignLogic)
     const { campaign, campaignLoading } = useValues(logic)
     const { push } = useActions(router)
+    const [isPaywallEditMode, togglePaywallEditMode] = useToggle();
 
     return (
         <BindLogic logic={campaignLogic} props={{ projectId, campaignId }}>
@@ -208,12 +209,30 @@ function CampaignScene({ projectId, campaignId }: CampaignProps) {
                                     <Stack>
                                         <Flex mb={0} gap={5} align={"center"} mt={20}>
                                             <IconReceipt2 size={22} />
-                                            <Title order={4} w={"100%"}>Paywalls</Title>
-                                            <Tooltip label="Attach Paywall">
-                                                <Button variant="light" radius="lg" size="compact-md" onClick={() => didClickAttachPaywall(projectId, campaign, loadCampaign)}>
-                                                    <IconPlus />
-                                                </Button>
-                                            </Tooltip>
+                                            <Title order={4} style={{ flexGrow: 1 }}>Paywalls</Title>
+                                            {isPaywallEditMode ? (
+                                                <>
+                                                    <Button variant="light" color={"red"} radius="lg" size="compact-md" leftSection={<IconCancel size={18} />} onClick={() => togglePaywallEditMode()}>
+                                                        <Text fw={400}>Cancel</Text>
+                                                    </Button>
+                                                    <Button variant="light" radius="lg" size="compact-md" disabled={true} leftSection={<IconCheck size={18} />} onClick={() => togglePaywallEditMode()}>
+                                                        <Text fw={400}>Save</Text>
+                                                    </Button>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Tooltip label="Edit Attached Paywalls">
+                                                        <Button variant="light" radius="lg" size="compact-md" leftSection={<IconPencil size={18} />} onClick={() => togglePaywallEditMode()}>
+                                                            <Text fw={400}>Edit</Text>
+                                                        </Button>
+                                                    </Tooltip>
+                                                    <Tooltip label="Attach Paywall">
+                                                        <Button variant="light" radius="lg" size="compact-md" onClick={() => didClickAttachPaywall(projectId, campaign, loadCampaign)}>
+                                                            <IconPlus />
+                                                        </Button>
+                                                    </Tooltip>
+                                                </>
+                                            )}
                                         </Flex>
 
                                         {campaign.paywalls.length ? (
@@ -224,17 +243,18 @@ function CampaignScene({ projectId, campaignId }: CampaignProps) {
                                                             <Stack align="center">
                                                                 <Stack align="center" gap={0}>
                                                                     <Title order={4}>{paywall.name}</Title>
-                                                                    <Text c={"blue"} fw={800} fs={"sm"}>{paywall.pivot.percentage}%</Text>
-                                                                    <Group>
-                                                                        <NumberInput variant="filled" size="sm" radius="md" styles={{ input: { textAlign: 'center' } }}
-                                                                            min={0} max={100} hideControls={true} w={"100px"} value={paywall.pivot.percentage} />
-                                                                        <Button color="blue" variant="light" size="sm" radius="md" onClick={() => { }}>
-                                                                            <IconCheck size={20} />
-                                                                        </Button>
-                                                                    </Group>
+                                                                    {isPaywallEditMode ? (
+                                                                        <Group gap={3}>
+                                                                            <NumberInput variant="filled" size="sm" radius="md" styles={{ input: { textAlign: 'center' } }}
+                                                                                min={0} max={100} hideControls={true} w={"100px"} value={paywall.pivot.percentage} />
+                                                                            <Text c={"blue"} fw={800} fs={"sm"}>%</Text>
+                                                                        </Group>
+                                                                    ) : (
+                                                                        <Text c={"blue"} fw={800} fs={"sm"}>{paywall.pivot.percentage}%</Text>
+                                                                    )}
                                                                 </Stack>
                                                                 <Box mah={"350px"}>
-                                                                    <Image src={paywall.preview_image_url} fallbackSrc="https://placehold.co/600x400?text=Placeholder" fit="contain" w={"auto"} mah={"350px"} radius="lg" style={{ border: '7px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-9))' }} />
+                                                                    <Image src={paywall.preview_image_url} fallbackSrc="https://placehold.co/600x400?text=Placeholder" w={"170px"} h={"350px"} radius="lg" style={{ border: '7px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-9))' }} />
                                                                 </Box>
                                                             </Stack>
                                                         </Card>

@@ -91,7 +91,7 @@ export type EditTriggerRequest = {
 }
 
 export type AttachCampaignPaywallRequest = {
-    paywallId: number | null // @davidmoreen can be null in form default but will fail server side validation if null is sent
+    paywall_id: number | null // @davidmoreen can be null in form default but will fail server side validation if null is sent
 }
 
 export class CampaignsApiClient implements CampaignsApiClientInterface {

@@ -31,10 +31,10 @@ export const attachCampaignPaywallLogic = kea<attachCampaignPaywallLogicType>([
     forms(({ props, actions }) => ({
         attachCampaignPaywallForm: {
             defaults: {
-                paywallId: null
+                paywall_id: null
             } as AttachCampaignPaywallRequest,
-            errors: ({ paywallId }: AttachCampaignPaywallRequest) => ({
-                paywallId: !paywallId ? 'A paywall is required' : null,
+            errors: ({ paywall_id }: AttachCampaignPaywallRequest) => ({
+                paywall_id: !paywall_id ? 'A paywall is required' : null,
             }),
             submit: async (request: AttachCampaignPaywallRequest) => {
                 try {

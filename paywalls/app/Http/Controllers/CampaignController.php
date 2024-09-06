@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Campaign\AttachCampaignPaywallRequest;
 use App\Http\Requests\Campaign\CreateCampaignRequest;
 use App\Models\Campaign;
+use App\Models\Paywall;
 use App\Models\Project;
 
 class CampaignController extends Controller
@@ -23,8 +25,11 @@ class CampaignController extends Controller
         return $campaign;
     }
 
-    public function attachPaywall(Project $project, Campaign $campaign)
+    public function attachPaywall(Project $project, Campaign $campaign, AttachCampaignPaywallRequest $request)
     {
-        // $campaign->paywalls()->syncWithoutDetaching([$paywall->id]);
+        $paywall = Paywall::findOrFail($request->validated('paywall_id'));
+        $campaign->paywalls()->attach($paywall, [
+            'percentage' => 0,
+        ]);
     }
 }
