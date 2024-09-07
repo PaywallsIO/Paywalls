@@ -1,9 +1,10 @@
 import { afterMount, kea, path, actions, defaults, key, props, selectors, listeners } from 'kea'
 import { loaders } from 'kea-loaders'
-import { Campaign, campaignsApiClient, EditTriggerRequest, UpdateSortOrderRequest } from './data/CampaignsApiClient'
+import { Campaign, campaignsApiClient, EditTriggerRequest, PaywallPercentageRequest, UpdateSortOrderRequest } from './data/CampaignsApiClient'
 import type { campaignLogicType } from './campaignLogicType'
 import { notifications } from '@mantine/notifications'
 import { undoNotificationMessage } from './Campaign'
+import { forms } from 'kea-forms'
 
 export type CampaignProps = {
     projectId: number
@@ -26,7 +27,7 @@ export const campaignLogic = kea<campaignLogicType>([
         restoreAudience: (audienceId: number) => ({ audienceId }),
         restoreTrigger: (triggerId: number) => ({ triggerId }),
         updateTrigger: ({ triggerId, request }: { triggerId: number, request: EditTriggerRequest }) => ({ triggerId, request }),
-        deleteTrigger: (triggerId: number) => ({ triggerId }),
+        deleteTrigger: (triggerId: number) => ({ triggerId })
     }),
     listeners(({ props, actions }) => ({
         restoreTrigger: async ({ triggerId }: { triggerId: number }) => {
@@ -139,6 +140,51 @@ export const campaignLogic = kea<campaignLogicType>([
                 })
             }
         },
+        loadCampaignSuccess: ({ campaign }: { campaign: Campaign }) => {
+            actions.setPaywallPercentageFormValues({
+                paywalls: campaign.paywalls.map((p) => ({ id: p.id, percentage: p.pivot.percentage })) || []
+            })
+        }
+    })),
+    forms(({ props, actions, values }) => ({
+        paywallPercentageForm: {
+            defaults: {
+                paywalls: []
+            } as PaywallPercentageRequest,
+            errors: ({ paywalls }: PaywallPercentageRequest) => ({
+                paywalls: paywalls.map((p) => {
+                    const sum = paywalls.reduce((acc, cur) => parseInt(String(acc + cur.percentage)), 0)
+                    if (sum > 100) {
+                        return {
+                            id: null,
+                            percentage: `Sum ${sum} must equal 100`,
+                        }
+                    }
+
+                    return {
+                        id: null,
+                        percentage: p.percentage < 0 || p.percentage > 100 ? `Must be between 0 and 100` : null,
+                    }
+                }),
+            }),
+            submit: async (request: PaywallPercentageRequest) => {
+                try {
+                    await campaignsApiClient.paywallPercentages(props.projectId, props.campaignId, request)
+
+
+                } catch (error: any) {
+                    notifications.show({
+                        color: 'red',
+                        title: 'Error',
+                        message: 'Something went wrong. Please try again.',
+                        radius: 'md',
+                    })
+                }
+            },
+            options: {
+                alwaysShowErrors: true,
+            }
+        }
     })),
     loaders(({ props }) => ({
         campaign: {

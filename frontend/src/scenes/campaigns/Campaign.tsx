@@ -1,6 +1,7 @@
 import { rem, Text, Title, Loader, Center, Image, Stack, Group, Paper, Anchor, Breadcrumbs, ThemeIcon, Grid, Badge, Button, Flex, Box, Tooltip, Space, Collapse, Blockquote, Input, Tabs, Card, NumberInput } from "@mantine/core";
 import { useValues, useActions, BindLogic } from 'kea'
 import { SceneExport } from '../sceneTypes'
+import { Form, Field } from "kea-forms";
 import { useDisclosure, useToggle } from '@mantine/hooks'
 import cx from 'clsx'
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd'
@@ -16,6 +17,7 @@ import { CreateEditAudienceForm } from "./audience/create/CreateEditAudienceForm
 import 'react-querybuilder/dist/query-builder.scss';
 import { CreateTriggerForm } from "./trigger/create/CreateTriggerForm";
 import { AttachCampaignPaywallForm } from "./attach/AttachCampaignPaywallForm";
+import React from "react";
 
 interface CampaignSceneProps {
     projectId?: number
@@ -81,10 +83,11 @@ function didClickEditAudience(projectId: number, campaignId: number, audience: C
 }
 
 function CampaignScene({ projectId, campaignId }: CampaignProps) {
-    const logic = campaignLogic({ projectId, campaignId })
+    const campaignScnenProps = { projectId, campaignId }
+    const logic = campaignLogic(campaignScnenProps)
     const { loadCampaign } = useActions(logic)
     const { updateTrigger, deleteTrigger } = useActions(campaignLogic)
-    const { campaign, campaignLoading } = useValues(logic)
+    const { campaign, campaignLoading, isPaywallPercentageFormSubmitting } = useValues(logic)
     const { push } = useActions(router)
     const [isPaywallEditMode, togglePaywallEditMode] = useToggle();
 
@@ -206,79 +209,108 @@ function CampaignScene({ projectId, campaignId }: CampaignProps) {
                                     </Stack>
                                 </Tabs.Panel>
                                 <Tabs.Panel value="paywalls">
-                                    <Stack>
-                                        <Flex mb={0} gap={5} align={"center"} mt={20}>
-                                            <IconReceipt2 size={22} />
-                                            <Title order={4} style={{ flexGrow: 1 }}>Paywalls</Title>
-                                            {isPaywallEditMode ? (
-                                                <>
-                                                    <Button variant="light" color={"red"} radius="lg" size="compact-md" leftSection={<IconCancel size={18} />} onClick={() => togglePaywallEditMode()}>
-                                                        <Text fw={400}>Cancel</Text>
-                                                    </Button>
-                                                    <Button variant="light" radius="lg" size="compact-md" disabled={true} leftSection={<IconCheck size={18} />} onClick={() => togglePaywallEditMode()}>
-                                                        <Text fw={400}>Save</Text>
-                                                    </Button>
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <Tooltip label="Edit Attached Paywalls">
-                                                        <Button variant="light" radius="lg" size="compact-md" leftSection={<IconPencil size={18} />} onClick={() => togglePaywallEditMode()}>
-                                                            <Text fw={400}>Edit</Text>
+                                    <Form logic={campaignLogic} props={campaignScnenProps} formKey="paywallPercentageForm" enableFormOnSubmit>
+                                        <Stack>
+                                            <Flex mb={0} gap={5} align={"center"} mt={20}>
+                                                <IconReceipt2 size={22} />
+                                                <Title order={4} style={{ flexGrow: 1 }}>Paywalls</Title>
+                                                {isPaywallEditMode ? (
+                                                    <>
+                                                        <Button variant="light" color={"red"} radius="lg" size="compact-md" leftSection={<IconCancel size={18} />} onClick={() => togglePaywallEditMode()}>
+                                                            <Text fw={400}>Cancel</Text>
                                                         </Button>
-                                                    </Tooltip>
-                                                    <Tooltip label="Attach Paywall">
-                                                        <Button variant="light" radius="lg" size="compact-md" onClick={() => didClickAttachPaywall(projectId, campaign, loadCampaign)}>
-                                                            <IconPlus />
+                                                        <Button type="submit" variant="light" radius="lg" size="compact-md" disabled={isPaywallPercentageFormSubmitting} leftSection={<IconCheck size={18} />} onClick={() => togglePaywallEditMode()}>
+                                                            <Text fw={400}>Save</Text>
                                                         </Button>
-                                                    </Tooltip>
-                                                </>
-                                            )}
-                                        </Flex>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <Tooltip label="Edit Attached Paywalls">
+                                                            <Button variant="light" radius="lg" size="compact-md" leftSection={<IconPencil size={18} />} onClick={() => togglePaywallEditMode()}>
+                                                                <Text fw={400}>Edit</Text>
+                                                            </Button>
+                                                        </Tooltip>
+                                                        <Tooltip label="Attach Paywall">
+                                                            <Button variant="light" radius="lg" size="compact-md" onClick={() => didClickAttachPaywall(projectId, campaign, loadCampaign)}>
+                                                                <IconPlus />
+                                                            </Button>
+                                                        </Tooltip>
+                                                    </>
+                                                )}
+                                            </Flex>
 
-                                        {campaign.paywalls.length ? (
-                                            <Grid>
-                                                {campaign.paywalls.map((paywall) => (
-                                                    <Grid.Col span={{ base: 12, md: 4 }} key={paywall.id}>
-                                                        <Card shadow="sm" padding="lg" radius="md" withBorder>
-                                                            <Stack align="center">
-                                                                <Stack align="center" gap={0}>
-                                                                    <Title order={4}>{paywall.name}</Title>
-                                                                    {isPaywallEditMode ? (
-                                                                        <Group gap={3}>
-                                                                            <NumberInput variant="filled" size="sm" radius="md" styles={{ input: { textAlign: 'center' } }}
-                                                                                min={0} max={100} hideControls={true} w={"100px"} value={paywall.pivot.percentage} />
-                                                                            <Text c={"blue"} fw={800} fs={"sm"}>%</Text>
-                                                                        </Group>
-                                                                    ) : (
-                                                                        <Text c={"blue"} fw={800} fs={"sm"}>{paywall.pivot.percentage}%</Text>
-                                                                    )}
+                                            {campaign.paywalls.length ? (
+                                                <Grid>
+                                                    {campaign.paywalls.map((paywall, index) => (
+                                                        <Grid.Col span={{ base: 12, md: 4 }} key={paywall.id}>
+                                                            <Card shadow="sm" padding="lg" radius="md" withBorder>
+                                                                <Stack align="center">
+                                                                    <Stack align="center" gap={0}>
+                                                                        <Title order={4}>{paywall.name}</Title>
+                                                                        {isPaywallEditMode ? (
+                                                                            <Field name={`paywalls.${index}.percentage`} template={({ label, kids, error }) => {
+                                                                                return (
+                                                                                    <>
+                                                                                        <Input.Wrapper className={classes.paywallPercentageInputWrapper} data-error={error ? true : false}>
+                                                                                            <Center>
+                                                                                                {kids as any}
+                                                                                            </Center>
+                                                                                            <Center>
+                                                                                                {error && <Text c="red" size="sm">{error}</Text>}
+                                                                                            </Center>
+                                                                                        </Input.Wrapper>
+                                                                                    </>
+                                                                                )
+                                                                            }}>
+                                                                                {({ value, onChange }) => (
+                                                                                    <Group gap={3}>
+                                                                                        <NumberInput
+                                                                                            variant="filled"
+                                                                                            size="sm"
+                                                                                            radius="md"
+                                                                                            hideControls={true}
+                                                                                            w={"100px"}
+                                                                                            min={0}
+                                                                                            max={100}
+                                                                                            value={value}
+                                                                                            onChange={(value) => onChange(value)}
+                                                                                        />
+                                                                                        <Text c={"blue"} fw={800} fs={"sm"}>%</Text>
+                                                                                    </Group>
+                                                                                )}
+                                                                            </Field>
+                                                                        ) : (
+                                                                            <Text c={"blue"} fw={800} fs={"sm"}>Show to {paywall.pivot.percentage}% of users</Text>
+                                                                        )}
+                                                                    </Stack>
+                                                                    <Box mah={"350px"}>
+                                                                        <Image src={paywall.preview_image_url} fallbackSrc="https://placehold.co/600x400?text=Placeholder" w={"170px"} h={"350px"} radius="lg" style={{ border: '7px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-9))' }} />
+                                                                    </Box>
                                                                 </Stack>
-                                                                <Box mah={"350px"}>
-                                                                    <Image src={paywall.preview_image_url} fallbackSrc="https://placehold.co/600x400?text=Placeholder" w={"170px"} h={"350px"} radius="lg" style={{ border: '7px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-9))' }} />
-                                                                </Box>
-                                                            </Stack>
-                                                        </Card>
-                                                    </Grid.Col>
-                                                ))}
-                                            </Grid>
-                                        ) : (
-                                            <Center>
-                                                <Stack align="center">
-                                                    <Title order={3}>No Paywalls Attached</Title>
-                                                    <Button onClick={() => { }}>
-                                                        Attach a Paywall
-                                                    </Button>
-                                                </Stack>
-                                            </Center>
-                                        )}
-                                    </Stack>
+                                                            </Card>
+                                                        </Grid.Col>
+                                                    ))}
+                                                </Grid>
+                                            ) : (
+                                                <Center>
+                                                    <Stack align="center">
+                                                        <Title order={3}>No Paywalls Attached</Title>
+                                                        <Button onClick={() => { }}>
+                                                            Attach a Paywall
+                                                        </Button>
+                                                    </Stack>
+                                                </Center>
+                                            )}
+                                        </Stack>
+                                    </Form>
+
                                 </Tabs.Panel>
                             </Tabs>
                         </>
                     )
                 }
             </Stack>
-        </BindLogic>
+        </BindLogic >
     )
 }
 
