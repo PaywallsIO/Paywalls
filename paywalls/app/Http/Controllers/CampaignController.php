@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Campaign\AttachCampaignPaywallRequest;
 use App\Http\Requests\Campaign\CreateCampaignRequest;
+use App\Http\Requests\Campaign\PaywallPercentagesRequest;
 use App\Models\Campaign;
 use App\Models\Paywall;
 use App\Models\Project;
@@ -31,5 +32,16 @@ class CampaignController extends Controller
         $campaign->paywalls()->attach($paywall, [
             'percentage' => 0,
         ]);
+    }
+
+    public function paywallPercentages(Project $project, Campaign $campaign, PaywallPercentagesRequest $request)
+    {
+        $paywalls = collect($request->validated('paywalls'))
+            ->mapWithKeys(function ($paywall) {
+                return [$paywall['id'] => ['percentage' => $paywall['percentage']]];
+            })
+            ->toArray();
+
+        $campaign->paywalls()->sync($paywalls);
     }
 }
