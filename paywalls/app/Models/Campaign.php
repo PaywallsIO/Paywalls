@@ -29,7 +29,7 @@ class Campaign extends Model
 
     public function paywalls(): belongsToMany
     {
-        return $this->belongsToMany(Paywall::class, CampaignPaywall::class)->withPivot('percentage');
+        return $this->belongsToMany(Paywall::class, CampaignPaywall::class)->withPivot('percentage')->withTimestamps();
     }
 
     public function publishedPaywalls(): belongsToMany

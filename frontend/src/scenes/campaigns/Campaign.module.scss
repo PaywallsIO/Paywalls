@@ -65,6 +65,7 @@
 .paywallPercentageInputWrapper:not([data-error="true"]) {
     input {
         background-color: var(--mantine-color-blue-light);
+        border: solid 1px transparent;
         color: var(--mantine-color-blue-2);
     }
 }

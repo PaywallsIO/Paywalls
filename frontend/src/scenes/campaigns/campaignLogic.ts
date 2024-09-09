@@ -157,7 +157,7 @@ export const campaignLogic = kea<campaignLogicType>([
                     if (sum > 100) {
                         return {
                             id: null,
-                            percentage: `Sum ${sum} must equal 100`,
+                            percentage: `Total (${sum}) must less than 100`,
                         }
                     }
 
@@ -170,7 +170,6 @@ export const campaignLogic = kea<campaignLogicType>([
             submit: async (request: PaywallPercentageRequest) => {
                 try {
                     await campaignsApiClient.paywallPercentages(props.projectId, props.campaignId, request)
-
 
                 } catch (error: any) {
                     notifications.show({

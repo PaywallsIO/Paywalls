@@ -87,7 +87,7 @@ function CampaignScene({ projectId, campaignId }: CampaignProps) {
     const logic = campaignLogic(campaignScnenProps)
     const { loadCampaign } = useActions(logic)
     const { updateTrigger, deleteTrigger } = useActions(campaignLogic)
-    const { campaign, campaignLoading, isPaywallPercentageFormSubmitting } = useValues(logic)
+    const { campaign, campaignLoading, isPaywallPercentageFormSubmitting, isPaywallPercentageFormValid } = useValues(logic)
     const { push } = useActions(router)
     const [isPaywallEditMode, togglePaywallEditMode] = useToggle();
 
@@ -219,7 +219,7 @@ function CampaignScene({ projectId, campaignId }: CampaignProps) {
                                                         <Button variant="light" color={"red"} radius="lg" size="compact-md" leftSection={<IconCancel size={18} />} onClick={() => togglePaywallEditMode()}>
                                                             <Text fw={400}>Cancel</Text>
                                                         </Button>
-                                                        <Button type="submit" variant="light" radius="lg" size="compact-md" disabled={isPaywallPercentageFormSubmitting} leftSection={<IconCheck size={18} />} onClick={() => togglePaywallEditMode()}>
+                                                        <Button type="submit" variant="light" radius="lg" size="compact-md" disabled={isPaywallPercentageFormSubmitting || !isPaywallPercentageFormValid} leftSection={<IconCheck size={18} />}>
                                                             <Text fw={400}>Save</Text>
                                                         </Button>
                                                     </>
@@ -295,7 +295,7 @@ function CampaignScene({ projectId, campaignId }: CampaignProps) {
                                                 <Center>
                                                     <Stack align="center">
                                                         <Title order={3}>No Paywalls Attached</Title>
-                                                        <Button onClick={() => { }}>
+                                                        <Button onClick={() => { didClickAttachPaywall(projectId, campaign, loadCampaign) }}>
                                                             Attach a Paywall
                                                         </Button>
                                                     </Stack>
