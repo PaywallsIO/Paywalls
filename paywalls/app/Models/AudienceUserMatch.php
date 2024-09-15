@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class AudienceUserMatch extends Model
 {
+    protected $table = 'audience_user_match';
+
     use HasFactory;
 
     public function campaignAudience(): BelongsTo

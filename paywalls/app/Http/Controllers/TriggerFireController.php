@@ -17,7 +17,7 @@ class TriggerFireController extends Controller
         $correlationId = Str::uuid()->toString();
 
         try {
-            $appUser = authPortal()->appUserDistinctIds()->where('distinct_id', $request->validated('distinct_id'))->first();
+            $appUser = authPortal()->appUserDistinctIds()->where('distinct_id', $request->validated('distinct_id'))->first()?->appUser;
             $triggerData = new TriggerFireData($appUser, $request);
 
             Log::debug('trigger_fire_start', [
@@ -50,19 +50,27 @@ class TriggerFireController extends Controller
 
                 // @davidmoreen a possible improvement could be to fetch counts for all audience user matches
                 // in one query initially then we can check the array vs running a query
-                $matchesCount = AudienceUserMatch::where([
-                    'campaign_audience_id' => $audience->id,
-                    'app_user_id' => $appUser->id,
-                ])
-                    ->whereBetween('created_at', [now()->subSeconds($audience->match_period), now()])
-                    ->count();
+                if ($audience->match_limit && $audience->match_period) {
+                    $matchesCount = AudienceUserMatch::where([
+                        'campaign_audience_id' => $audience->id,
+                        'app_user_id' => $appUser->id,
+                    ])
+                        ->whereBetween('created_at', [now()->subSeconds($audience->match_period), now()])
+                        ->count();
 
-                Log::debug('trigger_fire_matches', [
-                    'correlation_id' => $correlationId,
-                    'matches_count' => $matchesCount,
-                ]);
-                if ($matchesCount >= $audience->match_limit) {
-                    throw new \Exception('Match limit reached');
+                    Log::debug('trigger_fire_matches', [
+                        'correlation_id' => $correlationId,
+                        'matches_count' => $matchesCount,
+                    ]);
+                    if ($matchesCount >= $audience->match_limit) {
+                        throw new \Exception('Match limit reached');
+                    }
+                } else {
+                    Log::debug('trigger_fire_matches_skip', [
+                        'correlation_id' => $correlationId,
+                        'match_limit' => $audience->match_limit,
+                        'match_period' => $audience->match_period,
+                    ]);
                 }
 
                 AudienceUserMatch::forceCreate([
@@ -87,6 +95,10 @@ class TriggerFireController extends Controller
                     $selectedPaywall = $paywall;
                     break;
                 }
+            }
+
+            if (! $selectedPaywall) {
+                throw new \Exception('TriggerFire Holdout');
             }
 
             Log::debug('trigger_fire_paywall', [
