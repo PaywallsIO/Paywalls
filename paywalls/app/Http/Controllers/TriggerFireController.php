@@ -15,16 +15,21 @@ class TriggerFireController extends Controller
     public function __invoke(TriggerRequest $request)
     {
         $correlationId = Str::uuid()->toString();
-        $appUser = authPortal()->appUserDistinctIds()->where('distinct_id', $request->validated('distinct_id'))->first();
-        $triggerData = new TriggerFireData($appUser, $request);
-
-        Log::debug('trigger_fire_start', [
-            'correlation_id' => $correlationId,
-            'app_user' => $appUser,
-            'trigger_data' => $triggerData->toArray(),
-        ]);
 
         try {
+            $appUser = authPortal()->appUserDistinctIds()->where('distinct_id', $request->validated('distinct_id'))->first();
+            $triggerData = new TriggerFireData($appUser, $request);
+
+            Log::debug('trigger_fire_start', [
+                'correlation_id' => $correlationId,
+                'app_user' => $appUser,
+                'trigger_data' => $triggerData->toArray(),
+            ]);
+
+            if (! $appUser) {
+                throw new \Exception('App user not found');
+            }
+
             $campaignTrigger = authPortal()->campaignTriggers()->where('event_name', $request->validated('name'))->firstOrFail();
             Log::debug('trigger_fire_trigger', [
                 'correlation_id' => $correlationId,
@@ -32,27 +37,24 @@ class TriggerFireController extends Controller
             ]);
 
             $campaign = $campaignTrigger->campaign;
-            $audience = $campaign->audiences->firstOrFail(function ($audience) use ($triggerData, $correlationId) {
+            $audience = $campaign->audiences->firstOrFail(function ($audience) use ($triggerData, $correlationId, $appUser) {
                 Log::debug('trigger_fire_audience_eval', [
                     'correlation_id' => $correlationId,
                     'audience_id' => $audience->id,
                     'filters' => $audience->filters,
                 ]);
 
-                return JsonLogic::apply($audience->filters, $triggerData->toArray());
-            });
-            Log::debug('trigger_fire_audience', [
-                'correlation_id' => $correlationId,
-                'audience' => $audience,
-            ]);
+                if (! JsonLogic::apply($audience->filters, $triggerData->toArray())) {
+                    return false;
+                }
 
-            // check match limits
-            if ($appUser && $audience->match_limit > 0 && $audience->match_period > 0) {
+                // @davidmoreen a possible improvement could be to fetch counts for all audience user matches
+                // in one query initially then we can check the array vs running a query
                 $matchesCount = AudienceUserMatch::where([
                     'campaign_audience_id' => $audience->id,
                     'app_user_id' => $appUser->id,
                 ])
-                    ->whereBetween('created_at', [now()->subHours($audience->match_period), now()])
+                    ->whereBetween('created_at', [now()->subSeconds($audience->match_period), now()])
                     ->count();
 
                 Log::debug('trigger_fire_matches', [
@@ -63,27 +65,37 @@ class TriggerFireController extends Controller
                     throw new \Exception('Match limit reached');
                 }
 
-                AudienceUserMatch::forgeCreate([
+                AudienceUserMatch::forceCreate([
                     'campaign_audience_id' => $audience->id,
                     'app_user_id' => $appUser->id,
                 ]);
-            } else {
-                Log::debug('trigger_fire_match_limit_skipped', [
-                    'correlation_id' => $correlationId,
-                    'audience' => $audience,
-                ]);
+
+                return true;
+            });
+            Log::debug('trigger_fire_audience', [
+                'correlation_id' => $correlationId,
+                'audience' => $audience,
+            ]);
+
+            $seed = mt_rand(0, 100);
+            $cumulative = 0;
+            $selectedPaywall = null;
+
+            foreach ($campaign->publishedPaywalls as $paywall) {
+                $cumulative += $paywall->pivot->percentage;
+                if ($seed <= $cumulative) {
+                    $selectedPaywall = $paywall;
+                    break;
+                }
             }
 
-            // TODO determine correct paywall to show. Showing the first one for now
-
-            $paywall = $campaign->publishedPaywalls()->firstOrFail();
             Log::debug('trigger_fire_paywall', [
                 'correlation_id' => $correlationId,
-                'paywall_id' => $paywall->id,
+                'paywall_id' => $selectedPaywall?->id,
             ]);
 
             return [
-                'paywall' => new TriggerPaywallResource($paywall),
+                'paywall' => new TriggerPaywallResource($selectedPaywall),
             ];
         } catch (\Exception $e) {
             Log::debug('trigger_fire_exception', [

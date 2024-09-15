@@ -1,4 +1,4 @@
-import { afterMount, kea, path, actions, defaults, key, props, selectors, listeners } from 'kea'
+import { afterMount, kea, path, actions, defaults, key, props, selectors, listeners, reducers } from 'kea'
 import { loaders } from 'kea-loaders'
 import { Campaign, campaignsApiClient, EditTriggerRequest, PaywallPercentageRequest, UpdateSortOrderRequest } from './data/CampaignsApiClient'
 import type { campaignLogicType } from './campaignLogicType'
@@ -17,17 +17,29 @@ export const campaignLogic = kea<campaignLogicType>([
     key((props) => props.campaignId),
     defaults({
         campaign: {} as Campaign,
+        currentTab: 'triggers_audiences',
+        isPaywallEditMode: false,
     }),
     selectors({
         projectId: [() => [(_, props) => props], (props): number => props.projectId],
         campaignId: [() => [(_, props) => props], (props): number => props.campaignId],
     }),
     actions({
+        setActiveTab: (tab: string) => ({ tab }),
+        togglePaywallEditMode: true,
         deleteAudience: (audienceId) => ({ audienceId }),
         restoreAudience: (audienceId: number) => ({ audienceId }),
         restoreTrigger: (triggerId: number) => ({ triggerId }),
         updateTrigger: ({ triggerId, request }: { triggerId: number, request: EditTriggerRequest }) => ({ triggerId, request }),
         deleteTrigger: (triggerId: number) => ({ triggerId })
+    }),
+    reducers({
+        currentTab: {
+            setActiveTab: (_, { tab }) => tab,
+        },
+        isPaywallEditMode: {
+            togglePaywallEditMode: (state) => !state,
+        }
     }),
     listeners(({ props, actions }) => ({
         restoreTrigger: async ({ triggerId }: { triggerId: number }) => {
@@ -141,9 +153,7 @@ export const campaignLogic = kea<campaignLogicType>([
             }
         },
         loadCampaignSuccess: ({ campaign }: { campaign: Campaign }) => {
-            actions.setPaywallPercentageFormValues({
-                paywalls: campaign.paywalls.map((p) => ({ id: p.id, percentage: p.pivot.percentage })) || []
-            })
+            actions.setPaywallPercentageFormValues(buildPaywallsPercentageRequestFromCampaign(campaign))
         }
     })),
     forms(({ props, actions, values }) => ({
@@ -171,6 +181,14 @@ export const campaignLogic = kea<campaignLogicType>([
                 try {
                     await campaignsApiClient.paywallPercentages(props.projectId, props.campaignId, request)
 
+                    notifications.show({
+                        color: 'green',
+                        title: 'Paywall percentages updated',
+                        message: '',
+                        radius: 'md',
+                    })
+                    actions.togglePaywallEditMode()
+                    actions.loadCampaign()
                 } catch (error: any) {
                     notifications.show({
                         color: 'red',
@@ -199,3 +217,9 @@ export const campaignLogic = kea<campaignLogicType>([
         actions.loadCampaign()
     }),
 ])
+
+function buildPaywallsPercentageRequestFromCampaign(campaign: Campaign): PaywallPercentageRequest {
+    return {
+        paywalls: campaign.paywalls.map((p) => ({ id: p.id, percentage: p.pivot.percentage })) || []
+    }
+}

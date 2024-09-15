@@ -86,10 +86,9 @@ function CampaignScene({ projectId, campaignId }: CampaignProps) {
     const campaignScnenProps = { projectId, campaignId }
     const logic = campaignLogic(campaignScnenProps)
     const { loadCampaign } = useActions(logic)
-    const { updateTrigger, deleteTrigger } = useActions(campaignLogic)
-    const { campaign, campaignLoading, isPaywallPercentageFormSubmitting, isPaywallPercentageFormValid } = useValues(logic)
+    const { updateTrigger, deleteTrigger, setActiveTab, togglePaywallEditMode } = useActions(campaignLogic)
+    const { campaign, currentTab, campaignLoading, isPaywallPercentageFormSubmitting, isPaywallPercentageFormValid, isPaywallEditMode } = useValues(logic)
     const { push } = useActions(router)
-    const [isPaywallEditMode, togglePaywallEditMode] = useToggle();
 
     return (
         <BindLogic logic={campaignLogic} props={{ projectId, campaignId }}>
@@ -114,7 +113,7 @@ function CampaignScene({ projectId, campaignId }: CampaignProps) {
                                 </Group>
                             </Stack>
 
-                            <Tabs defaultValue="triggers_audiences">
+                            <Tabs value={currentTab} onChange={(value) => value && setActiveTab(value)}>
                                 <Tabs.List>
                                     <Tabs.Tab value="triggers_audiences" leftSection={<IconBolt size={14} />}>Triggers & Audiences</Tabs.Tab>
                                     <Tabs.Tab value="paywalls" leftSection={<IconReceipt2 size={14} />}>Paywalls</Tabs.Tab>
@@ -137,7 +136,7 @@ function CampaignScene({ projectId, campaignId }: CampaignProps) {
                                             <Group gap={10}>
                                                 {
                                                     campaign.triggers.map((trigger: CampaignTrigger) => (
-                                                        <Badge key={trigger.id} color="blue" variant={trigger.is_active ? "light" : "default"} radius="lg" size="xl" rightSection={(
+                                                        <Badge key={trigger.id} color="blue" variant={trigger.is_active ? "light" : "default"} radius="md" size="lg" mr={10} leftSection={<IconBolt size={18} />} rightSection={(
                                                             <>
                                                                 {trigger.is_active ? (
                                                                     <Tooltip label="Pause trigger">
@@ -146,7 +145,7 @@ function CampaignScene({ projectId, campaignId }: CampaignProps) {
                                                                         </Button>
                                                                     </Tooltip>
                                                                 ) : (
-                                                                    <Tooltip label="Resume triggering for users">
+                                                                    <Tooltip label="Resume trigger">
                                                                         <Button variant="transparent" className={classes.pausePlayButton} size="compact-xs" onClick={
                                                                             () => updateTrigger({ triggerId: trigger.id, request: { is_active: true } })
                                                                         }>
@@ -280,7 +279,7 @@ function CampaignScene({ projectId, campaignId }: CampaignProps) {
                                                                                 )}
                                                                             </Field>
                                                                         ) : (
-                                                                            <Text c={"blue"} fw={800} fs={"sm"}>Show to {paywall.pivot.percentage}% of users</Text>
+                                                                            <Text c={"blue"} fw={600} size="sm">Showing to {paywall.pivot.percentage}% of users</Text>
                                                                         )}
                                                                     </Stack>
                                                                     <Box mah={"350px"}>

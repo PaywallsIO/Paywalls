@@ -95,7 +95,7 @@ function AudienceForm(): JSX.Element {
                             />
                         )}
                     </Field>
-                    <Text>hours</Text>
+                    <Text>seconds</Text>
                 </Group>
             </Stack>
 

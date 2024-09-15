@@ -34,7 +34,10 @@ class Campaign extends Model
 
     public function publishedPaywalls(): belongsToMany
     {
-        return $this->paywalls()->whereNotNull('published_uuid');
+        return $this->belongsToMany(Paywall::class, CampaignPaywall::class)
+            ->whereNotNull('published_uuid')
+            ->withPivot('percentage')
+            ->withTimestamps();
     }
 
     public function triggers(): HasMany
