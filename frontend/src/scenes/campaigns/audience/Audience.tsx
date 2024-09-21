@@ -1,9 +1,10 @@
-import { Text, Stack, Group, Title, Button, Divider, NumberInput, Space, Flex, Notification } from '@mantine/core'
+import { Text, Stack, Group, Title, Button, Divider, NumberInput, Space, Flex } from '@mantine/core'
 import { BindLogic, useActions, useValues } from 'kea'
-import { Form, Field } from 'kea-forms'
+import { Form, Field as KeaField } from 'kea-forms'
 import { audienceLogic } from './audienceLogic'
 import { CampaignAudience } from '../data/CampaignsApiClient'
-import QueryBuilder, { formatQuery, defaultOperators, RuleGroupType, RuleType, transformQuery, defaultRuleProcessorJsonLogic, RuleProcessor } from 'react-querybuilder'
+import type { Field } from 'react-querybuilder'
+import QueryBuilder, { toFullOption, formatQuery, defaultOperators, RuleGroupType, RuleType, transformQuery, defaultRuleProcessorJsonLogic, RuleProcessor } from 'react-querybuilder'
 import { parseJsonLogic } from 'react-querybuilder/parseJsonLogic'
 import { QueryBuilderMantine } from '@react-querybuilder/mantine'
 import { IconFilter, IconFlame } from '@tabler/icons-react'
@@ -11,7 +12,6 @@ import './QueryBuilder.scss'
 import { useState } from 'react'
 import { modals } from '@mantine/modals'
 import { campaignLogic } from '../campaignLogic'
-import jsonLogic from 'json-logic-js'
 
 export function Audience({ projectId, audience }: { projectId: number, audience: CampaignAudience }): JSX.Element {
     return (
@@ -58,7 +58,7 @@ function AudienceForm(): JSX.Element {
                 </Group>
                 <Text size='sm' c="dimmed">Filter by user properties, device properties, or event properties</Text>
 
-                <Field name="filters">
+                <KeaField name="filters">
                     {({ value: queryValue, onChange }: { value: RuleGroupType, onChange: (value: RuleGroupType) => void }) => (
                         <>
                             <AudienceQueryBuilder query={query} onQueryChange={(query) => {
@@ -70,7 +70,7 @@ function AudienceForm(): JSX.Element {
                             }} />
                         </>
                     )}
-                </Field>
+                </KeaField>
 
                 <Space />
 
@@ -81,7 +81,7 @@ function AudienceForm(): JSX.Element {
                 <Text size='sm' c="dimmed">The amount of times in which a user can match this audience for a given time period</Text>
                 <Group>
                     <Text>up to</Text>
-                    <Field name="match_limit">
+                    <KeaField name="match_limit">
                         {({ value, onChange }) => (
                             <NumberInput
                                 variant='filled'
@@ -93,9 +93,9 @@ function AudienceForm(): JSX.Element {
                                 w={150}
                             />
                         )}
-                    </Field>
+                    </KeaField>
                     <Text>times every</Text>
-                    <Field name="match_period">
+                    <KeaField name="match_period">
                         {({ value, onChange }) => (
                             <NumberInput
                                 variant='filled'
@@ -107,7 +107,7 @@ function AudienceForm(): JSX.Element {
                                 w={150}
                             />
                         )}
-                    </Field>
+                    </KeaField>
                     <Text>seconds</Text>
                 </Group>
             </Stack>
@@ -141,7 +141,7 @@ const customRuleProcessor: RuleProcessor = (rule, options) => {
 
 function AudienceQueryBuilder({ query, onQueryChange }: { query: RuleGroupType, onQueryChange: (value: RuleGroupType) => void }): JSX.Element {
     const validator = (r: RuleType) => !!r.value;
-    const fields = [
+    const fields = ([
         {
             name: 'user_time_since_first_seen',
             label: 'Time Since First Seen',
@@ -307,7 +307,8 @@ function AudienceQueryBuilder({ query, onQueryChange }: { query: RuleGroupType, 
                 { name: 'Unknown', label: 'Unknown', value: 'Unknown' },
             ]
         },
-    ]
+    ] satisfies Field[]
+    ).map((o) => toFullOption(o));
 
     return (
         <QueryBuilderMantine>
