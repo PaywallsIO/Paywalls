@@ -81,6 +81,18 @@ function didClickEditAudience(projectId: number, campaignId: number, audience: C
     })
 }
 
+// @davidmoreen choosing not to implement this right now. Will circle back later: PAY-5
+function didClickArchiveCampaign(onConfirm: () => void) {
+    modals.openConfirmModal({
+        title: 'Archive Campaign',
+        children: <Text size="sm">User's will stop matching this campaign. Are you sure you want to archive this campaign?</Text>,
+        labels: { confirm: 'Archive', cancel: 'Cancel' },
+        confirmProps: { color: 'red' },
+        centered: true,
+        onConfirm: onConfirm
+    })
+}
+
 function CampaignScene({ projectId, campaignId }: CampaignProps) {
     const campaignScnenProps = { projectId, campaignId }
     const logic = campaignLogic(campaignScnenProps)
@@ -97,20 +109,25 @@ function CampaignScene({ projectId, campaignId }: CampaignProps) {
                         <Center style={{ height: '100vh' }}><Loader color="blue" /></Center>
                     ) : (
                         <>
-                            <Stack>
-                                <Breadcrumbs>
-                                    <Anchor onClick={() => push(`/projects/${projectId}/campaigns`)}>Campaigns</Anchor>
-                                    <Text>{campaign?.name}</Text>
-                                </Breadcrumbs>
-                                <Group align="baseline">
-                                    <Anchor onClick={() => push(`/projects/${projectId}/campaigns`)}>
-                                        <ThemeIcon color="blue" variant="light" size="lg">
-                                            <IconChevronLeft />
-                                        </ThemeIcon>
-                                    </Anchor>
-                                    <Title>{campaign?.name}</Title>
-                                </Group>
-                            </Stack>
+                            <Flex justify="space-between" align="center">
+                                <Stack>
+                                    <Breadcrumbs>
+                                        <Anchor onClick={() => push(`/projects/${projectId}/campaigns`)}>Campaigns</Anchor>
+                                        <Text>{campaign?.name}</Text>
+                                    </Breadcrumbs>
+                                    <Group align="baseline">
+                                        <Anchor onClick={() => push(`/projects/${projectId}/campaigns`)}>
+                                            <ThemeIcon color="blue" variant="light" size="lg">
+                                                <IconChevronLeft />
+                                            </ThemeIcon>
+                                        </Anchor>
+                                        <Title>{campaign?.name}</Title>
+                                    </Group>
+                                </Stack>
+                                {/* <Tooltip label="Archive campaign">
+                                    <Button variant="light" color="red" radius="md" onClick={() => didClickArchiveCampaign(() => loadCampaign())}>Archive</Button>
+                                </Tooltip> */}
+                            </Flex>
 
                             <Tabs value={currentTab} onChange={(value) => value && setActiveTab(value)}>
                                 <Tabs.List>
