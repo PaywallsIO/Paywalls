@@ -197,7 +197,7 @@ function AudienceQueryBuilder({ query, onQueryChange }: { query: RuleGroupType, 
         {
             name: 'session_duration_seconds',
             label: 'Current Session Duration',
-            placeholder: 'Session length in Seconds',
+            placeholder: 'Length in Seconds',
             inputType: 'number',
             validator,
         },
