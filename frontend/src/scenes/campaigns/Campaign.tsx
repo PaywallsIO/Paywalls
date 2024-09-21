@@ -1,15 +1,15 @@
-import { rem, Text, Title, Loader, Center, Image, Stack, Group, Paper, Anchor, Breadcrumbs, ThemeIcon, Grid, Badge, Button, Flex, Box, Tooltip, Space, Collapse, Blockquote, Input, Tabs, Card, NumberInput } from "@mantine/core";
+import { rem, Text, Title, Loader, Center, Image, Stack, Group, Paper, Anchor, Breadcrumbs, ThemeIcon, Grid, Badge, Button, Flex, Box, Tooltip, Space, Collapse, Input, Tabs, Card, NumberInput } from "@mantine/core";
 import { useValues, useActions, BindLogic } from 'kea'
 import { SceneExport } from '../sceneTypes'
 import { Form, Field } from "kea-forms";
-import { useDisclosure, useToggle } from '@mantine/hooks'
+import { useDisclosure } from '@mantine/hooks'
 import cx from 'clsx'
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd'
-import { IconArrowBack, IconCancel, IconCheck, IconChevronDown, IconChevronRight, IconGripVertical, IconInfoCircle, IconPencil, IconPlus, IconReceipt, IconReceipt2 } from '@tabler/icons-react'
+import { IconArrowBack, IconCancel, IconCheck, IconChevronDown, IconChevronRight, IconGripVertical, IconPencil, IconPlus, IconReceipt2 } from '@tabler/icons-react'
 import { campaignLogic, CampaignProps } from './campaignLogic'
 import { router } from "kea-router"
 import classes from './Campaign.module.scss'
-import { IconBolt, IconChevronLeft, IconPlayerPause, IconPlayerPauseFilled, IconPlayerPlayFilled, IconTrash, IconUsers } from "@tabler/icons-react"
+import { IconBolt, IconChevronLeft, IconPlayerPauseFilled, IconPlayerPlayFilled, IconTrash, IconUsers } from "@tabler/icons-react"
 import { Campaign as CampaignModel, CampaignAudience, CampaignTrigger } from "./data/CampaignsApiClient"
 import { Audience } from "./audience/Audience"
 import { modals } from "@mantine/modals"
@@ -17,7 +17,6 @@ import { CreateEditAudienceForm } from "./audience/create/CreateEditAudienceForm
 import 'react-querybuilder/dist/query-builder.scss';
 import { CreateTriggerForm } from "./trigger/create/CreateTriggerForm";
 import { AttachCampaignPaywallForm } from "./attach/AttachCampaignPaywallForm";
-import React from "react";
 
 interface CampaignSceneProps {
     projectId?: number

@@ -6,12 +6,40 @@ use App\Http\Requests\TriggerRequest;
 use App\Http\Resources\TriggerPaywallResource;
 use App\Models\AudienceUserMatch;
 use App\Services\Models\TriggerFireData;
+use Composer\Semver\Comparator;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use JWadhams\JsonLogic;
 
 class TriggerFireController extends Controller
 {
+    public function __construct()
+    {
+        JsonLogic::add_operation('semver_gt', function ($a, $b) {
+            return Comparator::greaterThan($a, $b);
+        });
+
+        JsonLogic::add_operation('semver_gte', function ($a, $b) {
+            return Comparator::greaterThanOrEqualTo($a, $b);
+        });
+
+        JsonLogic::add_operation('semver_lt', function ($a, $b) {
+            return Comparator::lessThan($a, $b);
+        });
+
+        JsonLogic::add_operation('semver_lte', function ($a, $b) {
+            return Comparator::lessThanOrEqualTo($a, $b);
+        });
+
+        JsonLogic::add_operation('semver_eq', function ($a, $b) {
+            return Comparator::equalTo($a, $b);
+        });
+
+        JsonLogic::add_operation('semver_neq', function ($a, $b) {
+            return Comparator::notEqualTo($a, $b);
+        });
+    }
+
     public function __invoke(TriggerRequest $request)
     {
         $correlationId = Str::uuid()->toString();
@@ -25,10 +53,6 @@ class TriggerFireController extends Controller
                 'app_user' => $appUser,
                 'trigger_data' => $triggerData->toArray(),
             ]);
-
-            if (! $appUser) {
-                throw new \Exception('App user not found');
-            }
 
             $campaignTrigger = authPortal()->campaignTriggers()->where('event_name', $request->validated('name'))->firstOrFail();
             Log::debug('trigger_fire_trigger', [
@@ -73,10 +97,14 @@ class TriggerFireController extends Controller
                     ]);
                 }
 
-                AudienceUserMatch::forceCreate([
-                    'campaign_audience_id' => $audience->id,
-                    'app_user_id' => $appUser->id,
-                ]);
+                // @davidmoreen, keeping this here for now, in reality there should always be an app user,
+                // even if they are anonymous
+                if ($appUser) {
+                    AudienceUserMatch::forceCreate([
+                        'campaign_audience_id' => $audience->id,
+                        'app_user_id' => $appUser->id,
+                    ]);
+                }
 
                 return true;
             });

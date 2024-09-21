@@ -58,7 +58,7 @@ class TriggerFireTest extends TestCase
         "$app_name": "PaywallsExample",
         "$session_duration_seconds": 15,
         "$lib": "swift",
-        "$app_version": "1.0",
+        "$app_version": "1.0.0",
         "$locale": "en"
     },
     "name": "$app_opened",
@@ -67,7 +67,28 @@ class TriggerFireTest extends TestCase
     "timestamp": 1724990755
 }
 EOF;
-        $filtersJson = '{"and": [{"==": [{"var": "user_user_type"}, "Anonymous"]}]}';
+        $filtersJson = <<<'EOF'
+{
+  "and": [
+    {
+      "==": [
+        {
+          "var": "user_user_type"
+        },
+        "Anonymous"
+      ]
+    },
+    {
+      "semver_gt": [
+        "1.0.0",
+        {
+          "var": "app_version"
+        }
+      ]
+    }
+  ]
+}
+EOF;
         $this->campaign->triggers()->forceCreate([
             'event_name' => '$app_opened',
             'is_active' => true,
