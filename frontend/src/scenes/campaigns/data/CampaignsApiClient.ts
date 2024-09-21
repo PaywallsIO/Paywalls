@@ -17,6 +17,10 @@ export interface CampaignsApiClientInterface {
     deleteAudience(projectId: number, campaignId: number, audienceId: number): Promise<void>
     restoreAudience(projectId: number, campaignId: number, audienceId: number): Promise<void>
     updateSortOrder(projectId: number, campaignId: number, audiences: UpdateSortOrderRequest): Promise<Campaign>
+
+    // Paywalls
+    attachPaywall(projectId: number, campaignId: number, request: AttachCampaignPaywallRequest): Promise<void>
+    paywallPercentages(projectId: number, campaignId: number, request: PaywallPercentageRequest): Promise<void>
 }
 
 export type CampaignTrigger = {
@@ -40,12 +44,22 @@ export type CampaignAudience = {
     updated_at: Date
 }
 
+export type CampaignPaywall = {
+    id: number
+    name: string
+    preview_image_url: string | null
+    pivot: {
+        percentage: number
+    }
+}
+
 export type Campaign = {
     id: number
     name: string
     project_id: number
     triggers: CampaignTrigger[]
     audiences: CampaignAudience[]
+    paywalls: CampaignPaywall[]
     created_at: Date
     updated_at: Date
 }
@@ -75,6 +89,14 @@ export type CreateTriggerRequest = {
 
 export type EditTriggerRequest = {
     is_active: boolean
+}
+
+export type AttachCampaignPaywallRequest = {
+    paywall_id: number | null // @davidmoreen can be null in form default but will fail server side validation if null is sent
+}
+
+export type PaywallPercentageRequest = {
+    paywalls: { id: number, percentage: number }[]
 }
 
 export class CampaignsApiClient implements CampaignsApiClientInterface {
@@ -126,6 +148,14 @@ export class CampaignsApiClient implements CampaignsApiClientInterface {
 
     async restoreTrigger(projectId: number, campaignId: number, triggerId: number): Promise<void> {
         return this.api.patch(`/api/projects/${projectId}/campaigns/${campaignId}/triggers/${triggerId}/restore`)
+    }
+
+    async attachPaywall(projectId: number, campaignId: number, request: AttachCampaignPaywallRequest): Promise<void> {
+        return this.api.post(`/api/projects/${projectId}/campaigns/${campaignId}/attach_paywall`, request)
+    }
+
+    async paywallPercentages(projectId: number, campaignId: number, request: PaywallPercentageRequest): Promise<void> {
+        return this.api.patch(`/api/projects/${projectId}/campaigns/${campaignId}/paywall_percentages`, request)
     }
 }
 

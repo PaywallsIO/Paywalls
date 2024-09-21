@@ -33,9 +33,6 @@ class AudiencesTest extends TestCase
 
     public function test_update_sort_order(): void
     {
-        // reset db:
-        $this->refreshTestDatabase();
-
         // Given
         $audience1 = CampaignAudience::factory()->for($this->campaign)->create(['sort_order' => 0]);
         $audience2 = CampaignAudience::factory()->for($this->campaign)->create(['sort_order' => 1]);

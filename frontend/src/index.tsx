@@ -11,6 +11,7 @@ import { App } from './scenes/app/App'
 import posthog from 'posthog-js'
 import { posthogKey, sentryDsn } from './lib/constants'
 import * as Sentry from "@sentry/react"
+import { notifications } from '@mantine/notifications';
 
 initMonitoring()
 initKea()
@@ -18,6 +19,13 @@ initKea()
 export function Initial() {
   const theme = createTheme({
     fontFamily: '"Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif',
+    components: {
+      Modal: {
+        defaultProps: {
+          radius: 'lg',
+        }
+      }
+    }
   })
 
   return (
@@ -70,7 +78,16 @@ function initKea() {
           segmentValueCharset: "a-zA-Z0-9-_~ %.@()!'|",
         },
       }),
-      loadersPlugin,
+      loadersPlugin({
+        onFailure({ error, actionKey, reducerKey, logic, }) {
+          notifications.show({
+            color: 'red',
+            title: 'Error',
+            message: 'Something went wrong. Please try again.',
+            radius: 'md',
+          })
+        },
+      }),
       formsPlugin
     ]
   })

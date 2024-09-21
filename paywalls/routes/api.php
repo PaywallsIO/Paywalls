@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\TriggerFireController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,11 +18,9 @@ Route::scopeBindings()->prefix('projects/{project}')->middleware(['auth:sanctum'
         ->middleware([
             'can:view,project',
         ]);
+
+    // Paywalls
     Route::apiResource('paywalls', App\Http\Controllers\PaywallController::class)
-        ->middleware([
-            'can:view,project',
-        ]);
-    Route::apiResource('campaigns', App\Http\Controllers\CampaignController::class)
         ->middleware([
             'can:view,project',
         ]);
@@ -30,6 +29,19 @@ Route::scopeBindings()->prefix('projects/{project}')->middleware(['auth:sanctum'
             'can:update,project',
         ]);
 
+    // Campaigns
+    Route::apiResource('campaigns', App\Http\Controllers\CampaignController::class)
+        ->middleware([
+            'can:view,project',
+        ]);
+    Route::post('campaigns/{campaign}/attach_paywall', [App\Http\Controllers\CampaignController::class, 'attachPaywall'])
+        ->middleware([
+            'can:view,project',
+        ]);
+    Route::patch('campaigns/{campaign}/paywall_percentages ', [App\Http\Controllers\CampaignController::class, 'paywallPercentages'])
+        ->middleware([
+            'can:view,project',
+        ]);
     Route::scopeBindings()->prefix('campaigns/{campaign}')->middleware(['auth:sanctum', 'can:update,project'])->group(function () {
         Route::patch('audiences/sort_order', [App\Http\Controllers\AudienceController::class, 'updateSortOrder'])->name('audiences.updateSortOrder');
         Route::patch('audiences/{audience}/restore', [App\Http\Controllers\AudienceController::class, 'restore'])->withTrashed();
@@ -44,5 +56,6 @@ Route::scopeBindings()->prefix('projects/{project}')->middleware(['auth:sanctum'
 Route::middleware('auth:app')->group(function () {
     Route::get('app_users/{distinct_id}', [App\Http\Controllers\AppUserController::class, 'show']);
     Route::post('events/ingest', [App\Http\Controllers\EventController::class, 'ingest']);
-    Route::post('events/trigger', [App\Http\Controllers\EventController::class, 'trigger']);
+
+    Route::post('trigger', TriggerFireController::class)->name('trigger.fire');
 });

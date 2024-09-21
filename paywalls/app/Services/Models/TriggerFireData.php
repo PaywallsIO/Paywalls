@@ -13,56 +13,48 @@ final class TriggerFireData
 {
     private array $data;
 
-    public function __construct(TriggerRequest $request)
+    public function __construct(?AppUser $appUser, TriggerRequest $request)
     {
         $eventName = $request->validated('name');
 
-        // dd($request->validated());
-        // dd($request->validated('distinct_id'));
-        // This is nieve don't do this
-        // find app user by distinct id has many relationship:
-        $appUser = AppUser::whereHas('distinctIds', function ($query) use ($request) {
-            $query->where('distinct_id', $request->validated('distinct_id'));
-        })->first();
         $properties = collect($request->validated('properties'));
 
-        // dd($appUser->properties);
         if ($appUser) {
             $userFirstSeen = $appUser->created_at->timestamp;
             $paywallVisitQuery = $appUser->events()->where('name', EventName::paywallVisit)->latest();
             $lastPaywallEvent = $paywallVisitQuery->first();
             $totalSeenPaywalls = $paywallVisitQuery->count();
+            $userIsIdentified = $appUser->is_identified || $eventName == EventName::identify;
             $totalSessions = $appUser->events()
                 ->select(DB::raw('COUNT(DISTINCT jsonb_extract_path_text(properties, \'$session_id\')) AS unique_count'))
                 ->value('unique_count');
         } else {
             $userFirstSeen = $request->validated('timestamp');
             $lastPaywallEvent = null;
+            $userIsIdentified = $eventName == EventName::identify;
             $totalSessions = 1; // only this current session
             $totalSeenPaywalls = 0;
         }
 
-        // dd($lastPaywallEvent);
-
         if ($properties->get(PropertyName::networkWifi) === true) {
-            $networkMode = 'wifi';
+            $networkMode = 'Wifi';
         } elseif ($properties->get(PropertyName::networkCellular) === true) {
-            $networkMode = 'cellular';
+            $networkMode = 'Cellular';
         } else {
-            $networkMode = 'unknown';
+            $networkMode = 'Unknown';
         }
 
+        // for backwards compatability only additive changes should be made
         $this->data = [
+            TriggerFireProperty::timeSinceFirstSeen => time() - $userFirstSeen,
             TriggerFireProperty::userFirstSeen => $userFirstSeen,
-            TriggerFireProperty::userIsIdentified => $appUser->is_identified || $eventName == EventName::identify,
+            TriggerFireProperty::userType => $userIsIdentified ? 'Identified' : 'Anonymous',
 
-            TriggerFireProperty::userTotalSessions => $totalSessions,
+            TriggerFireProperty::totalSessionsCount => $totalSessions,
             TriggerFireProperty::userSecondsSinceLastSeenPaywall => time() - ($lastPaywallEvent->created_at->timestamp ?? 0),
             TriggerFireProperty::userTotalSeenPaywalls => $totalSeenPaywalls,
             TriggerFireProperty::userLastPaywallId => $lastPaywallEvent->properties[PropertyName::paywallId] ?? null,
             TriggerFireProperty::sessionDurationSeconds => $properties->get(PropertyName::sessionDurationSeconds),
-
-            TriggerFireProperty::totalSessionCountInclusive => $totalSessions,
 
             TriggerFireProperty::appVersion => $properties->get(PropertyName::appVersion),
             TriggerFireProperty::appBuildNumber => $properties->get(PropertyName::appBuildNumber),
@@ -75,9 +67,12 @@ final class TriggerFireData
             TriggerFireProperty::deviceType => $properties->get(PropertyName::deviceType),
             TriggerFireProperty::deviceOs => $properties->get(PropertyName::os),
             TriggerFireProperty::networkMode => $networkMode,
-            TriggerFireProperty::deviceName => $properties->get(PropertyName::deviceName),
+            TriggerFireProperty::iosDeviceModel => $properties->get(PropertyName::iosDeviceModel),
         ];
+    }
 
-        dd($this->data);
+    public function toArray(): array
+    {
+        return $this->data;
     }
 }

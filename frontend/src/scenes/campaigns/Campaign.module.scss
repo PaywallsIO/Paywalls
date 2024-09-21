@@ -48,3 +48,24 @@
         }
     }
 }
+
+.paywallPercentageInputWrapper input {
+    font-weight: bold;
+    text-align: center;
+}
+
+.paywallPercentageInputWrapper[data-error="true"] {
+    input {
+        background-color: 'var(--mantine-color-red-light)';
+        border: solid 1px var(--mantine-color-red-7);
+        color: var(--mantine-color-red-2);
+    }
+}
+
+.paywallPercentageInputWrapper:not([data-error="true"]) {
+    input {
+        background-color: var(--mantine-color-blue-light);
+        border: solid 1px transparent;
+        color: var(--mantine-color-blue-2);
+    }
+}
